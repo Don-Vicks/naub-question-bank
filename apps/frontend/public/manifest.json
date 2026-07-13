@@ -1,0 +1,10 @@
+{
+  "name": "Padi",
+  "short_name": "Padi",
+  "description": "NAUB past questions. Answered. Explained.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF6EE",
+  "theme_color": "#1B2340",
+  "icons": []
+}
