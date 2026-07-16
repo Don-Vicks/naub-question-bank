@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Search, Layers, BookOpen, ArrowRight, GraduationCap } from 'lucide-react';
-import { mockFlashcardDecks } from '@/lib/mock-data';
 import { FACULTIES, getFacultyById } from '@/lib/naub-data';
 
 const LEVELS = ['100L', '200L', '300L', '400L', '500L'] as const;
@@ -12,16 +11,6 @@ export default function FlashcardsPage() {
   const [query, setQuery] = useState('');
   const [selectedFaculty, setSelectedFaculty] = useState<string | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
-
-  const filtered = mockFlashcardDecks.filter((deck) => {
-    const matchesQuery =
-      !query ||
-      deck.courseCode.toLowerCase().includes(query.toLowerCase()) ||
-      deck.courseTitle.toLowerCase().includes(query.toLowerCase());
-    const matchesFaculty = !selectedFaculty || deck.facultyId === selectedFaculty;
-    const matchesLevel = !selectedLevel || deck.level === selectedLevel;
-    return matchesQuery && matchesFaculty && matchesLevel;
-  });
 
   return (
     <div className="page-desktop">
@@ -91,70 +80,14 @@ export default function FlashcardsPage() {
           ))}
         </div>
 
-        {/* Stats */}
-        <div className="flex items-center gap-2 mb-5">
-          <BookOpen size={15} className="text-muted" />
-          <span className="text-caption text-muted">
-            {filtered.length} deck{filtered.length !== 1 ? 's' : ''} available
-          </span>
+        {/* Empty state */}
+        <div className="text-center py-20">
+          <div className="w-16 h-16 rounded-2xl bg-army/5 flex items-center justify-center mx-auto mb-4">
+            <Layers size={28} className="text-army/40" />
+          </div>
+          <p className="text-heading text-ink font-medium">No flashcard decks yet</p>
+          <p className="text-caption text-muted mt-1">Flashcards will appear here once question papers are processed</p>
         </div>
-
-        {/* Deck grid */}
-        {filtered.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="w-16 h-16 rounded-2xl bg-army/5 flex items-center justify-center mx-auto mb-4">
-              <Layers size={28} className="text-army/40" />
-            </div>
-            <p className="text-heading text-ink font-medium">No flashcard decks found</p>
-            <p className="text-caption text-muted mt-1">Try adjusting your filters or search</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
-            {filtered.map((deck) => {
-              const faculty = getFacultyById(deck.facultyId);
-              return (
-                <Link
-                  key={deck.courseCode}
-                  href={`/flashcards/${deck.courseCode}`}
-                  className="card-interactive group"
-                >
-                  <div className="p-5">
-                    {/* Top row */}
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <span className="badge-army">{deck.courseCode}</span>
-                        <span className="badge badge-muted text-[10px]">
-                          {deck.level}
-                        </span>
-                      </div>
-                      <ArrowRight
-                        size={16}
-                        className="text-muted/30 group-hover:text-army group-hover:translate-x-1 transition-all"
-                      />
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="font-semibold text-ink mb-1 group-hover:text-army transition-colors" style={{ fontFamily: "'Lora', Georgia, serif" }}>
-                      {deck.courseTitle}
-                    </h3>
-
-                    {/* Meta */}
-                    <div className="flex items-center gap-3 text-caption text-muted mt-3">
-                      <span className="flex items-center gap-1">
-                        <GraduationCap size={12} />
-                        {faculty?.abbreviation || deck.department}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Layers size={12} />
-                        {deck.cardCount} cards
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
       </div>
     </div>
   );

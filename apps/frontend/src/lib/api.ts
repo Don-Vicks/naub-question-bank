@@ -1,14 +1,7 @@
 import { Course, QuestionDetail, QuestionPaper, QuestionSummary } from './types';
-import {
-  mockCourses,
-  mockPapers,
-  mockQuestionDetail,
-  mockQuestions,
-} from './mock-data';
 import { FACULTIES, DEPARTMENTS, getDepartmentsByFaculty, type Faculty, type Department } from './naub-data';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3000/api';
-const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS !== 'false';
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
@@ -44,10 +37,6 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new Error(`API error ${res.status}: ${await res.text()}`);
   }
   return res.json();
-}
-
-function delay<T>(value: T, ms = 300): Promise<T> {
-  return new Promise((resolve) => setTimeout(() => resolve(value), ms));
 }
 
 // ── Admin types ──
@@ -132,21 +121,12 @@ export interface PaginatedResponse<T> {
 
 export const api = {
   getFaculties: (): Promise<Faculty[]> =>
-    USE_MOCKS ? delay(FACULTIES) : request<Faculty[]>('/question-bank/faculties'),
+    request<Faculty[]>('/question-bank/faculties'),
 
   getDepartments: (facultyId: string): Promise<Department[]> =>
-    USE_MOCKS
-      ? delay(getDepartmentsByFaculty(facultyId))
-      : request<Department[]>(`/question-bank/faculties/${facultyId}/departments`),
+    request<Department[]>(`/question-bank/faculties/${facultyId}/departments`),
 
   getCourses: (params?: { facultyId?: string; departmentId?: string; level?: string }) => {
-    if (USE_MOCKS) {
-      let filtered = mockCourses;
-      if (params?.facultyId) filtered = filtered.filter((c) => c.facultyId === params.facultyId);
-      if (params?.departmentId) filtered = filtered.filter((c) => c.departmentId === params.departmentId);
-      if (params?.level) filtered = filtered.filter((c) => c.level === params.level);
-      return delay(filtered);
-    }
     const qs = new URLSearchParams();
     if (params?.facultyId) qs.set('facultyId', params.facultyId);
     if (params?.departmentId) qs.set('departmentId', params.departmentId);
@@ -155,17 +135,9 @@ export const api = {
   },
 
   getCourse: (courseId: string): Promise<Course | undefined> =>
-    USE_MOCKS ? delay(mockCourses.find((c) => c.id === courseId)) : request<Course>(`/question-bank/courses/${courseId}`),
+    request<Course>(`/question-bank/courses/${courseId}`),
 
   getPapers: (params: { courseId?: string; facultyId?: string; departmentId?: string; level?: string }) => {
-    if (USE_MOCKS) {
-      let filtered = mockPapers;
-      if (params.courseId) filtered = filtered.filter((p) => p.courseId === params.courseId);
-      if (params.facultyId) filtered = filtered.filter((p) => p.facultyId === params.facultyId);
-      if (params.departmentId) filtered = filtered.filter((p) => p.departmentId === params.departmentId);
-      if (params.level) filtered = filtered.filter((p) => p.level === params.level);
-      return delay(filtered);
-    }
     const qs = new URLSearchParams();
     if (params.courseId) qs.set('courseId', params.courseId);
     if (params.facultyId) qs.set('facultyId', params.facultyId);
@@ -175,41 +147,20 @@ export const api = {
   },
 
   getPaper: (paperId: string): Promise<QuestionPaper | undefined> =>
-    USE_MOCKS
-      ? delay(mockPapers.find((p) => p.id === paperId))
-      : request<QuestionPaper>(`/question-bank/papers/${paperId}`),
+    request<QuestionPaper>(`/question-bank/papers/${paperId}`),
 
   getQuestionsByPaper: (paperId: string): Promise<QuestionSummary[]> =>
-    USE_MOCKS
-      ? delay(mockQuestions.filter((q) => q.paperId === paperId))
-      : request<QuestionSummary[]>(`/question-bank/papers/${paperId}/questions`),
+    request<QuestionSummary[]>(`/question-bank/papers/${paperId}/questions`),
 
   getQuestion: (id: string): Promise<QuestionDetail | undefined> =>
-    USE_MOCKS
-      ? delay(mockQuestionDetail[id])
-      : request<QuestionDetail>(`/question-bank/questions/${id}`),
+    request<QuestionDetail>(`/question-bank/questions/${id}`),
 
-  search: (query: string): Promise<QuestionPaper[]> => {
-    if (USE_MOCKS) {
-      const q = query.toLowerCase();
-      return delay(
-        mockPapers.filter(
-          (p) =>
-            p.title.toLowerCase().includes(q) ||
-            p.courseCode.toLowerCase().includes(q),
-        ),
-      );
-    }
-    return request<QuestionPaper[]>(
+  search: (query: string): Promise<QuestionPaper[]> =>
+    request<QuestionPaper[]>(
       `/question-bank/search?q=${encodeURIComponent(query)}`,
-    );
-  },
+    ),
 
   uploadPaper: async (formData: FormData): Promise<{ documentId: string; status: string }> => {
-    if (USE_MOCKS) {
-      await delay(null, 1000);
-      return { documentId: `mock-${Date.now()}`, status: 'uploaded' };
-    }
     const token = getToken();
     const headers: Record<string, string> = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -224,20 +175,16 @@ export const api = {
   },
 
   getUploadStatus: (documentId: string) =>
-    USE_MOCKS
-      ? delay({ id: documentId, status: 'extracted', pageCount: 3 })
-      : request(`/question-bank/documents/${documentId}/status`),
+    request(`/question-bank/documents/${documentId}/status`),
 
   reportIssue: (
     questionId: string,
     payload: { reason: string; note?: string },
   ): Promise<void> =>
-    USE_MOCKS
-      ? delay(undefined)
-      : request(`/question-bank/questions/${questionId}/report`, {
-          method: 'POST',
-          body: JSON.stringify(payload),
-        }),
+    request(`/question-bank/questions/${questionId}/report`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
 
   login: (email: string, password: string): Promise<{ access_token: string; user: { id: string; email: string; name: string; role: string } }> =>
     request('/auth/login', {
