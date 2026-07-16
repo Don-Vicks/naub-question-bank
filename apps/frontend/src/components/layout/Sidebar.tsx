@@ -37,26 +37,21 @@ export function Sidebar() {
               key={href}
               href={href}
               className={clsx(
-                'group relative flex items-center gap-3.5 rounded-2xl px-4 py-3 text-sm transition-all duration-200',
+                'group flex items-center gap-3.5 rounded-2xl px-4 py-3 text-sm transition-all duration-200',
                 active
-                  ? 'bg-naub-teal text-white shadow-glass'
-                  : 'text-muted hover:bg-army/5 hover:text-army',
+                  ? 'bg-army/10 text-army font-semibold'
+                  : 'text-muted hover:bg-army/5 hover:text-army font-medium',
               )}
             >
-              {active && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1.5 rounded-r-full bg-army" />
-              )}
               <Icon
                 size={19}
                 strokeWidth={active ? 2.25 : 1.75}
                 className={clsx(
-                  'transition-transform duration-200',
+                  'transition-transform duration-200 flex-shrink-0',
                   active ? 'text-army' : 'text-muted group-hover:text-army group-hover:scale-110',
                 )}
               />
-              <span className={clsx('font-medium', active ? 'font-semibold' : '')}>
-                {label}
-              </span>
+              <span>{label}</span>
             </Link>
           );
         })}
@@ -67,18 +62,18 @@ export function Sidebar() {
             <Link
               href="/admin"
               className={clsx(
-                'group relative flex items-center gap-3.5 rounded-2xl px-4 py-3 text-sm transition-all duration-200',
+                'group flex items-center gap-3.5 rounded-2xl px-4 py-3 text-sm transition-all duration-200',
                 pathname.startsWith('/admin')
-                  ? 'bg-naub-gold-light text-naub-gold border border-naub-gold/20'
-                  : 'text-muted hover:bg-naub-gold-light/50 hover:text-naub-gold',
+                  ? 'bg-naub-gold-light text-naub-gold border border-naub-gold/20 font-semibold'
+                  : 'text-muted hover:bg-naub-gold-light/50 hover:text-naub-gold font-medium',
               )}
             >
               <Shield
                 size={19}
                 strokeWidth={1.75}
-                className="transition-transform duration-200 group-hover:scale-110"
+                className="flex-shrink-0 transition-transform duration-200 group-hover:scale-110"
               />
-              <span className="font-medium">Admin</span>
+              <span>Admin</span>
             </Link>
           </>
         )}
