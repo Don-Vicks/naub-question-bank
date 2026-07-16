@@ -1,14 +1,45 @@
-import { Course, QuestionDetail, QuestionSummary } from './types';
-import { mockCourses, mockQuestionDetail, mockQuestions } from './mock-data';
+import { Course, QuestionDetail, QuestionPaper, QuestionSummary } from './types';
+import {
+  mockCourses,
+  mockPapers,
+  mockQuestionDetail,
+  mockQuestions,
+} from './mock-data';
+import { FACULTIES, DEPARTMENTS, getDepartmentsByFaculty, type Faculty, type Department } from './naub-data';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3000';
-const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === 'true';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3000/api';
+const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS !== 'false';
+
+function getToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem('padi-auth');
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed?.state?.token ?? null;
+  } catch {
+    return null;
+  }
+}
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...init,
-  });
+  const token = getToken();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(init?.headers as Record<string, string>),
+  };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const res = await fetch(`${API_BASE}${path}`, { ...init, headers });
+
+  if (res.status === 401) {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('padi-auth');
+      window.location.href = '/login';
+    }
+    throw new Error('Unauthorized');
+  }
+
   if (!res.ok) {
     throw new Error(`API error ${res.status}: ${await res.text()}`);
   }
@@ -19,61 +50,183 @@ function delay<T>(value: T, ms = 300): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms));
 }
 
-/**
- * NOTE ON BACKEND GAPS:
- * The NestJS pipeline (question-bank-pipeline) only exposes ingestion and
- * review endpoints so far. This frontend needs the following read endpoints,
- * scoped to NAUB courses rather than secondary-school subjects:
- *
- *   GET /question-bank/courses
- *   GET /question-bank/courses/:id/questions?examType=&session=
- *   GET /question-bank/questions/:id
- *   GET /question-bank/search?q=
- *
- * These map onto the existing Question/SourceDocument entities - `course`
- * replaces the old generic `subject` field, keyed off the course code the
- * DocumentMetadataService already extracts (e.g. "SWE218") rather than the
- * exam-board/year fields that made sense for WAEC-style content but not for
- * university course exams. Until these exist, mock-data.ts stands in.
- */
+// ── Admin types ──
+
+export interface AdminOverview {
+  stats: {
+    totalPapers: number;
+    totalQuestions: number;
+    flaggedQuestions: number;
+    approvedQuestions: number;
+    rejectedQuestions: number;
+    pendingQuestions: number;
+    totalUsers: number;
+    recentPapers: number;
+    recentUsers: number;
+  };
+  recentActivity: {
+    id: string;
+    action: string;
+    detail: string;
+    time: string;
+  }[];
+}
+
+export interface AdminPaperItem {
+  id: string;
+  title: string;
+  courseCode: string;
+  status: string;
+  pageCount: number;
+  uploadedAt: string;
+  uploaderId: string | null;
+  errorMessage: string | null;
+}
+
+export interface AdminUserItem {
+  id: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'user';
+  joinedAt: string;
+  papersUploaded: number;
+}
+
+export interface AdminStats {
+  totalPapers: number;
+  totalQuestions: number;
+  totalUsers: number;
+  extractionRate: number;
+  statusBreakdown: { label: string; count: number; color: string }[];
+  papersByStatus: { status: string; count: number }[];
+  questionsBySubject: { subject: string; count: number }[];
+}
+
+export interface ReviewQuestion {
+  id: string;
+  questionNumber: string;
+  textRaw: string;
+  textLatex: string;
+  confidence: number;
+  sourcePageImageUrl: string;
+  hasDiagram: boolean;
+  reviewStatus: string;
+  subject: string | null;
+  sourceDocument: {
+    id: string;
+    originalFilename: string;
+    extractedTitle: string | null;
+    extractedSubject: string | null;
+  };
+}
+
+export interface PaginatedResponse<T> {
+  items: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+// ── API methods ──
 
 export const api = {
-  getCourses: (): Promise<Course[]> =>
-    USE_MOCKS ? delay(mockCourses) : request<Course[]>('/question-bank/courses'),
+  getFaculties: (): Promise<Faculty[]> =>
+    USE_MOCKS ? delay(FACULTIES) : request<Faculty[]>('/question-bank/faculties'),
 
-  getQuestionsByCourse: (
-    courseId: string,
-    params?: { examType?: string; session?: string },
-  ): Promise<QuestionSummary[]> => {
+  getDepartments: (facultyId: string): Promise<Department[]> =>
+    USE_MOCKS
+      ? delay(getDepartmentsByFaculty(facultyId))
+      : request<Department[]>(`/question-bank/faculties/${facultyId}/departments`),
+
+  getCourses: (params?: { facultyId?: string; departmentId?: string; level?: string }) => {
     if (USE_MOCKS) {
-      return delay(mockQuestions.filter((q) => q.courseId === courseId));
+      let filtered = mockCourses;
+      if (params?.facultyId) filtered = filtered.filter((c) => c.facultyId === params.facultyId);
+      if (params?.departmentId) filtered = filtered.filter((c) => c.departmentId === params.departmentId);
+      if (params?.level) filtered = filtered.filter((c) => c.level === params.level);
+      return delay(filtered);
     }
     const qs = new URLSearchParams();
-    if (params?.examType) qs.set('examType', params.examType);
-    if (params?.session) qs.set('session', params.session);
-    return request<QuestionSummary[]>(
-      `/question-bank/courses/${courseId}/questions?${qs.toString()}`,
-    );
+    if (params?.facultyId) qs.set('facultyId', params.facultyId);
+    if (params?.departmentId) qs.set('departmentId', params.departmentId);
+    if (params?.level) qs.set('level', params.level);
+    return request<Course[]>(`/question-bank/courses?${qs.toString()}`);
   },
 
-  getQuestion: (id: string): Promise<QuestionDetail> =>
+  getCourse: (courseId: string): Promise<Course | undefined> =>
+    USE_MOCKS ? delay(mockCourses.find((c) => c.id === courseId)) : request<Course>(`/question-bank/courses/${courseId}`),
+
+  getPapers: (params: { courseId?: string; facultyId?: string; departmentId?: string; level?: string }) => {
+    if (USE_MOCKS) {
+      let filtered = mockPapers;
+      if (params.courseId) filtered = filtered.filter((p) => p.courseId === params.courseId);
+      if (params.facultyId) filtered = filtered.filter((p) => p.facultyId === params.facultyId);
+      if (params.departmentId) filtered = filtered.filter((p) => p.departmentId === params.departmentId);
+      if (params.level) filtered = filtered.filter((p) => p.level === params.level);
+      return delay(filtered);
+    }
+    const qs = new URLSearchParams();
+    if (params.courseId) qs.set('courseId', params.courseId);
+    if (params.facultyId) qs.set('facultyId', params.facultyId);
+    if (params.departmentId) qs.set('departmentId', params.departmentId);
+    if (params.level) qs.set('level', params.level);
+    return request<QuestionPaper[]>(`/question-bank/papers?${qs.toString()}`);
+  },
+
+  getPaper: (paperId: string): Promise<QuestionPaper | undefined> =>
+    USE_MOCKS
+      ? delay(mockPapers.find((p) => p.id === paperId))
+      : request<QuestionPaper>(`/question-bank/papers/${paperId}`),
+
+  getQuestionsByPaper: (paperId: string): Promise<QuestionSummary[]> =>
+    USE_MOCKS
+      ? delay(mockQuestions.filter((q) => q.paperId === paperId))
+      : request<QuestionSummary[]>(`/question-bank/papers/${paperId}/questions`),
+
+  getQuestion: (id: string): Promise<QuestionDetail | undefined> =>
     USE_MOCKS
       ? delay(mockQuestionDetail[id])
       : request<QuestionDetail>(`/question-bank/questions/${id}`),
 
-  search: (query: string): Promise<QuestionSummary[]> => {
+  search: (query: string): Promise<QuestionPaper[]> => {
     if (USE_MOCKS) {
       const q = query.toLowerCase();
       return delay(
-        mockQuestions.filter((item) =>
-          item.textPreview.toLowerCase().includes(q),
+        mockPapers.filter(
+          (p) =>
+            p.title.toLowerCase().includes(q) ||
+            p.courseCode.toLowerCase().includes(q),
         ),
       );
     }
-    return request<QuestionSummary[]>(
+    return request<QuestionPaper[]>(
       `/question-bank/search?q=${encodeURIComponent(query)}`,
     );
   },
+
+  uploadPaper: async (formData: FormData): Promise<{ documentId: string; status: string }> => {
+    if (USE_MOCKS) {
+      await delay(null, 1000);
+      return { documentId: `mock-${Date.now()}`, status: 'uploaded' };
+    }
+    const token = getToken();
+    const headers: Record<string, string> = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_BASE}/question-bank/documents/upload-batch`, {
+      method: 'POST',
+      headers,
+      body: formData,
+    });
+    if (!res.ok) throw new Error(`Upload failed: ${res.status}`);
+    return res.json();
+  },
+
+  getUploadStatus: (documentId: string) =>
+    USE_MOCKS
+      ? delay({ id: documentId, status: 'extracted', pageCount: 3 })
+      : request(`/question-bank/documents/${documentId}/status`),
 
   reportIssue: (
     questionId: string,
@@ -85,4 +238,69 @@ export const api = {
           method: 'POST',
           body: JSON.stringify(payload),
         }),
+
+  login: (email: string, password: string): Promise<{ access_token: string; user: { id: string; email: string; name: string; role: string } }> =>
+    request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    }),
+
+  register: (name: string, email: string, password: string): Promise<{ access_token: string; user: { id: string; email: string; name: string; role: string } }> =>
+    request('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ name, email, password }),
+    }),
+
+  getMe: (): Promise<{ id: string; email: string; name: string; role: string }> =>
+    request('/auth/me'),
+
+  // ── Admin endpoints ──
+
+  adminOverview: (): Promise<AdminOverview> =>
+    request('/admin/overview'),
+
+  adminPapers: (params?: { search?: string; status?: string; page?: number; limit?: number }): Promise<PaginatedResponse<AdminPaperItem>> => {
+    const qs = new URLSearchParams();
+    if (params?.search) qs.set('search', params.search);
+    if (params?.status) qs.set('status', params.status);
+    if (params?.page) qs.set('page', String(params.page));
+    if (params?.limit) qs.set('limit', String(params.limit));
+    return request(`/admin/papers?${qs.toString()}`);
+  },
+
+  adminDeletePaper: (id: string): Promise<{ deleted: boolean }> =>
+    request(`/admin/papers/${id}`, { method: 'DELETE' }),
+
+  adminUsers: (params?: { search?: string; page?: number; limit?: number }): Promise<PaginatedResponse<AdminUserItem>> => {
+    const qs = new URLSearchParams();
+    if (params?.search) qs.set('search', params.search);
+    if (params?.page) qs.set('page', String(params.page));
+    if (params?.limit) qs.set('limit', String(params.limit));
+    return request(`/admin/users?${qs.toString()}`);
+  },
+
+  adminPromoteUser: (id: string): Promise<AdminUserItem> =>
+    request(`/admin/users/${id}/promote`, { method: 'PATCH' }),
+
+  adminDemoteUser: (id: string): Promise<AdminUserItem> =>
+    request(`/admin/users/${id}/demote`, { method: 'PATCH' }),
+
+  adminStats: (): Promise<AdminStats> =>
+    request('/admin/stats'),
+
+  reviewQueue: (params?: { limit?: number; subject?: string }): Promise<ReviewQuestion[]> => {
+    const qs = new URLSearchParams();
+    if (params?.limit) qs.set('limit', String(params.limit));
+    if (params?.subject) qs.set('subject', params.subject);
+    return request(`/question-bank/review/queue?${qs.toString()}`);
+  },
+
+  reviewStats: (): Promise<{ total: number; flagged: number; approved: number; rejected: number }> =>
+    request('/question-bank/review/stats'),
+
+  reviewDecision: (id: string, decision: { decision: 'approve' | 'reject' | 'edit'; notes?: string; correctedTextLatex?: string }): Promise<unknown> =>
+    request(`/question-bank/review/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(decision),
+    }),
 };

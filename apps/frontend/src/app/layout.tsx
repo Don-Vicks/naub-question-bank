@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { QueryProvider } from '@/components/layout/QueryProvider';
 import { BottomNav } from '@/components/layout/BottomNav';
@@ -8,12 +8,12 @@ import { OfflineBanner } from '@/components/layout/OfflineBanner';
 export const metadata: Metadata = {
   title: 'Padi — NAUB past questions, answered',
   description:
-    'Nigerian Army University Biu past questions with worked answers, organized by course.',
+    'Nigerian Army University Biu past questions organized by faculty, department, and course.',
   manifest: '/manifest.json',
 };
 
-export const viewport = {
-  themeColor: '#1B2340',
+export const viewport: Viewport = {
+  themeColor: '#E40000',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -26,22 +26,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="font-sans">
+      <body className="font-sans antialiased bg-paper">
         <QueryProvider>
-          {/* Sidebar (md+) + content, side by side. On mobile the sidebar
-              is display:none via its own md:flex class, so this collapses
-              to just the content column with the fixed BottomNav below. */}
-          <div className="mx-auto flex max-w-6xl">
+          <div className="flex min-h-screen">
             <Sidebar />
-            <div className="min-h-screen flex-1 md:border-l md:border-line">
+            <div className="min-h-screen flex-1 lg:ml-72">
               <OfflineBanner />
-              {/* max-w-md only below md - phone-width column on mobile,
-                  full flexible width once the Sidebar takes over layout
-                  duties on desktop. This one change is most of the "why
-                  does this look cramped on desktop" fix. */}
-              <main className="mx-auto w-full max-w-md pb-16 md:max-w-none md:px-8 md:py-6 md:pb-6">
-                {children}
-              </main>
+              <main className="px-4 pb-24 pt-4 md:px-6 md:pb-8 md:pt-5 lg:px-8 lg:pb-8 lg:pt-5">{children}</main>
             </div>
           </div>
           <BottomNav />

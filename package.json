@@ -18,5 +18,8 @@
     "apps/*",
     "packages/*"
   ],
-  "packageManager": "pnpm@9.0.0"
+  "packageManager": "pnpm@9.0.0",
+  "dependencies": {
+    "next": "^16.2.10"
+  }
 }

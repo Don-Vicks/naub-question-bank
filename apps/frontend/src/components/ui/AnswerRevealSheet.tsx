@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
-import { IconFlag } from '@tabler/icons-react';
+import { Flag, Eye, ChevronDown } from 'lucide-react';
 import { ConfidenceBadge } from './ConfidenceBadge';
 import { ReviewStatus } from '@/lib/types';
 
@@ -13,8 +13,6 @@ interface Props {
   onReportIssue: () => void;
 }
 
-// Collapsed by default - see ux-flows.md: revealing immediately defeats
-// practice value even in plain browse mode, so this is a deliberate tap.
 export function AnswerRevealSheet({ answerLatex, reviewStatus, onReportIssue }: Props) {
   const [revealed, setRevealed] = useState(false);
 
@@ -22,29 +20,31 @@ export function AnswerRevealSheet({ answerLatex, reviewStatus, onReportIssue }: 
     return (
       <button
         onClick={() => setRevealed(true)}
-        className="w-full rounded-card border border-line bg-white py-3 text-[13px] font-medium text-ink active:bg-paper"
+        className="group flex w-full items-center justify-center gap-2.5 rounded-card-xl border border-dashed border-marigold/30 bg-marigold-50/50 py-4 text-sm font-semibold text-marigold transition-all duration-300 hover:border-marigold/50 hover:bg-marigold-50 hover:shadow-glow-sm active:scale-[0.99]"
       >
-        Reveal Padi's answer
+        <Eye size={16} strokeWidth={2} className="transition-transform duration-200 group-hover:scale-110" />
+        Reveal Padi&apos;s answer
+        <ChevronDown size={14} strokeWidth={2} className="transition-transform duration-200 group-hover:translate-y-0.5" />
       </button>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-card border border-line bg-white">
-      <div className="flex items-center justify-between bg-paper px-3 py-2.5">
-        <p className="text-[12.5px] font-medium text-ink">Padi's answer</p>
+    <div className="overflow-hidden rounded-card-xl border border-line bg-white shadow-card animate-fade-in-up">
+      <div className="flex items-center justify-between border-b border-line-light bg-paper-warm px-4 py-3">
+        <p className="text-caption font-semibold text-ink">Padi&apos;s answer</p>
         <ConfidenceBadge status={reviewStatus} />
       </div>
-      <div className="p-3 font-voice text-[13px] leading-relaxed text-ink">
+      <div className="p-4 font-voice text-[15px] leading-relaxed text-ink">
         {answerLatex.split('\\\\').map((line, i) => (
           <BlockMath key={i} math={line.trim()} />
         ))}
       </div>
       <button
         onClick={onReportIssue}
-        className="flex w-full items-center gap-1.5 border-t border-line px-3 py-2.5 text-[11.5px] text-muted"
+        className="flex w-full items-center gap-2 border-t border-line-light px-4 py-3 text-[11px] font-medium text-muted transition-colors duration-200 hover:bg-terracotta-50 hover:text-terracotta"
       >
-        <IconFlag size={14} stroke={1.75} />
+        <Flag size={12} strokeWidth={1.75} />
         Report an issue
       </button>
     </div>

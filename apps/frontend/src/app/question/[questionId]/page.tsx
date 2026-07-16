@@ -2,9 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { BlockMath } from 'react-katex';
-import 'katex/dist/katex.min.css';
-import { IconArrowLeft, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
+import { ArrowLeft, Bookmark, BookmarkCheck } from 'lucide-react';
 import { useQuestion } from '@/lib/hooks/useQuestionBank';
 import { useBookmarkStore } from '@/lib/hooks/useBookmarkStore';
 import { AnswerRevealSheet } from '@/components/ui/AnswerRevealSheet';
@@ -23,8 +21,14 @@ export default function QuestionPage() {
 
   if (isLoading || !question) {
     return (
-      <div className="p-4 md:px-0 md:py-6">
-        <div className="h-32 animate-pulse rounded-card bg-white" />
+      <div className="page-desktop">
+        <div className="page-header lg:rounded-card-xl lg:mx-0 lg:my-6">
+          <button onClick={() => router.back()} aria-label="Back" className="md:hidden btn-icon text-paper">
+            <ArrowLeft size={20} strokeWidth={1.75} />
+          </button>
+          <div><p className="page-header-title">Loading...</p></div>
+        </div>
+        <div className="content-area"><div className="skeleton h-48 rounded-card-xl" /></div>
       </div>
     );
   }
@@ -32,63 +36,60 @@ export default function QuestionPage() {
   const bookmarked = isBookmarked(question.id);
 
   return (
-    <div>
-      <header className="flex items-center gap-3 bg-ink px-4 py-4 md:rounded-card md:px-6 md:py-4">
-        <button onClick={() => router.back()} aria-label="Back" className="md:hidden">
-          <IconArrowLeft size={18} stroke={1.75} className="text-paper" />
+    <div className="page-desktop">
+      <div className="page-header lg:rounded-card-xl lg:mx-0 lg:my-6">
+        <button onClick={() => router.back()} aria-label="Back" className="md:hidden btn-icon text-paper">
+          <ArrowLeft size={20} strokeWidth={1.75} />
         </button>
-        <p className="text-[13px] font-medium text-paper">
-          {question.examType} · {question.session}
-        </p>
-      </header>
-
-      {/* Two-pane on lg+: question/diagram in the wide left column, the
-          answer panel sticky in a fixed-width right rail - avoids a single
-          narrow reading column stranded in the middle of a wide screen,
-          which is what stacking everything (the mobile layout) would do
-          here. Falls back to the mobile stacked flow below lg. */}
-      <div className="p-4 md:px-0 md:py-6 lg:grid lg:grid-cols-[1fr_360px] lg:items-start lg:gap-6">
         <div>
-          <p className="mb-1 text-[11px] font-medium text-muted">
-            Question {question.number}
-          </p>
-          <div className="mb-3 font-voice text-[14px] leading-relaxed text-ink lg:text-[15px]">
-            <BlockMath math={question.textLatex} />
+          <p className="page-header-title">Question {question.number}</p>
+        </div>
+      </div>
+
+      <div className="content-area">
+        <div className="lg:grid lg:grid-cols-[1fr_380px] lg:items-start lg:gap-8">
+          <div className="animate-fade-in">
+            <div className="rounded-card-xl border border-line bg-white p-4 shadow-card">
+              <img
+                src={question.sourcePageImageUrl}
+                alt={`Question ${question.number}`}
+                className="w-full object-contain"
+              />
+            </div>
+
+            {question.hasDiagram && question.diagramAssetUrl && (
+              <div className="mt-4 lg:max-w-lg">
+                <DiagramViewer
+                  src={question.diagramAssetUrl}
+                  alt={`Diagram for question ${question.number}`}
+                />
+                <p className="mt-2 text-center text-[10px] text-muted font-medium">
+                  original scanned diagram
+                </p>
+              </div>
+            )}
           </div>
 
-          {question.hasDiagram && question.diagramAssetUrl && (
-            <div className="mb-3.5 lg:max-w-lg">
-              <DiagramViewer
-                src={question.diagramAssetUrl}
-                alt={`Diagram for question ${question.number}`}
-              />
-              <p className="mt-1.5 text-center text-[10px] text-muted">
-                original scanned diagram
-              </p>
+          <div className="mt-4 lg:mt-0 lg:sticky lg:top-6 animate-fade-in-up">
+            <AnswerRevealSheet
+              answerLatex={question.answerLatex}
+              reviewStatus={question.answerReviewStatus}
+              onReportIssue={() => api.reportIssue(question.id, { reason: 'other' })}
+            />
+
+            <div className="mt-4 flex items-center justify-end">
+              <button
+                onClick={() => toggle(question.id)}
+                aria-label={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
+                className="btn-icon"
+              >
+                {bookmarked ? (
+                  <BookmarkCheck size={22} className="text-naub-gold" />
+                ) : (
+                  <Bookmark size={22} strokeWidth={1.75} className="text-naub-gold/50 hover:text-naub-gold" />
+                )}
+              </button>
             </div>
-          )}
-        </div>
-
-        <div className="lg:sticky lg:top-6">
-          <AnswerRevealSheet
-            answerLatex={question.answerLatex}
-            reviewStatus={question.answerReviewStatus}
-            onReportIssue={() =>
-              api.reportIssue(question.id, { reason: 'other' })
-            }
-          />
-
-          <div className="mt-3.5 flex items-center justify-end">
-            <button
-              onClick={() => toggle(question.id)}
-              aria-label={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
-            >
-              {bookmarked ? (
-                <IconBookmarkFilled size={20} className="text-marigold" />
-              ) : (
-                <IconBookmark size={20} stroke={1.75} className="text-marigold" />
-              )}
-            </button>
           </div>
         </div>
       </div>

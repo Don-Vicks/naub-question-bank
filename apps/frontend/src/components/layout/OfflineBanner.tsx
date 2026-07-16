@@ -1,6 +1,6 @@
 'use client';
 
-import { IconWifiOff } from '@tabler/icons-react';
+import { WifiOff } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 // Unobtrusive strip, not a blocking modal - see design-system.md's states
@@ -24,7 +24,7 @@ export function OfflineBanner() {
 
   return (
     <div className="flex items-center gap-2 bg-terracotta/10 px-4 py-2 text-xs text-terracotta-text">
-      <IconWifiOff size={14} stroke={1.75} />
+      <WifiOff size={14} strokeWidth={1.75} />
       Offline — showing downloaded subjects only
     </div>
   );

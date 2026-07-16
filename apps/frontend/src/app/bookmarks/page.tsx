@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useMemo } from 'react';
+import { Bookmark, BookmarkX } from 'lucide-react';
 import { useBookmarkStore } from '@/lib/hooks/useBookmarkStore';
-import { useQuestionsByCourse } from '@/lib/hooks/useQuestionBank';
+import { useAllQuestions } from '@/lib/hooks/useQuestionBank';
 import { QuestionCard } from '@/components/ui/QuestionCard';
 
 export default function BookmarksPage() {
@@ -12,31 +13,43 @@ export default function BookmarksPage() {
     if (!loaded) load();
   }, [loaded, load]);
 
-  // NOTE: placeholder data source until the backend has a
-  // `GET /questions?ids=` batch endpoint - fetching bookmarked questions
-  // across arbitrary courses is the real shape once that exists.
-  const { data: candidateQuestions } = useQuestionsByCourse('swe218');
+  const { data: allQuestions } = useAllQuestions();
   const bookmarked = useMemo(
-    () => candidateQuestions?.filter((q) => bookmarkedIds.has(q.id)) ?? [],
-    [candidateQuestions, bookmarkedIds],
+    () => allQuestions?.filter((q) => bookmarkedIds.has(q.id)) ?? [],
+    [allQuestions, bookmarkedIds],
   );
 
   return (
-    <div className="p-4 md:px-0 md:py-6">
-      <p className="mb-3 text-sm font-medium text-ink">Your shelf</p>
-
-      {bookmarked.length === 0 ? (
-        <p className="mt-8 text-center text-sm text-muted">
-          Nothing on your shelf yet — bookmark a question to start building
-          it.
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
-          {bookmarked.map((q) => (
-            <QuestionCard key={q.id} question={q} />
-          ))}
+    <div className="page-desktop">
+      <div className="page-header lg:rounded-card-xl lg:mx-0 lg:my-6">
+        <Bookmark size={20} strokeWidth={1.75} className="text-paper/60" />
+        <div>
+          <p className="page-header-title">Your shelf</p>
+          <p className="page-header-sub">Bookmarked questions</p>
         </div>
-      )}
+      </div>
+
+      <div className="content-area">
+        {bookmarked.length === 0 ? (
+          <div className="flex flex-col items-center gap-4 py-16 text-center animate-fade-in-up">
+            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-naub-gold-light border border-naub-gold/15">
+              <BookmarkX size={28} strokeWidth={1.5} className="text-naub-gold/50" />
+            </div>
+            <div>
+              <p className="text-heading text-ink">Nothing here yet</p>
+              <p className="text-body text-muted mt-1.5 max-w-xs">
+                Bookmark a question to start building your personal collection.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 stagger">
+            {bookmarked.map((q) => (
+              <QuestionCard key={q.id} question={q} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
