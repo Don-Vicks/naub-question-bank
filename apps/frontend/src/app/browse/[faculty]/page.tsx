@@ -24,7 +24,7 @@ export default function FacultyPage() {
         </div>
       </div>
 
-      <div className="content-area lg:px-8">
+      <div className="content-area">
         <nav className="breadcrumb">
           <Link href="/" className="hover:text-naub-green">Home</Link>
           <span>/</span>
