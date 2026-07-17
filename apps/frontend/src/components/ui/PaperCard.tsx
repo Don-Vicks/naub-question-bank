@@ -23,18 +23,21 @@ export function PaperCard({ paper }: { paper: QuestionPaper }) {
   return (
     <Link
       href={`/paper/${paper.id}`}
-      className="card-interactive group flex items-center gap-4 p-4"
+      className="card-interactive group relative flex items-center gap-4 overflow-hidden p-4"
     >
+      {/* Gradient left accent */}
+      <div className="absolute left-0 top-0 h-full w-[3px] bg-gradient-to-b from-naub-teal via-army/40 to-marigold opacity-0 transition-all duration-300 group-hover:opacity-100" />
+
       {/* Thumbnail */}
       <div className="relative h-16 w-12 flex-shrink-0 overflow-hidden rounded-xl border border-line bg-paper-warm">
         {paper.thumbnailUrl ? (
           <img
             src={paper.thumbnailUrl}
             alt={paper.title}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center">
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-ink/5 to-ink/10">
             <Image size={16} strokeWidth={1.75} className="text-muted/30" />
           </div>
         )}
@@ -44,7 +47,7 @@ export function PaperCard({ paper }: { paper: QuestionPaper }) {
 
       {/* Content */}
       <div className="min-w-0 flex-1">
-        <p className="truncate text-heading text-ink transition-colors duration-200">
+        <p className="truncate text-heading text-ink transition-colors duration-200 group-hover:text-army">
           {paper.title}
         </p>
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
@@ -61,7 +64,7 @@ export function PaperCard({ paper }: { paper: QuestionPaper }) {
       <ChevronRight
         size={16}
         strokeWidth={2}
-        className="flex-shrink-0 text-muted/30 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-ink"
+        className="flex-shrink-0 text-muted/30 transition-all duration-300 group-hover:translate-x-1 group-hover:text-army"
       />
     </Link>
   );

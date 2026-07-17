@@ -2,11 +2,11 @@
 
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Check, Upload as UploadIcon } from 'lucide-react';
+import { ArrowLeft, Check, Upload as UploadIcon, AlertTriangle, ExternalLink } from 'lucide-react';
 import { useScanEffect } from '@/lib/hooks/useScanEffect';
 import { ImageUploader } from '@/components/ui/ImageUploader';
 import { AuthGuard } from '@/components/layout/AuthGuard';
-import { api } from '@/lib/api';
+import { api, type UploadResult } from '@/lib/api';
 import {
   FACULTIES,
   LEVELS,
@@ -27,11 +27,12 @@ function UploadForm() {
   const [session, setSession] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [uploaded, setUploaded] = useState(false);
+  const [result, setResult] = useState<UploadResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const departments = facultyId ? getDepartmentsByFaculty(facultyId) : [];
-  const isFormValid = facultyId && departmentId && level && courseCode && examType && session && files.length > 0;
+  const isFormValid =
+    facultyId && departmentId && level && courseCode && examType && session && files.length > 0;
 
   const handleFilesChange = useCallback((newFiles: File[]) => {
     setFiles(newFiles);
@@ -49,18 +50,49 @@ function UploadForm() {
     try {
       const formData = new FormData();
       files.forEach((file) => formData.append('files', file));
-      formData.append('subjectHint', courseCode);
 
-      await api.uploadPaper(formData);
-      setUploaded(true);
+      // Pass all form metadata — backend saves these on each SourceDocument
+      formData.append('courseCode', courseCode.toUpperCase());
+      formData.append('subjectHint', courseCode.toUpperCase()); // backward compat
+      formData.append('facultyId', facultyId);
+      formData.append('departmentId', departmentId);
+      formData.append('level', level);
+      formData.append('examType', examType);
+      formData.append('session', session);
+
+      const uploadResult = await api.uploadPaper(formData);
+      setResult(uploadResult);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Upload failed. Please try again.');
+      const message = err instanceof Error ? err.message : 'Upload failed. Please try again.';
+      if (message.includes('401') || message.toLowerCase().includes('unauthorized')) {
+        setError('Your session has expired. Please log in again.');
+      } else {
+        setError(message);
+      }
     } finally {
       setUploading(false);
     }
   };
 
-  if (uploaded) {
+  const resetForm = () => {
+    setResult(null);
+    setFiles([]);
+    setFacultyId('');
+    setDepartmentId('');
+    setLevel('');
+    setCourseCode('');
+    setExamType('');
+    setSession('');
+    setError(null);
+  };
+
+  // ── Result screen ──
+  if (result) {
+    const firstDoc = result.documents?.[0];
+    const browsePath = departmentId && courseCode
+      ? `/browse/${facultyId}/${departmentId}/${departmentId}-${courseCode.toUpperCase()}`
+      : '/browse';
+
     return (
       <div className="page-desktop">
         <div className="page-header lg:rounded-card-xl lg:mx-0 lg:my-6">
@@ -70,41 +102,62 @@ function UploadForm() {
         </div>
         <div className="content-area">
           <div className="flex flex-col items-center gap-5 py-12 text-center animate-fade-in-up">
-            <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-naub-green-light border border-naub-green/15">
-              <Check size={36} strokeWidth={2.5} className="text-naub-green" />
-            </div>
-            <div>
-              <p className="text-title text-ink">Upload successful!</p>
-              <p className="text-body text-muted mt-1.5">
-                {files.length} {files.length === 1 ? 'file' : 'files'} submitted for processing.
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  setUploaded(false);
-                  setFiles([]);
-                  setFacultyId('');
-                  setDepartmentId('');
-                  setLevel('');
-                  setCourseCode('');
-                  setExamType('');
-                  setSession('');
-                }}
-                className="btn-secondary"
-              >
-                Upload more
-              </button>
-              <button onClick={() => router.push('/browse')} className="btn-primary">
-                Browse papers
-              </button>
-            </div>
+            {result.failed > 0 && result.queued === 0 ? (
+              <>
+                <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-terracotta-50 border border-terracotta-100 transition-transform duration-300 hover:scale-110">
+                  <AlertTriangle size={36} strokeWidth={2.5} className="text-terracotta" />
+                </div>
+                <div>
+                  <p className="text-title text-ink">Upload failed</p>
+                  <p className="text-body text-muted mt-1.5">
+                    All {result.failed} file{result.failed !== 1 ? 's' : ''} failed to upload.
+                    Please try again.
+                  </p>
+                </div>
+                <button onClick={resetForm} className="btn-primary">
+                  Try again
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-naub-green-light border border-naub-green/15 transition-transform duration-300 hover:scale-110">
+                  <Check size={36} strokeWidth={2.5} className="text-naub-green" />
+                </div>
+                <div>
+                  <p className="text-title text-ink">Upload successful!</p>
+                  <p className="text-body text-muted mt-1.5">
+                    {result.queued} file{result.queued !== 1 ? 's are' : ' is'} now live and
+                    visible to all students.
+                    {result.failed > 0 && ` ${result.failed} file${result.failed !== 1 ? 's' : ''} failed.`}
+                  </p>
+                </div>
+                <div className="flex gap-3">
+                  <button onClick={resetForm} className="btn-secondary">
+                    Upload more
+                  </button>
+                  {firstDoc ? (
+                    <button
+                      onClick={() => router.push(`/paper/${firstDoc.documentId}`)}
+                      className="btn-primary flex items-center gap-1.5"
+                    >
+                      <ExternalLink size={14} strokeWidth={2} />
+                      View paper
+                    </button>
+                  ) : (
+                    <button onClick={() => router.push(browsePath)} className="btn-primary">
+                      Browse papers
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
     );
   }
 
+  // ── Upload form ──
   return (
     <div className="page-desktop">
       <div className="page-header lg:rounded-card-xl lg:mx-0 lg:my-6">
@@ -113,7 +166,7 @@ function UploadForm() {
         </button>
         <div>
           <p className="page-header-title">Upload Question Paper</p>
-          <p className="page-header-sub">PDFs or images of past questions</p>
+          <p className="page-header-sub">PDFs or images · scan effect applied automatically</p>
         </div>
       </div>
 

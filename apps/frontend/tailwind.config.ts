@@ -155,6 +155,8 @@ const config: Config = {
         'pulse-soft': 'pulseSoft 2s infinite ease-in-out',
         'float': 'float 3s infinite ease-in-out',
         'glow-pulse': 'glowPulse 2s infinite ease-in-out',
+        'gradient-shift': 'gradientShift 8s ease infinite',
+        'border-glow': 'borderGlow 2s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -193,6 +195,14 @@ const config: Config = {
           '0%, 100%': { boxShadow: '0 0 12px rgba(228, 0, 0, 0.12)' },
           '50%': { boxShadow: '0 0 24px rgba(228, 0, 0, 0.25)' },
         },
+        gradientShift: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        borderGlow: {
+          '0%, 100%': { opacity: '0.4' },
+          '50%': { opacity: '1' },
+        },
       },
       transitionTimingFunction: {
         'premium': 'cubic-bezier(0.16, 1, 0.3, 1)',
@@ -210,6 +220,10 @@ const config: Config = {
         'gradient-gold': 'linear-gradient(135deg, #C8A951 0%, #B08E30 100%)',
         'gradient-gold-soft': 'linear-gradient(135deg, #FDF9EE 0%, #F5EDDA 100%)',
         'gradient-card': 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 100%)',
+        'gradient-shimmer': 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)',
+      },
+      backgroundSize: {
+        '300%': '300% 300%',
       },
       screens: {
         '3xl': '1800px',

@@ -18,6 +18,8 @@
   body {
     @apply bg-paper text-ink font-sans;
     text-rendering: optimizeLegibility;
+    background-image: radial-gradient(circle at 1px 1px, rgba(27, 35, 64, 0.015) 1px, transparent 0);
+    background-size: 32px 32px;
   }
 
   ::selection {
@@ -117,11 +119,21 @@
   .card-premium::before {
     content: '';
     @apply absolute inset-0 bg-gradient-to-br from-army/5 via-transparent to-naub-gold/5
-      opacity-0 transition-opacity duration-300;
+      opacity-0 transition-opacity duration-500;
   }
 
   .card-premium:hover::before {
     @apply opacity-100;
+  }
+
+  .card-premium::after {
+    content: '';
+    @apply absolute -left-full top-0 h-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent
+      transition-transform duration-700;
+  }
+
+  .card-premium:hover::after {
+    @apply translate-x-[250%];
   }
 
   /* Inputs */
@@ -177,9 +189,22 @@
 
   /* Page layout */
   .page-header {
-    @apply flex items-center gap-3.5 bg-gradient-naub px-5 py-5
+    @apply relative flex items-center gap-3.5 overflow-hidden bg-gradient-naub px-5 py-5
       lg:my-6 lg:rounded-card-xl lg:py-6 lg:px-6
       md:my-4 md:rounded-card-xl md:py-6 md:px-6;
+  }
+
+  .page-header::before {
+    content: '';
+    @apply absolute inset-0 opacity-[0.03];
+    background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+
+  .page-header::after {
+    content: '';
+    @apply absolute bottom-0 left-0 right-0 h-px;
+    background: linear-gradient(90deg, transparent, rgba(200, 169, 81, 0.3), transparent);
   }
 
   .page-header-title {
@@ -297,5 +322,29 @@
 
   .press-scale {
     @apply transition-all duration-150 ease-premium active:scale-[0.98];
+  }
+
+  .glow-border {
+    position: relative;
+  }
+
+  .glow-border::before {
+    content: '';
+    @apply absolute -inset-px rounded-[inherit] opacity-0 transition-opacity duration-300;
+    background: linear-gradient(135deg, rgba(228, 0, 0, 0.15), rgba(200, 169, 81, 0.15), rgba(35, 164, 85, 0.15));
+    z-index: -1;
+  }
+
+  .glow-border:hover::before {
+    @apply opacity-100;
+  }
+
+  .accent-bar {
+    @apply absolute left-0 top-0 h-full w-[3px] rounded-full bg-gradient-to-b from-army via-army/60 to-transparent
+      opacity-0 scale-y-0 transition-all duration-300 origin-top;
+  }
+
+  .group:hover .accent-bar {
+    @apply opacity-100 scale-y-100;
   }
 }

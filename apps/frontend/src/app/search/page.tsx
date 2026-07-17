@@ -20,28 +20,33 @@ export default function SearchPage() {
       </div>
 
       <div className="content-area">
-        <div className="mb-5 animate-fade-in">
+        {/* Decorative gradient blob */}
+        <div className="relative mb-5 animate-fade-in">
+          <div className="absolute -inset-10 -z-10 rounded-full bg-gradient-to-br from-army/5 via-naub-gold/5 to-naub-teal/5 blur-3xl opacity-60" />
+
           <div className="relative">
-            <SearchIcon
-              size={18}
-              strokeWidth={1.75}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/50"
-            />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search courses, e.g. SWE218, Linear Algebra"
-              className="input-field pl-11 pr-10"
-              autoFocus
-            />
-            {query && (
-              <button
-                onClick={() => setQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-army transition-colors"
-              >
-                <X size={16} strokeWidth={2} />
-              </button>
-            )}
+            <div className="relative group">
+              <SearchIcon
+                size={18}
+                strokeWidth={1.75}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/50 transition-colors duration-200 group-focus-within:text-army"
+              />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search courses, e.g. SWE218, Linear Algebra"
+                className="input-field pl-11 pr-10"
+                autoFocus
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-army transition-colors duration-200 hover:scale-110 active:scale-95"
+                >
+                  <X size={16} strokeWidth={2} />
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -54,7 +59,7 @@ export default function SearchPage() {
 
           {!isFetching && query.trim().length > 1 && results?.length === 0 && (
             <div className="col-span-full flex flex-col items-center gap-3 py-12 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-army-50 border border-army/10">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-army-50 border border-army/10 transition-transform duration-300 hover:scale-110">
                 <SearchIcon size={20} strokeWidth={1.75} className="text-army" />
               </div>
               <div>

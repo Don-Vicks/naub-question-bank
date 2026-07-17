@@ -3,15 +3,16 @@
 import { useState, useCallback, useRef } from 'react';
 import { Upload, X, Image, File, Sparkles } from 'lucide-react';
 import clsx from 'clsx';
+import { dataUrlToFile } from '@/lib/hooks/useScanEffect';
 
 interface FileEntry {
-  file: File;
-  previewUrl: string;
-  processedUrl: string | null;
+  file: File;           // original — used for display name / type check
+  uploadFile: File;     // what actually gets sent to the server (processed WebP or original PDF)
+  previewUrl: string;   // shown in thumbnail — processed version when available
 }
 
 interface ImageUploaderProps {
-  onFilesChange: (files: File[]) => void;
+  onFilesChange: (files: File[]) => void;  // receives the upload-ready files
   processImage: (file: File) => Promise<string>;
   maxFiles?: number;
   accept?: string;
@@ -37,23 +38,38 @@ export function ImageUploader({
 
       const newEntries: FileEntry[] = [];
       for (const file of files) {
-        const previewUrl = URL.createObjectURL(file);
-        let processedUrl: string | null = null;
-
         if (file.type.startsWith('image/')) {
+          // Apply scan effect + compress to WebP
           try {
-            processedUrl = await processImage(file);
+            const processedDataUrl = await processImage(file);
+            const uploadFile = await dataUrlToFile(processedDataUrl, file.name);
+            newEntries.push({
+              file,
+              uploadFile,
+              previewUrl: processedDataUrl,
+            });
           } catch {
-            processedUrl = null;
+            // Fallback: use original if processing fails
+            newEntries.push({
+              file,
+              uploadFile: file,
+              previewUrl: URL.createObjectURL(file),
+            });
           }
+        } else {
+          // PDF or other — no client-side processing
+          newEntries.push({
+            file,
+            uploadFile: file,
+            previewUrl: URL.createObjectURL(file),
+          });
         }
-
-        newEntries.push({ file, previewUrl, processedUrl });
       }
 
       const allEntries = [...entries, ...newEntries].slice(0, maxFiles);
       setEntries(allEntries);
-      onFilesChange(allEntries.map((e) => e.file));
+      // Pass the processed upload-ready files up — not the originals
+      onFilesChange(allEntries.map((e) => e.uploadFile));
       setProcessing(false);
     },
     [entries, maxFiles, onFilesChange, processImage],
@@ -61,13 +77,9 @@ export function ImageUploader({
 
   const removeFile = useCallback(
     (index: number) => {
-      const entry = entries[index];
-      URL.revokeObjectURL(entry.previewUrl);
-      if (entry.processedUrl) URL.revokeObjectURL(entry.processedUrl);
-
       const next = entries.filter((_, i) => i !== index);
       setEntries(next);
-      onFilesChange(next.map((e) => e.file));
+      onFilesChange(next.map((e) => e.uploadFile));
     },
     [entries, onFilesChange],
   );
@@ -138,7 +150,7 @@ export function ImageUploader({
       {processing && (
         <div className="flex items-center justify-center gap-2 rounded-xl bg-marigold-50 px-4 py-2.5 text-caption text-marigold animate-fade-in">
           <Sparkles size={12} strokeWidth={2} className="animate-pulse" />
-          Applying scan effect...
+          Applying scan effect &amp; compressing...
         </div>
       )}
 
@@ -148,11 +160,18 @@ export function ImageUploader({
           {entries.map((entry, i) => (
             <div key={i} className="group relative">
               <div className="aspect-[3/4] overflow-hidden rounded-xl border border-line bg-paper-warm shadow-card transition-shadow duration-200 group-hover:shadow-card-hover">
-                <img
-                  src={entry.processedUrl ?? entry.previewUrl}
-                  alt={`Upload ${i + 1}`}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
+                {entry.file.type === 'application/pdf' ? (
+                  <div className="flex h-full w-full flex-col items-center justify-center gap-1.5 bg-paper-warm">
+                    <File size={24} strokeWidth={1.5} className="text-muted/40" />
+                    <p className="px-1 text-center text-[9px] font-medium text-muted/60 leading-tight">PDF</p>
+                  </div>
+                ) : (
+                  <img
+                    src={entry.previewUrl}
+                    alt={`Upload ${i + 1}`}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                )}
               </div>
               <button
                 type="button"
@@ -172,6 +191,15 @@ export function ImageUploader({
                   {entry.file.name}
                 </p>
               </div>
+              {/* Show compression badge for processed images */}
+              {entry.file.type.startsWith('image/') && entry.uploadFile !== entry.file && (
+                <div className="mt-0.5 flex items-center gap-0.5 px-0.5">
+                  <Sparkles size={8} strokeWidth={2} className="text-marigold/70" />
+                  <p className="text-[9px] text-marigold/70 font-medium">
+                    {Math.round((1 - entry.uploadFile.size / entry.file.size) * 100)}% smaller
+                  </p>
+                </div>
+              )}
             </div>
           ))}
         </div>
