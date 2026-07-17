@@ -170,7 +170,7 @@ export function useScanEffect(): ScanEffectResult {
         binarize(data, threshold);
         ctx.putImageData(imageData, 0, 0);
 
-        const resultUrl = canvas.toDataURL('image/jpeg', 0.92);
+        const resultUrl = canvas.toDataURL('image/webp', 0.82);
         setProcessedUrl(resultUrl);
         return resultUrl;
       } finally {
@@ -185,4 +185,18 @@ export function useScanEffect(): ScanEffectResult {
   }, []);
 
   return { processedUrl, isProcessing, processImage, reset };
+}
+
+/**
+ * Converts a canvas data URL (e.g. from processImage) back into a File
+ * so it can be appended to a FormData for upload.
+ *
+ * @param dataUrl  The data URL string (image/webp or image/jpeg)
+ * @param name     Desired filename (without extension — .webp is appended)
+ */
+export async function dataUrlToFile(dataUrl: string, name: string): Promise<File> {
+  const res = await fetch(dataUrl);
+  const blob = await res.blob();
+  const safeName = name.replace(/\.[^.]+$/, '') + '.webp';
+  return new File([blob], safeName, { type: blob.type });
 }

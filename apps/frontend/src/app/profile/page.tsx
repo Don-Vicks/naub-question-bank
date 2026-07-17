@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, ChevronRight, Download, Moon, Info, LogOut, User, Settings, HelpCircle } from 'lucide-react';
-import { useAuthStore } from '@/lib/auth-store';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 const SETTINGS_ROWS = [
   { label: 'Downloaded subjects', description: 'Offline access', icon: Download, color: 'bg-ink/5' },
@@ -13,8 +13,7 @@ const SETTINGS_ROWS = [
 
 export default function ProfilePage() {
   const router = useRouter();
-  const user = useAuthStore((s) => s.user);
-  const logout = useAuthStore((s) => s.logout);
+  const { user, logout } = useAuth();
 
   const displayName = user?.name ?? 'Student';
   const displayEmail = user?.email ?? 'Nigerian Army University Biu';
@@ -64,7 +63,7 @@ export default function ProfilePage() {
 
         {user && (
           <button
-            onClick={() => { logout(); router.push('/'); }}
+            onClick={logout}
             className="mt-4 flex w-full items-center justify-center gap-2.5 rounded-card-xl btn-danger"
           >
             <LogOut size={16} strokeWidth={2} />

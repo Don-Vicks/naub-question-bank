@@ -4,12 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { User, Mail, Lock, Loader2, ArrowRight } from 'lucide-react';
-import { useAuthStore } from '@/lib/auth-store';
+import { useAuth } from '@/lib/hooks/useAuth';
 import { api } from '@/lib/api';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const { setAuth } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
