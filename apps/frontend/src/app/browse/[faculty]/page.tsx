@@ -3,13 +3,12 @@
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
-import { useDepartments } from '@/lib/hooks/useQuestionBank';
-import { getFacultyById } from '@/lib/naub-data';
+import { getFacultyById, getDepartmentsByFaculty } from '@/lib/naub-data';
 
 export default function FacultyPage() {
   const { faculty } = useParams<{ faculty: string }>();
   const router = useRouter();
-  const { data: departments, isLoading } = useDepartments(faculty);
+  const departments = getDepartmentsByFaculty(faculty);
   const facultyInfo = getFacultyById(faculty);
 
   return (
@@ -36,12 +35,7 @@ export default function FacultyPage() {
         <p className="section-title mb-3">Departments</p>
 
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 lg:grid-cols-3 stagger">
-          {isLoading &&
-            [0, 1, 2].map((i) => (
-              <div key={i} className="skeleton h-[72px] rounded-card-xl" />
-            ))}
-
-          {departments?.map((dept) => (
+          {departments.map((dept) => (
             <Link
               key={dept.id}
               href={`/browse/${faculty}/${dept.id}`}
@@ -56,7 +50,7 @@ export default function FacultyPage() {
             </Link>
           ))}
 
-          {departments?.length === 0 && (
+          {departments.length === 0 && (
             <p className="col-span-full mt-12 text-center text-sm text-muted">
               No departments found.
             </p>

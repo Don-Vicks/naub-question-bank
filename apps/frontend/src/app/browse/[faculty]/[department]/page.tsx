@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, FileText } from 'lucide-react';
 import { useCourses } from '@/lib/hooks/useQuestionBank';
 import { getFacultyById, getDepartmentById } from '@/lib/naub-data';
 
@@ -52,7 +52,7 @@ export default function DepartmentPage() {
               <div key={i} className="skeleton h-[88px] rounded-card-xl" />
             ))}
 
-          {courses?.map((course) => (
+          {!isLoading && courses?.map((course) => (
             <Link
               key={course.id}
               href={`/browse/${faculty}/${department}/${course.id}`}
@@ -79,10 +79,24 @@ export default function DepartmentPage() {
             </Link>
           ))}
 
-          {courses?.length === 0 && (
+          {!isLoading && courses?.length === 0 && (
             <p className="col-span-full mt-12 text-center text-sm text-muted">
               No courses found for this department.
             </p>
+          )}
+
+          {!isLoading && !courses && (
+            <div className="col-span-full flex flex-col items-center gap-3 py-16 text-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-paper-warm">
+                <FileText size={24} strokeWidth={1.75} className="text-muted/40" />
+              </div>
+              <div>
+                <p className="text-heading text-ink font-medium">No courses yet</p>
+                <p className="text-caption text-muted mt-1">
+                  Courses will appear here once question papers are uploaded for this department.
+                </p>
+              </div>
+            </div>
           )}
         </div>
       </div>
