@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import {
   Search,
@@ -22,6 +23,7 @@ import {
   Layers,
 } from 'lucide-react';
 import { FACULTIES, getDepartmentsByFaculty } from '@/lib/naub-data';
+import { useAuthStore } from '@/lib/auth-store';
 
 function AnimatedCounter({ end, suffix = '' }: { end: number; suffix?: string }) {
   const [count, setCount] = useState(0);
@@ -136,15 +138,37 @@ const TESTIMONIALS = [
 ];
 
 export default function LandingPage() {
+  const router = useRouter();
+  const token = useAuthStore((s) => s.token);
+  const hydrated = useAuthStore((s) => s.hydrated);
+
+  useEffect(() => {
+    if (hydrated && token) {
+      router.replace('/home');
+    }
+  }, [hydrated, token, router]);
+
+  if (!hydrated || token) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-paper">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-army border-t-transparent" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-army">
-        {/* Decorative blurs */}
+        {/* Decorative blurs — layered for depth */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-white/[0.04] blur-[100px]" />
           <div className="absolute -bottom-40 -left-40 h-[400px] w-[400px] rounded-full bg-naub-teal/10 blur-[80px]" />
           <div className="absolute right-1/4 top-1/3 h-64 w-64 rounded-full bg-white/[0.02] blur-[60px]" />
+          {/* Floating accent orbs */}
+          <div className="absolute right-20 top-20 h-3 w-3 rounded-full bg-naub-gold/30 animate-float" />
+          <div className="absolute left-1/3 bottom-32 h-2 w-2 rounded-full bg-white/20 animate-float" style={{ animationDelay: '1s' }} />
+          <div className="absolute right-1/3 top-1/2 h-2.5 w-2.5 rounded-full bg-naub-green/20 animate-float" style={{ animationDelay: '2s' }} />
         </div>
 
         <div className="relative mx-auto max-w-6xl px-6 py-16 lg:py-0">
@@ -294,23 +318,32 @@ export default function LandingPage() {
       </section>
 
       {/* Stats */}
-      <section className="border-b border-line bg-white">
-        <div className="mx-auto max-w-6xl px-6 py-10">
+      <section className="relative border-b border-line bg-white overflow-hidden">
+        {/* Subtle dot texture */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 0.5px, transparent 0)',
+            backgroundSize: '24px 24px',
+          }}
+        />
+        <div className="relative mx-auto max-w-6xl px-6 py-12">
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {[
-              { value: 5, label: 'Faculties', suffix: '' },
-              { value: 31, label: 'Departments', suffix: '' },
-              { value: 2146, label: 'Papers', suffix: '+' },
-              { value: 10, label: 'Sessions', suffix: '+' },
-            ].map(({ value, label, suffix }) => (
-              <div key={label} className="text-center">
+              { value: 5, label: 'Faculties', suffix: '', accent: 'from-army to-army-700' },
+              { value: 31, label: 'Departments', suffix: '', accent: 'from-naub-teal to-naub-teal/80' },
+              { value: 2146, label: 'Papers', suffix: '+', accent: 'from-naub-green to-naub-green/80' },
+              { value: 10, label: 'Sessions', suffix: '+', accent: 'from-naub-gold to-marigold-600' },
+            ].map(({ value, label, suffix, accent }) => (
+              <div key={label} className="group text-center">
+                <div className={`mx-auto mb-3 h-1 w-8 rounded-full bg-gradient-to-r ${accent} opacity-40 transition-all duration-300 group-hover:w-12 group-hover:opacity-80`} />
                 <p
-                  className="text-3xl font-bold text-ink md:text-4xl"
+                  className="text-3xl font-bold text-ink md:text-4xl tabular-nums"
                   style={{ fontFamily: "'Lora', Georgia, serif" }}
                 >
                   <AnimatedCounter end={value} suffix={suffix} />
                 </p>
-                <p className="mt-1 text-sm text-muted">{label}</p>
+                <p className="mt-1.5 text-sm text-muted font-medium">{label}</p>
               </div>
             ))}
           </div>
@@ -340,10 +373,13 @@ export default function LandingPage() {
             {FEATURES.map(({ icon: Icon, title, description, color }) => (
               <div
                 key={title}
-                className="group rounded-2xl border border-line bg-white p-6 transition-all duration-300 hover:border-army/15 hover:shadow-card-hover hover:translate-y-[-2px]"
+                className="group relative overflow-hidden rounded-2xl border border-line bg-white p-6 transition-all duration-300 hover:border-army/15 hover:shadow-card-hover hover:translate-y-[-2px]"
               >
+                {/* Shine sweep */}
+                <div className="absolute -left-full top-0 h-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-[300%]" />
+
                 <div
-                  className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl ${color} transition-transform duration-300 group-hover:scale-110`}
+                  className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl ${color} transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}
                 >
                   <Icon size={22} strokeWidth={1.75} />
                 </div>
@@ -378,14 +414,14 @@ export default function LandingPage() {
             <div className="absolute left-1/6 right-1/6 top-12 hidden h-px bg-gradient-to-r from-army/20 via-naub-teal/20 to-naub-green/20 md:block" />
 
             {STEPS.map(({ step, icon: Icon, title, description, color }) => (
-              <div key={step} className="relative text-center">
+              <div key={step} className="relative text-center group">
                 <div className="relative mx-auto mb-6">
                   <div
-                    className={`mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg`}
+                    className={`mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl`}
                   >
                     <Icon size={26} strokeWidth={1.75} />
                   </div>
-                  <span className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full bg-paper border-2 border-line text-xs font-bold text-muted">
+                  <span className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full bg-paper border-2 border-line text-xs font-bold text-muted shadow-sm transition-all duration-300 group-hover:border-army/20 group-hover:text-army">
                     {step}
                   </span>
                 </div>
@@ -480,17 +516,22 @@ export default function LandingPage() {
             {TESTIMONIALS.map((t) => (
               <div
                 key={t.name}
-                className="rounded-2xl border border-line bg-paper p-6 transition-all duration-300 hover:shadow-card-hover"
+                className="relative overflow-hidden rounded-2xl border border-line bg-paper p-6 transition-all duration-300 hover:shadow-card-hover hover:border-army/10"
               >
-                <div className="mb-3 flex gap-0.5">
-                  {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} size={14} fill="currentColor" className="text-naub-gold" />
-                  ))}
-                </div>
-                <p className="text-sm text-ink leading-relaxed mb-4">&ldquo;{t.text}&rdquo;</p>
-                <div className="border-t border-line pt-4">
-                  <p className="text-sm font-semibold text-ink">{t.name}</p>
-                  <p className="text-xs text-muted mt-0.5">{t.faculty}</p>
+                {/* Subtle gold accent on hover */}
+                <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-naub-gold/5 transition-transform duration-500 hover:scale-150" />
+
+                <div className="relative">
+                  <div className="mb-3 flex gap-0.5">
+                    {Array.from({ length: t.rating }).map((_, i) => (
+                      <Star key={i} size={14} fill="currentColor" className="text-naub-gold" />
+                    ))}
+                  </div>
+                  <p className="text-sm text-ink leading-relaxed mb-4">&ldquo;{t.text}&rdquo;</p>
+                  <div className="border-t border-line pt-4">
+                    <p className="text-sm font-semibold text-ink">{t.name}</p>
+                    <p className="text-xs text-muted mt-0.5">{t.faculty}</p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -503,9 +544,14 @@ export default function LandingPage() {
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -right-32 -top-32 h-80 w-80 rounded-full bg-white/[0.04] blur-[80px]" />
           <div className="absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-naub-teal/10 blur-[80px]" />
+          {/* Floating accent orbs */}
+          <div className="absolute left-1/4 top-1/4 h-2 w-2 rounded-full bg-naub-gold/25 animate-float" style={{ animationDelay: '0.5s' }} />
+          <div className="absolute right-1/4 bottom-1/3 h-3 w-3 rounded-full bg-white/10 animate-float" style={{ animationDelay: '1.5s' }} />
         </div>
         <div className="relative mx-auto max-w-3xl px-6 text-center">
-          <GraduationCap size={48} strokeWidth={1.5} className="mx-auto mb-6 text-white/25" />
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm transition-transform duration-300 hover:scale-110">
+            <GraduationCap size={32} strokeWidth={1.5} className="text-white/70" />
+          </div>
           <h2
             className="text-3xl font-bold text-white md:text-4xl"
             style={{ fontFamily: "'Lora', Georgia, serif" }}

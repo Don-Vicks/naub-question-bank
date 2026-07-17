@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 
 export const NAV_ITEMS = [
-  { href: '/', label: 'Home', icon: Home },
+  { href: '/home', label: 'Home', icon: Home },
   { href: '/browse', label: 'Browse', icon: Building2 },
   { href: '/flashcards', label: 'Flashcards', icon: Layers },
   { href: '/upload', label: 'Upload', icon: Upload },
