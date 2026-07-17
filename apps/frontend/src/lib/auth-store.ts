@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
-interface User {
+export interface User {
   id: string;
   email: string;
   name: string;
@@ -11,9 +11,11 @@ interface User {
 interface AuthState {
   token: string | null;
   user: User | null;
+  hydrated: boolean;
   setAuth: (token: string, user: User) => void;
   logout: () => void;
   isAdmin: () => boolean;
+  setHydrated: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -21,10 +23,23 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       token: null,
       user: null,
+      hydrated: false,
       setAuth: (token, user) => set({ token, user }),
       logout: () => set({ token: null, user: null }),
       isAdmin: () => get().user?.role === 'admin',
+      setHydrated: () => set({ hydrated: true }),
     }),
-    { name: 'padi-auth' },
+    {
+      name: 'padi-auth',
+      storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => (_state, _error) => {
+        // Zustand calls this after rehydrating from localStorage.
+        // We use a microtask to ensure the store update happens
+        // after the initial render cycle.
+        queueMicrotask(() => {
+          useAuthStore.setState({ hydrated: true });
+        });
+      },
+    },
   ),
 );

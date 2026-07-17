@@ -8,15 +8,17 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const token = useAuthStore((s) => s.token);
   const user = useAuthStore((s) => s.user);
+  const hydrated = useAuthStore((s) => s.hydrated);
 
   useEffect(() => {
+    if (!hydrated) return;
     if (!token) {
       router.replace('/login');
     } else if (user?.role !== 'admin') {
       router.replace('/');
     }
-  }, [token, user, router]);
+  }, [hydrated, token, user, router]);
 
-  if (!token || user?.role !== 'admin') return null;
+  if (!hydrated || !token || user?.role !== 'admin') return null;
   return <>{children}</>;
 }

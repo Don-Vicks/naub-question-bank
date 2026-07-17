@@ -7,11 +7,13 @@ import { useAuthStore } from '@/lib/auth-store';
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const token = useAuthStore((s) => s.token);
+  const hydrated = useAuthStore((s) => s.hydrated);
 
   useEffect(() => {
-    if (!token) router.replace('/login');
-  }, [token, router]);
+    if (hydrated && !token) router.replace('/login');
+  }, [hydrated, token, router]);
 
+  if (!hydrated) return null;
   if (!token) return null;
   return <>{children}</>;
 }
