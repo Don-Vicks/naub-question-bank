@@ -2,7 +2,11 @@
 
 import { useState } from 'react';
 import { RotateCcw, Lightbulb, Check, X, CircleDot } from 'lucide-react';
-import type { Flashcard } from '@/lib/types';
+
+type FlashcardBase = { id: string };
+type FlipFlashcard = FlashcardBase & { type: 'flip'; front: string; back: string; hint?: string };
+type ObjFlashcard = FlashcardBase & { type: 'obj'; question: string; options: string[]; correctIndex: number; explanation?: string };
+type Flashcard = FlipFlashcard | ObjFlashcard;
 
 interface FlashcardCardProps {
   card: Flashcard;
@@ -10,7 +14,7 @@ interface FlashcardCardProps {
   total: number;
 }
 
-function FlipCard({ card }: { card: Extract<Flashcard, { type: 'flip' }> }) {
+function FlipCard({ card }: { card: FlipFlashcard }) {
   const [flipped, setFlipped] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
@@ -27,11 +31,8 @@ function FlipCard({ card }: { card: Extract<Flashcard, { type: 'flip' }> }) {
           }`}
           style={{ transformStyle: 'preserve-3d' }}
         >
-          {/* Front */}
           <div className="absolute inset-0 rounded-2xl bg-white border border-line p-8 flex flex-col items-center justify-center text-center [backface-visibility:hidden] shadow-card">
-            <span className="text-overline uppercase tracking-widest text-naub-green mb-4">
-              Question
-            </span>
+            <span className="text-overline uppercase tracking-widest text-naub-green mb-4">Question</span>
             <p className="text-xl md:text-2xl text-ink leading-relaxed" style={{ fontFamily: "'Lora', Georgia, serif" }}>
               {card.front}
             </p>
@@ -41,11 +42,8 @@ function FlipCard({ card }: { card: Extract<Flashcard, { type: 'flip' }> }) {
             </span>
           </div>
 
-          {/* Back */}
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-army/10 to-army/5 border border-army/20 p-8 flex flex-col items-center justify-center text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
-            <span className="text-overline uppercase tracking-widest text-army mb-4">
-              Answer
-            </span>
+            <span className="text-overline uppercase tracking-widest text-army mb-4">Answer</span>
             <p className="text-lg md:text-xl text-ink leading-relaxed" style={{ fontFamily: "'Lora', Georgia, serif" }}>
               {card.back}
             </p>
@@ -67,9 +65,7 @@ function FlipCard({ card }: { card: Extract<Flashcard, { type: 'flip' }> }) {
             <Lightbulb size={14} />
             {showHint ? 'Hide hint' : 'Need a hint?'}
           </button>
-          {showHint && (
-            <p className="mt-2 text-sm text-naub-green/80 italic">{card.hint}</p>
-          )}
+          {showHint && <p className="mt-2 text-sm text-naub-green/80 italic">{card.hint}</p>}
         </div>
       )}
     </>
@@ -78,10 +74,9 @@ function FlipCard({ card }: { card: Extract<Flashcard, { type: 'flip' }> }) {
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E'];
 
-function ObjCard({ card }: { card: Extract<Flashcard, { type: 'obj' }> }) {
+function ObjCard({ card }: { card: ObjFlashcard }) {
   const [selected, setSelected] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
-
   const isCorrect = selected === card.correctIndex;
 
   function handleSelect(idx: number) {
@@ -97,12 +92,9 @@ function ObjCard({ card }: { card: Extract<Flashcard, { type: 'obj' }> }) {
 
   return (
     <div className="w-full">
-      {/* Question */}
       <div className="rounded-2xl bg-white border border-line p-8 mb-6 shadow-card">
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-overline uppercase tracking-widest text-naub-green">
-            Objective
-          </span>
+          <span className="text-overline uppercase tracking-widest text-naub-green">Objective</span>
           <CircleDot size={12} className="text-naub-green" />
         </div>
         <p className="text-lg md:text-xl text-ink leading-relaxed" style={{ fontFamily: "'Lora', Georgia, serif" }}>
@@ -110,9 +102,8 @@ function ObjCard({ card }: { card: Extract<Flashcard, { type: 'obj' }> }) {
         </p>
       </div>
 
-      {/* Options */}
       <div className="space-y-3">
-        {card.options.map((option, idx) => {
+        {card.options.map((option: string, idx: number) => {
           const isThisCorrect = idx === card.correctIndex;
           const isThisSelected = idx === selected;
 
@@ -154,34 +145,19 @@ function ObjCard({ card }: { card: Extract<Flashcard, { type: 'obj' }> }) {
         })}
       </div>
 
-      {/* Result feedback */}
       {revealed && (
         <div className="mt-6 space-y-3">
-          <div
-            className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium ${
-              isCorrect
-                ? 'bg-naub-green/10 text-naub-green border border-naub-green/20'
-                : 'bg-army/10 text-army border border-army/20'
-            }`}
-          >
+          <div className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium ${isCorrect ? 'bg-naub-green/10 text-naub-green border border-naub-green/20' : 'bg-army/10 text-army border border-army/20'}`}>
             {isCorrect ? <Check size={16} /> : <X size={16} />}
             {isCorrect ? 'Correct!' : 'Not quite. The correct answer is highlighted above.'}
           </div>
-
           {card.explanation && (
             <div className="bg-paper border border-line rounded-xl p-4">
-              <p className="text-overline text-muted mb-1 uppercase tracking-wide">
-                Explanation
-              </p>
+              <p className="text-overline text-muted mb-1 uppercase tracking-wide">Explanation</p>
               <p className="text-sm text-ink leading-relaxed">{card.explanation}</p>
             </div>
           )}
-
-          <button
-            type="button"
-            onClick={handleReset}
-            className="btn-ghost text-xs flex items-center gap-1.5 mx-auto"
-          >
+          <button type="button" onClick={handleReset} className="btn-ghost text-xs flex items-center gap-1.5 mx-auto">
             <RotateCcw size={12} />
             Try again
           </button>
@@ -194,11 +170,8 @@ function ObjCard({ card }: { card: Extract<Flashcard, { type: 'obj' }> }) {
 export function FlashcardCard({ card, index, total }: FlashcardCardProps) {
   return (
     <div className="w-full max-w-xl mx-auto">
-      {/* Progress */}
       <div className="flex items-center justify-between mb-4">
-        <span className="text-caption font-medium text-muted">
-          Card {index + 1} of {total}
-        </span>
+        <span className="text-caption font-medium text-muted">Card {index + 1} of {total}</span>
         <div className="flex items-center gap-2">
           <span className="text-overline uppercase tracking-widest text-muted bg-ink/5 px-2 py-0.5 rounded">
             {card.type === 'obj' ? 'OBJ' : 'Flip'}
@@ -208,16 +181,9 @@ export function FlashcardCard({ card, index, total }: FlashcardCardProps) {
           </span>
         </div>
       </div>
-
-      {/* Progress bar */}
       <div className="h-1.5 bg-ink/5 rounded-full mb-6 overflow-hidden">
-        <div
-          className="h-full bg-army rounded-full transition-all duration-500 ease-out"
-          style={{ width: `${((index + 1) / total) * 100}%` }}
-        />
+        <div className="h-full bg-army rounded-full transition-all duration-500 ease-out" style={{ width: `${((index + 1) / total) * 100}%` }} />
       </div>
-
-      {/* Card content */}
       {card.type === 'flip' ? <FlipCard card={card} /> : <ObjCard card={card} />}
     </div>
   );

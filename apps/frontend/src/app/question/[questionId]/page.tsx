@@ -1,39 +1,11 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { ArrowLeft, Bookmark, BookmarkCheck } from 'lucide-react';
-import { useQuestion } from '@/lib/hooks/useQuestionBank';
-import { useBookmarkStore } from '@/lib/hooks/useBookmarkStore';
-import { AnswerRevealSheet } from '@/components/ui/AnswerRevealSheet';
-import { DiagramViewer } from '@/components/ui/DiagramViewer';
-import { api } from '@/lib/api';
+import { ArrowLeft, Construction } from 'lucide-react';
 
 export default function QuestionPage() {
   const { questionId } = useParams<{ questionId: string }>();
   const router = useRouter();
-  const { data: question, isLoading } = useQuestion(questionId);
-  const { load, toggle, isBookmarked, loaded } = useBookmarkStore();
-
-  useEffect(() => {
-    if (!loaded) load();
-  }, [loaded, load]);
-
-  if (isLoading || !question) {
-    return (
-      <div className="page-desktop">
-        <div className="page-header lg:rounded-card-xl lg:mx-0 lg:my-6">
-          <button onClick={() => router.back()} aria-label="Back" className="md:hidden btn-icon text-paper">
-            <ArrowLeft size={20} strokeWidth={1.75} />
-          </button>
-          <div><p className="page-header-title">Loading...</p></div>
-        </div>
-        <div className="content-area"><div className="skeleton h-48 rounded-card-xl" /></div>
-      </div>
-    );
-  }
-
-  const bookmarked = isBookmarked(question.id);
 
   return (
     <div className="page-desktop">
@@ -42,55 +14,27 @@ export default function QuestionPage() {
           <ArrowLeft size={20} strokeWidth={1.75} />
         </button>
         <div>
-          <p className="page-header-title">Question {question.number}</p>
+          <p className="page-header-title">Question</p>
         </div>
       </div>
 
       <div className="content-area">
-        <div className="lg:grid lg:grid-cols-[1fr_380px] lg:items-start lg:gap-8">
-          <div className="animate-fade-in">
-            <div className="rounded-card-xl border border-line bg-white p-4 shadow-card">
-              <img
-                src={question.sourcePageImageUrl}
-                alt={`Question ${question.number}`}
-                className="w-full object-contain"
-              />
-            </div>
-
-            {question.hasDiagram && question.diagramAssetUrl && (
-              <div className="mt-4 lg:max-w-lg">
-                <DiagramViewer
-                  src={question.diagramAssetUrl}
-                  alt={`Diagram for question ${question.number}`}
-                />
-                <p className="mt-2 text-center text-[10px] text-muted font-medium">
-                  original scanned diagram
-                </p>
-              </div>
-            )}
+        <div className="flex flex-col items-center gap-4 py-16 text-center animate-fade-in-up">
+          <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-terracotta-50 border border-terracotta/15">
+            <Construction size={28} strokeWidth={1.5} className="text-terracotta/50" />
           </div>
-
-          <div className="mt-4 lg:mt-0 lg:sticky lg:top-6 animate-fade-in-up">
-            <AnswerRevealSheet
-              answerLatex={question.answerLatex}
-              reviewStatus={question.answerReviewStatus}
-              onReportIssue={() => api.reportIssue(question.id, { reason: 'other' })}
-            />
-
-            <div className="mt-4 flex items-center justify-end">
-              <button
-                onClick={() => toggle(question.id)}
-                aria-label={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
-                className="btn-icon"
-              >
-                {bookmarked ? (
-                  <BookmarkCheck size={22} className="text-naub-gold" />
-                ) : (
-                  <Bookmark size={22} strokeWidth={1.75} className="text-naub-gold/50 hover:text-naub-gold" />
-                )}
-              </button>
-            </div>
+          <div>
+            <p className="text-heading text-ink">Coming soon</p>
+            <p className="text-body text-muted mt-1.5 max-w-xs">
+              Individual question views will be available once we add question extraction. For now, browse and view full papers directly.
+            </p>
           </div>
+          <button
+            onClick={() => router.back()}
+            className="btn-primary mt-2"
+          >
+            Go back
+          </button>
         </div>
       </div>
     </div>

@@ -59,46 +59,6 @@ export function usePaper(paperId: string) {
   });
 }
 
-export function useQuestionsByPaper(paperId: string) {
-  return useQuery({
-    queryKey: ['questions', paperId],
-    queryFn: () => api.getQuestionsByPaper(paperId),
-    enabled: Boolean(paperId),
-  });
-}
-
-export function useQuestion(id: string) {
-  return useQuery({
-    queryKey: ['question', id],
-    queryFn: () => api.getQuestion(id),
-    enabled: Boolean(id),
-    staleTime: 60 * 1000,
-  });
-}
-
-export function useAllQuestions() {
-  return useQuery({
-    queryKey: ['allQuestions'],
-    queryFn: async () => {
-      const courses = await api.getCourses();
-      const allQuestions = [];
-      for (const course of courses.slice(0, 10)) {
-        try {
-          const papers = await api.getPapers({ courseId: course.id });
-          for (const paper of papers.slice(0, 3)) {
-            try {
-              const questions = await api.getQuestionsByPaper(paper.id);
-              allQuestions.push(...questions);
-            } catch { /* skip */ }
-          }
-        } catch { /* skip */ }
-      }
-      return allQuestions;
-    },
-    staleTime: 5 * 60 * 1000,
-  });
-}
-
 export function useSearch(query: string) {
   return useQuery({
     queryKey: ['search', query],

@@ -1,6 +1,7 @@
 import { Check, AlertTriangle } from 'lucide-react';
 import clsx from 'clsx';
-import { ReviewStatus } from '@/lib/types';
+
+type ReviewStatus = 'approved' | 'flagged' | 'rejected';
 
 const CONFIG: Record<
   ReviewStatus,

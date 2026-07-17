@@ -1,5 +1,7 @@
-import { Course, QuestionDetail, QuestionPaper, QuestionSummary } from './types';
-import { FACULTIES, DEPARTMENTS, getDepartmentsByFaculty, type Faculty, type Department } from './naub-data';
+import { Course, QuestionPaper, UploadResult } from './types';
+import { type Faculty, type Department } from './naub-data';
+
+export type { UploadResult };
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3000/api';
 
@@ -17,13 +19,22 @@ function getToken(): string | null {
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const token = getToken();
+  const url = `${API_BASE}${path}`;
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(init?.headers as Record<string, string>),
   };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}${path}`, { ...init, headers });
+  let res: Response;
+  try {
+    res = await fetch(url, { ...init, headers });
+  } catch (e: any) {
+    console.error('[api] fetch failed for', url, ':', e?.name, e?.message);
+    throw new Error(
+      `Could not connect to server at ${API_BASE}. Is the backend running? (${e?.message ?? 'unknown'})`,
+    );
+  }
 
   if (res.status === 401) {
     if (typeof window !== 'undefined') {
@@ -38,8 +49,6 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   }
   return res.json();
 }
-
-// ── Admin types ──
 
 export interface AdminOverview {
   stats: {
@@ -91,24 +100,6 @@ export interface AdminStats {
   questionsBySubject: { subject: string; count: number }[];
 }
 
-export interface ReviewQuestion {
-  id: string;
-  questionNumber: string;
-  textRaw: string;
-  textLatex: string;
-  confidence: number;
-  sourcePageImageUrl: string;
-  hasDiagram: boolean;
-  reviewStatus: string;
-  subject: string | null;
-  sourceDocument: {
-    id: string;
-    originalFilename: string;
-    extractedTitle: string | null;
-    extractedSubject: string | null;
-  };
-}
-
 export interface PaginatedResponse<T> {
   items: T[];
   total: number;
@@ -149,42 +140,40 @@ export const api = {
   getPaper: (paperId: string): Promise<QuestionPaper | undefined> =>
     request<QuestionPaper>(`/question-bank/papers/${paperId}`),
 
-  getQuestionsByPaper: (paperId: string): Promise<QuestionSummary[]> =>
-    request<QuestionSummary[]>(`/question-bank/papers/${paperId}/questions`),
-
-  getQuestion: (id: string): Promise<QuestionDetail | undefined> =>
-    request<QuestionDetail>(`/question-bank/questions/${id}`),
-
   search: (query: string): Promise<QuestionPaper[]> =>
     request<QuestionPaper[]>(
       `/question-bank/search?q=${encodeURIComponent(query)}`,
     ),
 
-  uploadPaper: async (formData: FormData): Promise<{ documentId: string; status: string }> => {
+  uploadPaper: async (formData: FormData): Promise<UploadResult> => {
     const token = getToken();
+    const url = `${API_BASE}/question-bank/documents/upload-batch`;
+
     const headers: Record<string, string> = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const res = await fetch(`${API_BASE}/question-bank/documents/upload-batch`, {
-      method: 'POST',
-      headers,
-      body: formData,
-    });
-    if (!res.ok) throw new Error(`Upload failed: ${res.status}`);
+    let res: Response;
+    try {
+      res = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
+    } catch (e: any) {
+      throw new Error(
+        `Could not connect to server at ${API_BASE}. Is the backend running? (${e?.message ?? 'unknown'})`,
+      );
+    }
+
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(body || `Upload failed: ${res.status}`);
+    }
     return res.json();
   },
 
   getUploadStatus: (documentId: string) =>
     request(`/question-bank/documents/${documentId}/status`),
-
-  reportIssue: (
-    questionId: string,
-    payload: { reason: string; note?: string },
-  ): Promise<void> =>
-    request(`/question-bank/questions/${questionId}/report`, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    }),
 
   login: (email: string, password: string): Promise<{ access_token: string; user: { id: string; email: string; name: string; role: string } }> =>
     request('/auth/login', {
@@ -234,20 +223,4 @@ export const api = {
 
   adminStats: (): Promise<AdminStats> =>
     request('/admin/stats'),
-
-  reviewQueue: (params?: { limit?: number; subject?: string }): Promise<ReviewQuestion[]> => {
-    const qs = new URLSearchParams();
-    if (params?.limit) qs.set('limit', String(params.limit));
-    if (params?.subject) qs.set('subject', params.subject);
-    return request(`/question-bank/review/queue?${qs.toString()}`);
-  },
-
-  reviewStats: (): Promise<{ total: number; flagged: number; approved: number; rejected: number }> =>
-    request('/question-bank/review/stats'),
-
-  reviewDecision: (id: string, decision: { decision: 'approve' | 'reject' | 'edit'; notes?: string; correctedTextLatex?: string }): Promise<unknown> =>
-    request(`/question-bank/review/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(decision),
-    }),
 };
