@@ -6,10 +6,8 @@ import * as path from 'path';
 // Load pipeline .env
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
-const OLD_DB_URL = 'postgresql://donvicks:Superteam@localhost:5432/naubpadi';
-const NEW_DB_URL =
-  process.env.DATABASE_URL ||
-  'postgresql://neondb_owner:npg_nX0qomawDf1t@ep-green-butterfly-av30vh57-pooler.c-11.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+const OLD_DB_URL = process.env.OLD_DATABASE_URL;
+const NEW_DB_URL = process.env.DATABASE_URL;
 
 // Entities
 import { User } from '../src/auth/entities/user.entity';
@@ -17,18 +15,23 @@ import { SourceDocument } from '../src/question-bank/entities/source-document.en
 import { Question } from '../src/question-bank/entities/question.entity';
 
 async function migrate() {
+  if (!OLD_DB_URL || !NEW_DB_URL) {
+    console.error('❌ Error: Both OLD_DATABASE_URL and DATABASE_URL environment variables must be defined.');
+    process.exit(1);
+  }
+
   console.log('🚀 Starting Database Migration...');
   console.log('--------------------------------------------------');
-  console.log(`Source DB: ${OLD_DB_URL}`);
+  console.log(`Source DB: ${OLD_DB_URL.replace(/:[^:@]+@/, ':****@')}`);
   console.log(`Target DB: ${NEW_DB_URL.replace(/:[^:@]+@/, ':****@')}`);
   console.log('--------------------------------------------------\n');
 
   // Step 1: Initialize target DB schema with TypeORM
-  console.log('1️⃣  Initializing schema on Target Database (Neon PostgreSQL)...');
+  console.log('1️⃣  Initializing schema on Target Database...');
   const targetDataSource = new DataSource({
     type: 'postgres',
     url: NEW_DB_URL,
-    ssl: { rejectUnauthorized: false },
+    ssl: NEW_DB_URL.includes('neon.tech') ? { rejectUnauthorized: false } : undefined,
     entities: [User, SourceDocument, Question],
     synchronize: true, // Creates tables, indexes, constraints
     logging: false,
@@ -37,8 +40,8 @@ async function migrate() {
   await targetDataSource.initialize();
   console.log('✅ Target schema initialized successfully!\n');
 
-  // Step 2: Connect to Old Local Postgres DB
-  console.log('2️⃣  Connecting to Old Database (Local PostgreSQL)...');
+  // Step 2: Connect to Old Database
+  console.log('2️⃣  Connecting to Old Database...');
   const oldPgClient = new Client({
     connectionString: OLD_DB_URL,
   });
@@ -47,7 +50,7 @@ async function migrate() {
     await oldPgClient.connect();
     console.log('✅ Connected to Old Database.\n');
   } catch (err: any) {
-    console.error('❌ Failed to connect to old local Postgres DB:', err.message);
+    console.error('❌ Failed to connect to old database:', err.message);
     await targetDataSource.destroy();
     process.exit(1);
   }

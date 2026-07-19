@@ -13,7 +13,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { diskStorage } from 'multer';
-import { v4 as uuid } from 'uuid';
+import { randomUUID as uuid } from 'crypto';
 import * as path from 'path';
 import { SourceDocument } from '../entities/source-document.entity';
 import { UploadDocumentDto } from '../dto/create-question.dto';
