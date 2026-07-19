@@ -15,12 +15,18 @@ import { Repository } from 'typeorm';
 import { diskStorage } from 'multer';
 import { randomUUID as uuid } from 'crypto';
 import * as path from 'path';
+import * as fs from 'fs';
+import * as os from 'os';
 import { SourceDocument } from '../entities/source-document.entity';
 import { UploadDocumentDto } from '../dto/create-question.dto';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { R2Service } from '../../storage/r2.service';
 
-const UPLOAD_DIR = process.env.UPLOAD_DIR ?? './uploads/raw';
+const getUploadDir = (): string => {
+  const dir = process.env.UPLOAD_DIR ?? path.join(os.tmpdir(), 'uploads', 'raw');
+  fs.mkdirSync(dir, { recursive: true });
+  return dir;
+};
 
 @Controller('question-bank/documents')
 export class IngestionController {
@@ -48,7 +54,13 @@ export class IngestionController {
   @UseInterceptors(
     FilesInterceptor('files', 500, {
       storage: diskStorage({
-        destination: UPLOAD_DIR,
+        destination: (_req, _file, cb) => {
+          try {
+            cb(null, getUploadDir());
+          } catch (err: any) {
+            cb(err, '');
+          }
+        },
         filename: (_req, file, cb) => {
           cb(null, `${uuid()}${path.extname(file.originalname)}`);
         },
