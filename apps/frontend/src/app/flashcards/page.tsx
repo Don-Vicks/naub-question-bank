@@ -37,11 +37,11 @@ export default function FlashcardsPage() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide py-1.5 mb-6 whitespace-nowrap">
           <button
             type="button"
             onClick={() => setSelectedFaculty(null)}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+            className={`px-3.5 py-2 min-h-[36px] flex-shrink-0 rounded-full text-xs font-semibold transition-all ${
               !selectedFaculty
                 ? 'bg-army text-white shadow-glow-sm'
                 : 'bg-ink/5 text-muted hover:bg-army/10 hover:text-army'
@@ -54,7 +54,7 @@ export default function FlashcardsPage() {
               key={f.id}
               type="button"
               onClick={() => setSelectedFaculty(f.id)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              className={`px-3.5 py-2 min-h-[36px] flex-shrink-0 rounded-full text-xs font-semibold transition-all ${
                 selectedFaculty === f.id
                   ? 'bg-army text-white shadow-glow-sm'
                   : 'bg-ink/5 text-muted hover:bg-army/10 hover:text-army'
@@ -63,13 +63,13 @@ export default function FlashcardsPage() {
               {f.abbreviation}
             </button>
           ))}
-          <div className="w-px h-6 bg-line mx-1 self-center" />
+          <div className="w-px h-5 bg-line mx-1 flex-shrink-0" />
           {LEVELS.map((level) => (
             <button
               key={level}
               type="button"
               onClick={() => setSelectedLevel(selectedLevel === level ? null : level)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              className={`px-3.5 py-2 min-h-[36px] flex-shrink-0 rounded-full text-xs font-semibold transition-all ${
                 selectedLevel === level
                   ? 'bg-naub-teal text-white'
                   : 'bg-ink/5 text-muted hover:bg-naub-teal/10 hover:text-naub-teal'

@@ -20,33 +20,31 @@ export default function SearchPage() {
       </div>
 
       <div className="content-area">
-        {/* Decorative gradient blob */}
-        <div className="relative mb-5 animate-fade-in">
-          <div className="absolute -inset-10 -z-10 rounded-full bg-gradient-to-br from-army/5 via-naub-gold/5 to-naub-teal/5 blur-3xl opacity-60" />
+        {/* Search input container */}
+        <div className="relative mb-5 overflow-hidden rounded-2xl animate-fade-in">
+          <div className="absolute inset-0 -z-10 bg-gradient-to-br from-army/5 via-naub-gold/5 to-naub-teal/5 blur-2xl opacity-60" />
 
-          <div className="relative">
-            <div className="relative group">
-              <SearchIcon
-                size={18}
-                strokeWidth={1.75}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/50 transition-colors duration-200 group-focus-within:text-army"
-              />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search courses, e.g. SWE218, Linear Algebra"
-                className="input-field pl-11 pr-10"
-                autoFocus
-              />
-              {query && (
-                <button
-                  onClick={() => setQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-army transition-colors duration-200 hover:scale-110 active:scale-95"
-                >
-                  <X size={16} strokeWidth={2} />
-                </button>
-              )}
-            </div>
+          <div className="relative group">
+            <SearchIcon
+              size={18}
+              strokeWidth={1.75}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/50 transition-colors duration-200 group-focus-within:text-army"
+            />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search courses, e.g. SWE218, Linear Algebra"
+              className="input-field pl-11 pr-10 min-h-[44px]"
+              autoFocus
+            />
+            {query && (
+              <button
+                onClick={() => setQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-muted hover:text-army transition-colors duration-200 hover:scale-110 active:scale-95 min-h-[36px] min-w-[36px] flex items-center justify-center"
+              >
+                <X size={16} strokeWidth={2} />
+              </button>
+            )}
           </div>
         </div>
 

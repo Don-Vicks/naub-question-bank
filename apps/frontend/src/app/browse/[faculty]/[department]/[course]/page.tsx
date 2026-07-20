@@ -63,44 +63,46 @@ export default function CoursePapersPage() {
         </nav>
 
         {/* Filters */}
-        <div className="mb-5 flex flex-wrap items-center gap-2.5">
-          <div className="flex items-center gap-1.5 text-muted">
+        <div className="mb-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+          <div className="flex items-center gap-1.5 text-muted py-1">
             <Filter size={14} strokeWidth={1.75} />
-            <span className="text-caption font-medium">Filter</span>
+            <span className="text-caption font-semibold uppercase tracking-wider">Filter</span>
           </div>
-          <select
-            value={examFilter}
-            onChange={(e) => setExamFilter(e.target.value)}
-            className="select-field w-auto text-[13px] py-2.5"
-          >
-            <option value="all">All exam types</option>
-            {EXAM_TYPES.map((et) => (
-              <option key={et} value={et}>{et}</option>
-            ))}
-          </select>
-
-          {sessions.length > 0 && (
+          <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
             <select
-              value={sessionFilter}
-              onChange={(e) => setSessionFilter(e.target.value)}
-              className="select-field w-auto text-[13px] py-2.5"
+              value={examFilter}
+              onChange={(e) => setExamFilter(e.target.value)}
+              className="select-field sm:w-auto text-[13px] py-2.5 min-h-[44px]"
             >
-              <option value="all">All sessions</option>
-              {sessions.map((s) => (
-                <option key={s} value={s}>{s}</option>
+              <option value="all">All exam types</option>
+              {EXAM_TYPES.map((et) => (
+                <option key={et} value={et}>{et}</option>
               ))}
             </select>
-          )}
 
-          {hasFilters && (
-            <button
-              onClick={() => { setExamFilter('all'); setSessionFilter('all'); }}
-              className="flex items-center gap-1 text-caption font-medium text-naub-green transition-colors hover:text-naub-teal"
-            >
-              <X size={12} strokeWidth={2} />
-              Clear
-            </button>
-          )}
+            {sessions.length > 0 && (
+              <select
+                value={sessionFilter}
+                onChange={(e) => setSessionFilter(e.target.value)}
+                className="select-field sm:w-auto text-[13px] py-2.5 min-h-[44px]"
+              >
+                <option value="all">All sessions</option>
+                {sessions.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            )}
+
+            {hasFilters && (
+              <button
+                onClick={() => { setExamFilter('all'); setSessionFilter('all'); }}
+                className="flex items-center justify-center gap-1 text-caption font-semibold text-army transition-colors hover:text-army-700 min-h-[40px] px-3 rounded-xl bg-army-50 border border-army-100"
+              >
+                <X size={14} strokeWidth={2} />
+                Clear filters
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Papers grid */}

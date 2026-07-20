@@ -78,22 +78,22 @@ function DashboardContent() {
                     NAUB Question Bank
                   </div>
                   <h1
-                    className="text-display-lg text-paper tracking-tight"
+                    className="text-2xl font-bold sm:text-3xl lg:text-4xl text-paper tracking-tight"
                     style={{ fontFamily: "'Lora', Georgia, serif" }}
                   >
                     Welcome back, {firstName}
                   </h1>
-                  <p className="mt-2 max-w-sm text-body text-paper/65">
+                  <p className="mt-2 max-w-sm text-xs sm:text-sm text-paper/70 leading-relaxed">
                     Pick up where you left off, or explore new papers across all faculties.
                   </p>
                 </div>
-                <div className="hidden h-14 w-14 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm md:flex">
+                <div className="hidden h-14 w-14 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm md:flex flex-shrink-0">
                   <BookOpen size={24} strokeWidth={1.75} className="text-paper/60" />
                 </div>
               </div>
 
               {/* Search bar */}
-              <form onSubmit={handleSearch} className="mt-6">
+              <form onSubmit={handleSearch} className="mt-5">
                 <div className="relative group">
                   <Search
                     size={16}
@@ -104,9 +104,9 @@ function DashboardContent() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search courses, topics..."
-                    className="w-full rounded-2xl bg-white/10 pl-10 pr-20 py-3.5 text-sm text-paper placeholder:text-paper/40 backdrop-blur-sm outline-none transition-all duration-200 focus:bg-white/15 focus:ring-1 focus:ring-white/20"
+                    className="w-full rounded-2xl bg-white/10 pl-10 pr-4 sm:pr-20 py-3 text-sm text-paper placeholder:text-paper/40 backdrop-blur-sm outline-none transition-all duration-200 focus:bg-white/15 focus:ring-1 focus:ring-white/20 min-h-[44px]"
                   />
-                  <kbd className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg bg-white/10 px-2 py-0.5 text-[10px] font-semibold text-paper/50">
+                  <kbd className="hidden sm:inline-flex absolute right-3 top-1/2 -translate-y-1/2 rounded-lg bg-white/10 px-2 py-0.5 text-[10px] font-semibold text-paper/50">
                     /
                   </kbd>
                 </div>
@@ -115,25 +115,27 @@ function DashboardContent() {
           </div>
 
           {/* Quick actions */}
-          <div className="mt-6 grid grid-cols-3 gap-3 stagger">
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3 stagger">
             {QUICK_ACTIONS.map(({ href, label, description, icon: Icon, gradient }) => (
               <Link
                 key={href}
                 href={href}
-                className="card-interactive group relative overflow-hidden p-4 text-left"
+                className="card-interactive group relative overflow-hidden p-3.5 text-left flex items-center justify-between sm:block"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-[0.03] transition-opacity duration-300 group-hover:opacity-[0.06]`} />
-                <div className="relative">
-                  <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-white shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-md`}>
+                <div className="relative flex items-center gap-3 sm:block">
+                  <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-white shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-md sm:mb-3`}>
                     <Icon size={18} strokeWidth={1.75} />
                   </div>
-                  <p className="text-heading text-ink">{label}</p>
-                  <p className="text-[11px] text-muted mt-0.5 leading-snug">{description}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-ink">{label}</p>
+                    <p className="text-[11px] text-muted leading-snug truncate sm:whitespace-normal">{description}</p>
+                  </div>
                 </div>
                 <ArrowRight
-                  size={14}
+                  size={16}
                   strokeWidth={2}
-                  className="absolute right-3 top-4 text-muted/30 transition-all duration-300 group-hover:translate-x-1 group-hover:text-army"
+                  className="relative flex-shrink-0 text-muted/30 transition-all duration-300 group-hover:translate-x-1 group-hover:text-army sm:absolute sm:right-3 sm:top-4"
                 />
               </Link>
             ))}

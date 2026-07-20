@@ -172,7 +172,7 @@ function UploadForm() {
 
       <div className="content-area">
         <div className="mx-auto max-w-lg space-y-5 stagger">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
             <div>
               <label className="label">Faculty *</label>
               <select
@@ -203,7 +203,7 @@ function UploadForm() {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
             <div>
               <label className="label">Level *</label>
               <select value={level} onChange={(e) => setLevel(e.target.value)} className="select-field">
