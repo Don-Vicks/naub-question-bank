@@ -32,7 +32,7 @@ function UploadForm() {
 
   const departments = facultyId ? getDepartmentsByFaculty(facultyId) : [];
   const isFormValid =
-    facultyId && departmentId && level && courseCode && examType && session && files.length > 0;
+    facultyId && departmentId && level && examType && session && files.length > 0;
 
   const handleFilesChange = useCallback((newFiles: File[]) => {
     setFiles(newFiles);
@@ -40,7 +40,7 @@ function UploadForm() {
 
   const handleUpload = async () => {
     if (!isFormValid) {
-      setError('Please fill in all fields and select files to upload.');
+      setError('Please select faculty, department, level, exam type, session, and select files.');
       return;
     }
 
@@ -51,9 +51,11 @@ function UploadForm() {
       const formData = new FormData();
       files.forEach((file) => formData.append('files', file));
 
-      // Pass all form metadata — backend saves these on each SourceDocument
-      formData.append('courseCode', courseCode.toUpperCase());
-      formData.append('subjectHint', courseCode.toUpperCase()); // backward compat
+      // Pass form metadata
+      if (courseCode.trim()) {
+        formData.append('courseCode', courseCode.trim().toUpperCase());
+        formData.append('subjectHint', courseCode.trim().toUpperCase());
+      }
       formData.append('facultyId', facultyId);
       formData.append('departmentId', departmentId);
       formData.append('level', level);
@@ -228,12 +230,12 @@ function UploadForm() {
           </div>
 
           <div>
-            <label className="label">Course Code *</label>
+            <label className="label">Course Code <span className="text-muted text-[11px] font-normal">(Optional)</span></label>
             <input
               type="text"
               value={courseCode}
               onChange={(e) => setCourseCode(e.target.value.toUpperCase())}
-              placeholder="e.g. SWE218"
+              placeholder="e.g. SWE218 (leave blank if unknown)"
               className="input-field"
             />
           </div>
