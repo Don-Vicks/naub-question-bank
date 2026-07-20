@@ -60,7 +60,7 @@ function DashboardContent() {
 
   return (
     <div className="page-desktop">
-      <div className="lg:grid lg:grid-cols-[1fr_340px] lg:gap-8 lg:p-8">
+      <div className="p-4 sm:p-6 lg:p-8 lg:grid lg:grid-cols-[1fr_340px] lg:gap-8">
         {/* ── Left column ── */}
         <div>
           {/* Welcome hero */}

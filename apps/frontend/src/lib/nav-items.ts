@@ -19,6 +19,14 @@ export const NAV_ITEMS = [
   { href: '/profile', label: 'Profile', icon: User },
 ];
 
+export const MOBILE_NAV_ITEMS = [
+  { href: '/home', label: 'Home', icon: Home },
+  { href: '/browse', label: 'Browse', icon: Building2 },
+  { href: '/upload', label: 'Upload', icon: Upload },
+  { href: '/bookmarks', label: 'Saved', icon: Bookmark },
+  { href: '/profile', label: 'Profile', icon: User },
+];
+
 export const ADMIN_NAV_ITEMS = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard },
   { href: '/admin/uploads', label: 'Uploads', icon: Upload },

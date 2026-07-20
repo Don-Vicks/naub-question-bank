@@ -15,7 +15,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {!isLanding && <Sidebar />}
         <div className={`flex-1 min-w-0 w-full max-w-full ${isLanding ? '' : 'lg:pl-0'}`}>
           <OfflineBanner />
-          <main className="w-full max-w-full overflow-x-hidden">
+          <main className={`w-full max-w-full overflow-x-hidden ${isLanding ? '' : 'pb-24 lg:pb-0'}`}>
             {children}
           </main>
         </div>
