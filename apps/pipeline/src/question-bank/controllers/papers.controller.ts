@@ -165,14 +165,18 @@ export class PapersController {
    */
   @Get('courses/:courseId')
   async getCourse(@Param('courseId') courseId: string) {
+    let departmentId: string | undefined;
+    let courseCode = courseId;
     const separator = courseId.indexOf('::');
-    if (separator === -1) throw new NotFoundException('Course not found');
-    const departmentId = courseId.substring(0, separator);
-    const courseCode = courseId.substring(separator + 2);
+    if (separator !== -1) {
+      departmentId = courseId.substring(0, separator);
+      courseCode = courseId.substring(separator + 2);
+    }
 
-    const doc = await this.sourceDocRepo.findOne({
-      where: { departmentId, courseCode, status: 'ready' },
-    });
+    const where: any = { courseCode, status: 'ready' };
+    if (departmentId) where.departmentId = departmentId;
+
+    const doc = await this.sourceDocRepo.findOne({ where });
     if (!doc) throw new NotFoundException('Course not found');
 
     return {
@@ -183,9 +187,7 @@ export class PapersController {
       departmentId: doc.departmentId ?? '',
       facultyId: doc.facultyId ?? '',
       level: doc.level ?? '',
-      questionPaperCount: await this.sourceDocRepo.count({
-        where: { departmentId, courseCode, status: 'ready' },
-      }),
+      questionPaperCount: await this.sourceDocRepo.count({ where }),
     };
   }
 
@@ -209,6 +211,8 @@ export class PapersController {
       if (separator !== -1) {
         where.departmentId = courseId.substring(0, separator);
         where.courseCode = courseId.substring(separator + 2);
+      } else {
+        where.courseCode = courseId;
       }
     }
 
