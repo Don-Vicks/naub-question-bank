@@ -273,15 +273,17 @@ export class PapersController {
 
   private toQuestionPaper(doc: SourceDocument) {
     const isImage = doc.mimeType?.startsWith('image/') ?? false;
+    const cleanFilename = doc.originalFilename ? doc.originalFilename.replace(/\.[^/.]+$/, '') : 'Question Paper';
+
     return {
       id: doc.id,
       title: doc.courseCode
         ? `${doc.courseCode} — ${doc.examType ?? 'Paper'} ${doc.session ?? ''}`.trim()
-        : doc.originalFilename,
-      courseCode: doc.courseCode ?? doc.subjectHint ?? '',
+        : `${cleanFilename} (${doc.examType ?? 'Paper'} ${doc.session ?? ''})`.trim(),
+      courseCode: doc.courseCode ?? doc.subjectHint ?? 'GENERAL',
       courseId: doc.departmentId
-        ? `${doc.departmentId}::${doc.courseCode}`
-        : doc.courseCode ?? '',
+        ? `${doc.departmentId}::${doc.courseCode ?? 'GENERAL'}`
+        : doc.courseCode ?? 'GENERAL',
       facultyId: doc.facultyId ?? '',
       departmentId: doc.departmentId ?? '',
       level: doc.level ?? '',
