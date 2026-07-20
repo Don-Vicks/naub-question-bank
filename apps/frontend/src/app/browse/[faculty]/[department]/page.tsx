@@ -55,7 +55,7 @@ export default function DepartmentPage() {
           {!isLoading && courses?.map((course) => (
             <Link
               key={course.id}
-              href={`/browse/${faculty}/${department}/${course.id}`}
+              href={`/browse/${faculty}/${department}/${course.code}`}
               className="card-interactive group p-4"
             >
               <div className="flex items-start justify-between">
