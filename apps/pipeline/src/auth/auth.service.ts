@@ -74,6 +74,32 @@ export class AuthService {
     return result;
   }
 
+  async forgotPassword(email: string) {
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = await this.userRepository.findOne({ where: { email: normalizedEmail } });
+    // Always return generic success message to prevent user enumeration
+    return {
+      message: 'If an account exists with that email address, password reset instructions have been sent.',
+      sent: Boolean(user),
+    };
+  }
+
+  async updateProfile(userId: string, dto: { name?: string; facultyId?: string; departmentId?: string; level?: string }) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (dto.name !== undefined) user.name = dto.name.trim();
+    if (dto.facultyId !== undefined) user.facultyId = dto.facultyId;
+    if (dto.departmentId !== undefined) user.departmentId = dto.departmentId;
+    if (dto.level !== undefined) user.level = dto.level;
+
+    const saved = await this.userRepository.save(user);
+    const { passwordHash, ...result } = saved;
+    return result;
+  }
+
   private signToken(user: User): string {
     return this.jwtService.sign({
       sub: user.id,

@@ -24,6 +24,15 @@ export class User {
   @Column({ type: 'varchar', default: 'user' })
   role: UserRole;
 
+  @Column({ nullable: true })
+  facultyId?: string;
+
+  @Column({ nullable: true })
+  departmentId?: string;
+
+  @Column({ nullable: true })
+  level?: string;
+
   @CreateDateColumn()
   createdAt: Date;
 }
