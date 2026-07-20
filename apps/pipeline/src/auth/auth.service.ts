@@ -21,8 +21,9 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
+    const normalizedEmail = dto.email.toLowerCase().trim();
     const existing = await this.userRepository.findOne({
-      where: { email: dto.email },
+      where: { email: normalizedEmail },
     });
     if (existing) {
       throw new ConflictException('Email already registered');
@@ -30,9 +31,9 @@ export class AuthService {
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
     const user = this.userRepository.create({
-      email: dto.email,
+      email: normalizedEmail,
       passwordHash,
-      name: dto.name,
+      name: dto.name.trim(),
     });
     const saved = await this.userRepository.save(user);
 
@@ -44,8 +45,9 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
+    const normalizedEmail = dto.email.toLowerCase().trim();
     const user = await this.userRepository.findOne({
-      where: { email: dto.email },
+      where: { email: normalizedEmail },
     });
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
