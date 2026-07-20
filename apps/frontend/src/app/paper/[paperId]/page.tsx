@@ -2,9 +2,11 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, X, Download } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, X, Download, Bookmark, Loader2 } from 'lucide-react';
 import { usePaper } from '@/lib/hooks/useQuestionBank';
 import { WatermarkOverlay } from '@/components/ui/WatermarkOverlay';
+import { useBookmarkStore } from '@/lib/bookmark-store';
+import { downloadFile } from '@/lib/download';
 
 export default function PaperPage() {
   const { paperId } = useParams<{ paperId: string }>();
@@ -12,12 +14,27 @@ export default function PaperPage() {
   const { data: paper, isLoading } = usePaper(paperId);
   const [currentPage, setCurrentPage] = useState(0);
   const [expanded, setExpanded] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+
+  const bookmarked = useBookmarkStore((s) => s.bookmarkedPaperIds.includes(paperId));
+  const toggleBookmark = useBookmarkStore((s) => s.toggleBookmark);
+
+  const handleDownload = async () => {
+    if (!paper?.fileUrl) return;
+    setDownloading(true);
+    try {
+      const ext = paper.mimeType === 'application/pdf' ? '.pdf' : '.png';
+      await downloadFile(paper.fileUrl, `${paper.title.replace(/[^a-zA-Z0-9]/g, '_')}${ext}`);
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   if (isLoading || !paper) {
     return (
       <div className="page-desktop">
         <div className="page-header lg:rounded-card-xl lg:mx-0 lg:my-6">
-          <button onClick={() => router.back()} aria-label="Back" className="md:hidden btn-icon text-paper">
+          <button onClick={() => router.back()} aria-label="Back" className="btn-icon text-paper flex-shrink-0 transition-transform duration-200 hover:scale-110 active:scale-95">
             <ArrowLeft size={20} strokeWidth={1.75} />
           </button>
           <div><p className="page-header-title">Loading...</p></div>
@@ -43,18 +60,31 @@ export default function PaperPage() {
             {[paper.examType, paper.session, paper.level].filter(Boolean).join(' · ')}
           </p>
         </div>
-        {paper.fileUrl && (
-          <a
-            href={paper.fileUrl}
-            download
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-icon text-paper flex-shrink-0 transition-all duration-200 hover:bg-white/10 hover:scale-110"
-            aria-label="Download"
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => toggleBookmark(paper.id)}
+            aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark paper'}
+            className={`btn-icon flex-shrink-0 transition-all duration-200 ${
+              bookmarked ? 'text-naub-gold bg-white/20' : 'text-paper hover:bg-white/10'
+            }`}
           >
-            <Download size={18} strokeWidth={1.75} />
-          </a>
-        )}
+            <Bookmark size={18} strokeWidth={bookmarked ? 2.5 : 1.75} fill={bookmarked ? 'currentColor' : 'none'} />
+          </button>
+          {paper.fileUrl && (
+            <button
+              onClick={handleDownload}
+              disabled={downloading}
+              className="btn-icon text-paper flex-shrink-0 transition-all duration-200 hover:bg-white/10 hover:scale-110 disabled:opacity-50"
+              aria-label="Download paper"
+            >
+              {downloading ? (
+                <Loader2 size={18} className="animate-spin text-paper" />
+              ) : (
+                <Download size={18} strokeWidth={1.75} />
+              )}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="content-area">

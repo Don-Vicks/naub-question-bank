@@ -1,18 +1,19 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
-import { Upload, X, Image, File, Sparkles } from 'lucide-react';
+import { Upload, X, Image, FileText, Sparkles, FileCheck } from 'lucide-react';
 import clsx from 'clsx';
 import { dataUrlToFile } from '@/lib/hooks/useScanEffect';
 
 interface FileEntry {
-  file: File;           // original — used for display name / type check
-  uploadFile: File;     // what actually gets sent to the server (processed WebP or original PDF)
-  previewUrl: string;   // shown in thumbnail — processed version when available
+  file: File;
+  uploadFile: File;
+  previewUrl: string;
+  isPdf: boolean;
 }
 
 interface ImageUploaderProps {
-  onFilesChange: (files: File[]) => void;  // receives the upload-ready files
+  onFilesChange: (files: File[]) => void;
   processImage: (file: File) => Promise<string>;
   maxFiles?: number;
   accept?: string;
@@ -22,12 +23,17 @@ export function ImageUploader({
   onFilesChange,
   processImage,
   maxFiles = 10,
-  accept = 'image/jpeg,image/png,application/pdf',
+  accept = 'application/pdf,image/jpeg,image/png,image/webp,.pdf,.png,.jpg,.jpeg',
 }: ImageUploaderProps) {
   const [entries, setEntries] = useState<FileEntry[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
   const [processing, setProcessing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
 
   const addFiles = useCallback(
     async (fileList: FileList | File[]) => {
@@ -38,8 +44,19 @@ export function ImageUploader({
 
       const newEntries: FileEntry[] = [];
       for (const file of files) {
-        if (file.type.startsWith('image/')) {
-          // Apply scan effect + compress to WebP
+        const isPdf =
+          file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+
+        if (isPdf) {
+          // Native PDF file upload — bypass image processing
+          newEntries.push({
+            file,
+            uploadFile: file,
+            previewUrl: '',
+            isPdf: true,
+          });
+        } else if (file.type.startsWith('image/')) {
+          // Process image with scan effect + compress WebP
           try {
             const processedDataUrl = await processImage(file);
             const uploadFile = await dataUrlToFile(processedDataUrl, file.name);
@@ -47,28 +64,29 @@ export function ImageUploader({
               file,
               uploadFile,
               previewUrl: processedDataUrl,
+              isPdf: false,
             });
           } catch {
-            // Fallback: use original if processing fails
             newEntries.push({
               file,
               uploadFile: file,
               previewUrl: URL.createObjectURL(file),
+              isPdf: false,
             });
           }
         } else {
-          // PDF or other — no client-side processing
+          // General fallback
           newEntries.push({
             file,
             uploadFile: file,
             previewUrl: URL.createObjectURL(file),
+            isPdf: false,
           });
         }
       }
 
       const allEntries = [...entries, ...newEntries].slice(0, maxFiles);
       setEntries(allEntries);
-      // Pass the processed upload-ready files up — not the originals
       onFilesChange(allEntries.map((e) => e.uploadFile));
       setProcessing(false);
     },
@@ -107,29 +125,29 @@ export function ImageUploader({
         className={clsx(
           'relative flex w-full flex-col items-center gap-4 rounded-card-xl border-2 border-dashed p-8 text-center transition-all duration-300',
           isDragOver
-            ? 'border-marigold bg-marigold-50 scale-[1.01] shadow-glow-sm'
-            : 'border-line bg-white hover:border-marigold/30 hover:bg-marigold-50/30',
+            ? 'border-army bg-army-50 scale-[1.01] shadow-glow-sm'
+            : 'border-line bg-white hover:border-army/30 hover:bg-army-50/30',
         )}
       >
         <div className={clsx(
           'flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300',
-          isDragOver ? 'bg-marigold/15 scale-110' : 'bg-paper-warm',
+          isDragOver ? 'bg-army/15 scale-110' : 'bg-paper-warm',
         )}>
           <Upload
-            size={22}
+            size={24}
             strokeWidth={1.75}
             className={clsx(
               'transition-colors duration-300',
-              isDragOver ? 'text-marigold' : 'text-muted/50',
+              isDragOver ? 'text-army' : 'text-muted/60',
             )}
           />
         </div>
         <div>
-          <p className="text-body font-semibold text-ink">
+          <p className="text-body font-bold text-ink">
             Drop question papers here
           </p>
           <p className="mt-1 text-caption text-muted">
-            or tap to browse · PDF, JPG, PNG · up to {maxFiles} files
+            Upload <span className="font-semibold text-army">PDF documents</span> or exam image photos · up to {maxFiles} files
           </p>
         </div>
       </button>
@@ -148,24 +166,42 @@ export function ImageUploader({
 
       {/* Processing indicator */}
       {processing && (
-        <div className="flex items-center justify-center gap-2 rounded-xl bg-marigold-50 px-4 py-2.5 text-caption text-marigold animate-fade-in">
-          <Sparkles size={12} strokeWidth={2} className="animate-pulse" />
-          Applying scan effect &amp; compressing...
+        <div className="flex items-center justify-center gap-2 rounded-xl bg-army-50 px-4 py-2.5 text-caption text-army animate-fade-in">
+          <Sparkles size={12} strokeWidth={2} className="animate-pulse text-naub-gold" />
+          Processing files &amp; compressing...
         </div>
       )}
 
       {/* File grid */}
       {entries.length > 0 && (
-        <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 md:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
           {entries.map((entry, i) => (
             <div key={i} className="group relative">
-              <div className="aspect-[3/4] overflow-hidden rounded-xl border border-line bg-paper-warm shadow-card transition-shadow duration-200 group-hover:shadow-card-hover">
-                {entry.file.type === 'application/pdf' ? (
-                  <div className="flex h-full w-full flex-col items-center justify-center gap-1.5 bg-paper-warm">
-                    <File size={24} strokeWidth={1.5} className="text-muted/40" />
-                    <p className="px-1 text-center text-[9px] font-medium text-muted/60 leading-tight">PDF</p>
+              <div className="aspect-[3/4] overflow-hidden rounded-xl border border-line bg-paper-warm shadow-card transition-shadow duration-200 group-hover:shadow-card-hover relative">
+                {entry.isPdf ? (
+                  /* PDF File Card Preview */
+                  <div className="flex h-full w-full flex-col items-center justify-between p-3.5 bg-gradient-to-b from-terracotta-50/50 to-white text-center">
+                    <div className="mt-2 flex h-10 w-10 items-center justify-center rounded-xl bg-terracotta text-white shadow-sm">
+                      <FileText size={20} strokeWidth={2} />
+                    </div>
+                    <div className="my-auto min-w-0 w-full px-1">
+                      <span className="inline-block rounded-md bg-terracotta/10 px-2 py-0.5 text-[9px] font-bold text-terracotta uppercase">
+                        PDF Document
+                      </span>
+                      <p className="mt-1.5 truncate text-[11px] font-semibold text-ink">
+                        {entry.file.name}
+                      </p>
+                      <p className="text-[10px] text-muted mt-0.5">
+                        {formatFileSize(entry.file.size)}
+                      </p>
+                    </div>
+                    <div className="w-full border-t border-line-light pt-1.5 flex items-center justify-center gap-1 text-[9px] font-medium text-naub-green">
+                      <FileCheck size={10} />
+                      <span>Ready to upload</span>
+                    </div>
                   </div>
                 ) : (
+                  /* Image File Preview */
                   <img
                     src={entry.previewUrl}
                     alt={`Upload ${i + 1}`}
@@ -173,6 +209,8 @@ export function ImageUploader({
                   />
                 )}
               </div>
+
+              {/* Delete button */}
               <button
                 type="button"
                 onClick={() => removeFile(i)}
@@ -181,23 +219,22 @@ export function ImageUploader({
               >
                 <X size={12} strokeWidth={2.5} />
               </button>
-              <div className="mt-1.5 flex items-center gap-1 px-0.5">
-                {entry.file.type.startsWith('image/') ? (
-                  <Image size={10} strokeWidth={1.75} className="text-muted/50" />
-                ) : (
-                  <File size={10} strokeWidth={1.75} className="text-muted/50" />
-                )}
-                <p className="truncate text-[10px] text-muted/70">
-                  {entry.file.name}
-                </p>
-              </div>
-              {/* Show compression badge for processed images */}
-              {entry.file.type.startsWith('image/') && entry.uploadFile !== entry.file && (
-                <div className="mt-0.5 flex items-center gap-0.5 px-0.5">
-                  <Sparkles size={8} strokeWidth={2} className="text-marigold/70" />
-                  <p className="text-[9px] text-marigold/70 font-medium">
-                    {Math.round((1 - entry.uploadFile.size / entry.file.size) * 100)}% smaller
-                  </p>
+
+              {/* Name & Compression info */}
+              {!entry.isPdf && (
+                <div className="mt-1.5 px-0.5">
+                  <div className="flex items-center gap-1">
+                    <Image size={10} strokeWidth={1.75} className="text-muted/50 flex-shrink-0" />
+                    <p className="truncate text-[10px] text-muted/70">{entry.file.name}</p>
+                  </div>
+                  {entry.uploadFile !== entry.file && (
+                    <div className="mt-0.5 flex items-center gap-0.5">
+                      <Sparkles size={8} strokeWidth={2} className="text-naub-gold" />
+                      <p className="text-[9px] text-army font-medium">
+                        {Math.round((1 - entry.uploadFile.size / entry.file.size) * 100)}% compressed
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

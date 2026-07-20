@@ -258,7 +258,30 @@ export const api = {
   adminStats: (): Promise<AdminStats> =>
     request('/admin/stats'),
 
-  // ── Review endpoints ──
+  // ── Review & Moderation endpoints ──
+
+  getPendingDocuments: (): Promise<Array<{
+    id: string;
+    title: string;
+    originalFilename: string;
+    mimeType: string;
+    fileUrl: string;
+    courseCode: string;
+    facultyId: string;
+    departmentId: string;
+    level: string;
+    examType: string;
+    session: string;
+    status: string;
+    uploaderId: string;
+    uploadedAt: string;
+  }>> => request('/question-bank/documents/pending'),
+
+  approveDocument: (id: string): Promise<any> =>
+    request(`/question-bank/documents/${id}/approve`, { method: 'POST' }),
+
+  rejectDocument: (id: string): Promise<any> =>
+    request(`/question-bank/documents/${id}/reject`, { method: 'POST' }),
 
   getReviewQueue: (params?: { limit?: number; subject?: string }) => {
     const qs = new URLSearchParams();

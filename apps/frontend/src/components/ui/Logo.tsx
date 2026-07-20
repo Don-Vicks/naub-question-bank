@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import clsx from 'clsx';
-import { Sparkles } from 'lucide-react';
+import { BookOpen, Sparkles, ShieldCheck } from 'lucide-react';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
@@ -21,10 +21,12 @@ export function Logo({
   const isLg = size === 'lg';
 
   const badgeSizeClass = isSm
-    ? 'h-8 w-8 rounded-xl text-xs'
+    ? 'h-9 w-9 rounded-xl'
     : isLg
-    ? 'h-14 w-14 rounded-2xl text-2xl'
-    : 'h-10 w-10 rounded-2xl text-base';
+    ? 'h-14 w-14 rounded-2xl'
+    : 'h-11 w-11 rounded-2xl';
+
+  const iconSize = isSm ? 16 : isLg ? 24 : 19;
 
   const titleSizeClass = isSm
     ? 'text-base font-bold'
@@ -33,15 +35,20 @@ export function Logo({
     : 'text-xl font-extrabold';
 
   const content = (
-    <div className={clsx('flex items-center gap-3 group select-none', className)}>
-      {/* Icon Badge */}
+    <div className={clsx('flex items-center gap-3.5 group select-none', className)}>
+      {/* Distinctive Military-Academic Crest Emblem */}
       <div
         className={clsx(
-          'flex items-center justify-center bg-gradient-army font-bold text-white shadow-glow-sm transition-all duration-300 group-hover:scale-105 group-hover:shadow-glow flex-shrink-0',
+          'relative flex items-center justify-center bg-gradient-to-br from-army via-army-700 to-naub-gold p-[2px] shadow-glow-sm transition-all duration-300 group-hover:scale-105 group-hover:shadow-glow flex-shrink-0',
           badgeSizeClass
         )}
       >
-        <span>P</span>
+        <div className="flex h-full w-full items-center justify-center rounded-[inherit] bg-ink dark:bg-ink-dark text-white relative overflow-hidden">
+          {/* Subtle background glow inside badge */}
+          <div className="absolute inset-0 bg-gradient-to-br from-army/40 via-transparent to-naub-gold/20" />
+          <BookOpen size={iconSize} strokeWidth={2} className="relative z-10 text-paper" />
+          <Sparkles size={iconSize * 0.55} className="absolute -top-0.5 -right-0.5 z-20 text-naub-gold animate-pulse" />
+        </div>
       </div>
 
       {/* Wordmark Text */}
@@ -53,17 +60,20 @@ export function Logo({
           >
             Padi
           </span>
-          <Sparkles size={isSm ? 10 : 12} className="text-naub-gold opacity-80" />
+          <span className="h-1.5 w-1.5 rounded-full bg-naub-gold shadow-glow-gold" />
+          <span className="text-[10px] font-bold uppercase tracking-wider text-army dark:text-naub-teal bg-army/10 dark:bg-naub-teal/15 px-1.5 py-0.5 rounded-md border border-army/15 dark:border-naub-teal/20">
+            NAUB
+          </span>
         </div>
 
         {showSubtitle && (
           <p
             className={clsx(
-              'font-medium text-muted dark:text-white/50 tracking-wide mt-0.5',
+              'font-semibold text-muted dark:text-white/50 tracking-wide mt-1',
               isSm ? 'text-[9px]' : isLg ? 'text-xs' : 'text-[10px]'
             )}
           >
-            NAUB Question Bank
+            Question Bank & Repository
           </p>
         )}
       </div>
