@@ -16,11 +16,24 @@ async function bootstrap() {
         return callback(null, true);
       }
 
-      const allowedOrigins = (process.env.CORS_ORIGIN ?? 'http://localhost:3001')
-        .split(',')
-        .map((o) => o.trim());
+      const defaultOrigins = [
+        'http://localhost:3001',
+        'https://naubpadi.vercel.app',
+      ];
+      const envOrigins = process.env.CORS_ORIGIN
+        ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
+        : [];
+      const allowedOrigins = [...defaultOrigins, ...envOrigins];
 
-      if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+      const cleanOrigin = origin.replace(/\/+$/, '');
+      if (
+        allowedOrigins.some(
+          (allowed) =>
+            allowed === '*' ||
+            cleanOrigin === allowed.replace(/\/+$/, '') ||
+            cleanOrigin.startsWith(allowed.replace(/\/+$/, '')),
+        )
+      ) {
         return callback(null, true);
       }
 
