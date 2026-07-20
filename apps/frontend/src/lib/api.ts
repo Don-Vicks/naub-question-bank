@@ -3,13 +3,18 @@ import { type Faculty, type Department } from './naub-data';
 
 export type { UploadResult };
 
+function isLocalLanHost(hostname: string): boolean {
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.local')) return true;
+  return /^(192\.168|10|172\.(1[6-9]|2\d|3[01]))\.\d{1,3}\.\d{1,3}$/.test(hostname);
+}
+
 function getApiBaseUrl(): string {
   const envUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   if (typeof window !== 'undefined' && window.location?.hostname) {
     const hostname = window.location.hostname;
-    // If accessing from mobile or another network device via LAN IP/hostname:
-    if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+    // If accessing on local Wi-Fi / LAN IP (e.g. 192.168.x.x) and envUrl is unset or pointing to localhost:
+    if (isLocalLanHost(hostname) && hostname !== 'localhost' && hostname !== '127.0.0.1') {
       if (!envUrl || envUrl.includes('localhost') || envUrl.includes('127.0.0.1')) {
         const protocol = window.location.protocol;
         return `${protocol}//${hostname}:3000/api`;
@@ -48,7 +53,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   } catch (e: any) {
     console.error('[api] fetch failed for', url, ':', e?.name, e?.message);
     throw new Error(
-      `Could not connect to server at ${apiBase}. Is the backend running? (${e?.message ?? 'unknown'})`,
+      `Could not connect to backend at ${url}. Check if the server is running and NEXT_PUBLIC_API_BASE_URL is configured. (${e?.message ?? 'Failed to fetch'})`,
     );
   }
 
