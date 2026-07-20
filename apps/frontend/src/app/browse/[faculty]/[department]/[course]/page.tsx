@@ -37,7 +37,7 @@ export default function CoursePapersPage() {
   return (
     <div className="page-desktop">
       <div className="page-header lg:rounded-card-xl lg:mx-0 lg:my-6">
-        <button onClick={() => router.back()} aria-label="Back" className="lg:hidden btn-icon text-paper">
+        <button onClick={() => router.back()} aria-label="Back" className="btn-icon text-paper flex-shrink-0 transition-transform duration-200 hover:scale-110 active:scale-95">
           <ArrowLeft size={20} strokeWidth={1.75} />
         </button>
         <div className="min-w-0 flex-1">

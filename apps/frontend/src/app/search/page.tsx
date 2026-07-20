@@ -1,19 +1,27 @@
 'use client';
 
 import { useState } from 'react';
-import { Search as SearchIcon, X, FileSearch } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Search as SearchIcon, X, FileSearch, ArrowLeft } from 'lucide-react';
 import { useSearch } from '@/lib/hooks/useQuestionBank';
 import { PaperCard } from '@/components/ui/PaperCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 
 export default function SearchPage() {
+  const router = useRouter();
   const [query, setQuery] = useState('');
   const { data: results, isFetching } = useSearch(query);
 
   return (
     <div className="page-desktop">
       <div className="page-header lg:rounded-card-xl lg:mx-0 lg:my-6">
-        <SearchIcon size={20} strokeWidth={1.75} className="text-paper/60" />
+        <button
+          onClick={() => router.back()}
+          aria-label="Back"
+          className="btn-icon text-paper flex-shrink-0 transition-transform duration-200 hover:scale-110 active:scale-95"
+        >
+          <ArrowLeft size={20} strokeWidth={1.75} />
+        </button>
         <div>
           <p className="page-header-title">Search</p>
           <p className="page-header-sub">Find courses and papers</p>

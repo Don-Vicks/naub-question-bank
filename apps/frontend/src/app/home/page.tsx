@@ -267,9 +267,5 @@ function DashboardContent() {
 }
 
 export default function HomePage() {
-  return (
-    <AuthGuard>
-      <DashboardContent />
-    </AuthGuard>
-  );
+  return <DashboardContent />;
 }

@@ -9,6 +9,7 @@ interface UseAuthReturn {
   isAuthenticated: boolean;
   isAdmin: boolean;
   setAuth: (token: string, user: User) => void;
+  updateUser: (partialUser: Partial<User>) => void;
   logout: () => void;
 }
 
@@ -18,6 +19,7 @@ export function useAuth(): UseAuthReturn {
   const token = useAuthStore((s) => s.token);
   const hydrated = useAuthStore((s) => s.hydrated);
   const setAuthStore = useAuthStore((s) => s.setAuth);
+  const updateUserStore = useAuthStore((s) => s.updateUser);
   const logoutStore = useAuthStore((s) => s.logout);
 
   const setAuth = useCallback(
@@ -25,6 +27,13 @@ export function useAuth(): UseAuthReturn {
       setAuthStore(newToken, newUser);
     },
     [setAuthStore],
+  );
+
+  const updateUser = useCallback(
+    (partialUser: Partial<User>) => {
+      updateUserStore(partialUser);
+    },
+    [updateUserStore],
   );
 
   const logout = useCallback(() => {
@@ -40,8 +49,9 @@ export function useAuth(): UseAuthReturn {
       isAuthenticated: Boolean(token),
       isAdmin: user?.role === 'admin',
       setAuth,
+      updateUser,
       logout,
     }),
-    [user, token, hydrated, setAuth, logout],
+    [user, token, hydrated, setAuth, updateUser, logout],
   );
 }

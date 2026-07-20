@@ -6,6 +6,9 @@ export interface User {
   email: string;
   name: string;
   role: 'admin' | 'user';
+  facultyId?: string;
+  departmentId?: string;
+  level?: string;
 }
 
 interface AuthState {
@@ -13,6 +16,7 @@ interface AuthState {
   user: User | null;
   hydrated: boolean;
   setAuth: (token: string, user: User) => void;
+  updateUser: (partialUser: Partial<User>) => void;
   logout: () => void;
   isAdmin: () => boolean;
   setHydrated: () => void;
@@ -25,6 +29,10 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       hydrated: false,
       setAuth: (token, user) => set({ token, user }),
+      updateUser: (partialUser) =>
+        set((state) => ({
+          user: state.user ? { ...state.user, ...partialUser } : null,
+        })),
       logout: () => set({ token: null, user: null }),
       isAdmin: () => get().user?.role === 'admin',
       setHydrated: () => set({ hydrated: true }),
