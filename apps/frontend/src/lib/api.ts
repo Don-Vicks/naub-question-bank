@@ -240,4 +240,22 @@ export const api = {
 
   adminStats: (): Promise<AdminStats> =>
     request('/admin/stats'),
+
+  // ── Review endpoints ──
+
+  getReviewQueue: (params?: { limit?: number; subject?: string }) => {
+    const qs = new URLSearchParams();
+    if (params?.limit) qs.set('limit', String(params.limit));
+    if (params?.subject) qs.set('subject', params.subject);
+    return request(`/question-bank/review/queue?${qs.toString()}`);
+  },
+
+  getReviewStats: () =>
+    request<{ total: number; flagged: number; approved: number; rejected: number }>('/question-bank/review/stats'),
+
+  submitReviewDecision: (id: string, body: { decision: 'approve' | 'reject' | 'edit'; correctedTextLatex?: string; notes?: string }) =>
+    request(`/question-bank/review/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    }),
 };
