@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Search as SearchIcon, X } from 'lucide-react';
+import { Search as SearchIcon, X, FileSearch } from 'lucide-react';
 import { useSearch } from '@/lib/hooks/useQuestionBank';
 import { PaperCard } from '@/components/ui/PaperCard';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export default function SearchPage() {
   const [query, setQuery] = useState('');
@@ -56,17 +57,13 @@ export default function SearchPage() {
           )}
 
           {!isFetching && query.trim().length > 1 && results?.length === 0 && (
-            <div className="col-span-full flex flex-col items-center gap-3 py-12 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-army-50 border border-army/10 transition-transform duration-300 hover:scale-110">
-                <SearchIcon size={20} strokeWidth={1.75} className="text-army" />
-              </div>
-              <div>
-                <p className="text-heading text-ink">No results found</p>
-                <p className="text-caption text-muted mt-1">
-                  Try a different course or topic
-                </p>
-              </div>
-            </div>
+            <EmptyState
+              icon={FileSearch}
+              title="No courses or papers found"
+              description={`We couldn't find any results matching "${query}". Try searching with a different course code or keyword.`}
+              actionLabel="Browse by Faculty"
+              actionHref="/browse"
+            />
           )}
 
           {results?.map((paper) => (

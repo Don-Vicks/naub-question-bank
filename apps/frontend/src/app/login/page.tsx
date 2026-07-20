@@ -1,14 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Mail, Lock, Loader2, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Loader2, ArrowRight, Info } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { api } from '@/lib/api';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTarget = searchParams.get('redirect') ?? '/';
+  const noticeMessage = searchParams.get('message');
+
   const { setAuth } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,7 +27,7 @@ export default function LoginPage() {
     try {
       const data = await api.login(email, password);
       setAuth(data.access_token, data.user as any);
-      router.push('/');
+      router.push(redirectTarget);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Invalid credentials');
     } finally {
@@ -32,15 +36,22 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-[90vh] items-center justify-center">
+    <div className="flex min-h-[90vh] items-center justify-center p-4">
       <div className="w-full max-w-sm animate-fade-in-up">
-        <div className="mb-10 text-center">
+        <div className="mb-8 text-center">
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-army shadow-glow animate-float">
             <span className="text-2xl font-extrabold text-white">P</span>
           </div>
           <h1 className="text-display text-ink tracking-tight" style={{ fontFamily: "'Lora', Georgia, serif" }}>Welcome back</h1>
           <p className="mt-2 text-body text-muted">Sign in to your Padi account</p>
         </div>
+
+        {noticeMessage && (
+          <div className="mb-5 flex items-start gap-2.5 rounded-2xl border border-naub-teal/20 bg-naub-teal/10 px-4 py-3 text-xs text-naub-teal animate-fade-in">
+            <Info size={16} className="mt-0.5 flex-shrink-0" />
+            <span>{noticeMessage}</span>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
@@ -100,5 +111,17 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-[90vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-3 border-army border-t-transparent" />
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

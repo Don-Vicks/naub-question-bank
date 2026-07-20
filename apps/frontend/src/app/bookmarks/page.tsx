@@ -1,6 +1,7 @@
 'use client';
 
 import { Bookmark, BookmarkX } from 'lucide-react';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export default function BookmarksPage() {
   return (
@@ -14,17 +15,13 @@ export default function BookmarksPage() {
       </div>
 
       <div className="content-area">
-        <div className="flex flex-col items-center gap-4 py-16 text-center animate-fade-in-up">
-          <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-naub-gold-light border border-naub-gold/15">
-            <BookmarkX size={28} strokeWidth={1.5} className="text-naub-gold/50" />
-          </div>
-          <div>
-            <p className="text-heading text-ink">Coming soon</p>
-            <p className="text-body text-muted mt-1.5 max-w-xs">
-              Bookmark individual questions to build your personal collection. This feature is coming soon.
-            </p>
-          </div>
-        </div>
+        <EmptyState
+          icon={BookmarkX}
+          title="Your shelf is empty"
+          description="Bookmark individual questions and courses to build your personal study collection."
+          actionLabel="Browse Question Bank"
+          actionHref="/browse"
+        />
       </div>
     </div>
   );

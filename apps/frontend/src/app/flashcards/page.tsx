@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Search, Layers, BookOpen, ArrowRight, GraduationCap } from 'lucide-react';
 import { FACULTIES, getFacultyById } from '@/lib/naub-data';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 const LEVELS = ['100L', '200L', '300L', '400L', '500L'] as const;
 
@@ -81,13 +82,15 @@ export default function FlashcardsPage() {
         </div>
 
         {/* Empty state */}
-        <div className="text-center py-20">
-          <div className="w-16 h-16 rounded-2xl bg-army/5 flex items-center justify-center mx-auto mb-4">
-            <Layers size={28} className="text-army/40" />
-          </div>
-          <p className="text-heading text-ink font-medium">No flashcard decks yet</p>
-          <p className="text-caption text-muted mt-1">Flashcards will appear here once question papers are processed</p>
-        </div>
+        <EmptyState
+          icon={Layers}
+          title="No flashcard decks yet"
+          description="Interactive flashcard study decks will appear here automatically when question papers are processed."
+          actionLabel="Browse Available Papers"
+          actionHref="/browse"
+          secondaryActionLabel="Upload a Question Paper"
+          secondaryActionHref="/upload"
+        />
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, X, Download } from 'lucide-react';
 import { usePaper } from '@/lib/hooks/useQuestionBank';
+import { WatermarkOverlay } from '@/components/ui/WatermarkOverlay';
 
 export default function PaperPage() {
   const { paperId } = useParams<{ paperId: string }>();
@@ -61,7 +62,8 @@ export default function PaperPage() {
 
           {/* ── PDF viewer ── */}
           {isPdf && paper.fileUrl && (
-            <div className="overflow-hidden rounded-card-xl border border-line bg-white shadow-elevated animate-fade-in">
+            <div className="relative overflow-hidden rounded-card-xl border border-line bg-white shadow-elevated animate-fade-in">
+              <WatermarkOverlay text="naubpadi.com.ng" />
               <embed
                 src={paper.fileUrl}
                 type="application/pdf"
@@ -76,6 +78,7 @@ export default function PaperPage() {
           {hasImagePages && (
             <>
               <div className="relative overflow-hidden rounded-card-xl border border-line bg-white shadow-elevated animate-fade-in">
+                <WatermarkOverlay text="naubpadi.com.ng" />
                 <button onClick={() => setExpanded(true)} className="block w-full">
                   <img
                     src={pages[currentPage]}
@@ -83,7 +86,7 @@ export default function PaperPage() {
                     className="w-full object-contain transition-transform duration-300 hover:scale-[1.01]"
                   />
                 </button>
-                <div className="absolute right-3 top-3">
+                <div className="absolute right-3 top-3 z-30">
                   <button
                     onClick={() => setExpanded(true)}
                     className="flex h-9 w-9 items-center justify-center rounded-xl bg-ink/70 text-paper backdrop-blur-sm transition-all duration-200 hover:bg-ink/90 hover:scale-110 active:scale-95"

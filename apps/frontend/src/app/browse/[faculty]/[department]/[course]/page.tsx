@@ -3,9 +3,10 @@
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
-import { ArrowLeft, Filter, X } from 'lucide-react';
+import { ArrowLeft, Filter, X, FileText } from 'lucide-react';
 import { usePapers, useCourse } from '@/lib/hooks/useQuestionBank';
 import { PaperCard } from '@/components/ui/PaperCard';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { getFacultyById, getDepartmentById, EXAM_TYPES } from '@/lib/naub-data';
 
 export default function CoursePapersPage() {
@@ -117,17 +118,14 @@ export default function CoursePapersPage() {
           ))}
 
           {filteredPapers?.length === 0 && !isLoading && (
-            <div className="col-span-full mt-12 flex flex-col items-center gap-3 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-naub-green-light border border-naub-green/10">
-                <Filter size={20} strokeWidth={1.75} className="text-naub-green/50" />
-              </div>
-              <div>
-                <p className="text-heading text-ink">No papers found</p>
-                <p className="text-caption text-muted mt-1">
-                  {hasFilters ? 'Try adjusting your filters' : 'No papers available for this course yet'}
-                </p>
-              </div>
-            </div>
+            <EmptyState
+              icon={FileText}
+              title="No papers available"
+              description={hasFilters ? 'No question papers match your selected filters. Try resetting the filters.' : 'No question papers have been uploaded for this course yet.'}
+              actionLabel={hasFilters ? 'Reset Filters' : 'Upload a Paper'}
+              onAction={hasFilters ? () => { setExamFilter('all'); setSessionFilter('all'); } : undefined}
+              actionHref={hasFilters ? undefined : '/upload'}
+            />
           )}
         </div>
       </div>

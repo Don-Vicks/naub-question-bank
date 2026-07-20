@@ -60,7 +60,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (res.status === 401) {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('padi-auth');
-      window.location.href = '/login';
+      window.location.href = `/login?message=${encodeURIComponent('Your session has expired. Please sign in again.')}`;
     }
     throw new Error('Unauthorized');
   }

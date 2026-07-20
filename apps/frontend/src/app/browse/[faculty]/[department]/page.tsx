@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, FileText } from 'lucide-react';
 import { useCourses } from '@/lib/hooks/useQuestionBank';
 import { getFacultyById, getDepartmentById } from '@/lib/naub-data';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export default function DepartmentPage() {
   const { faculty, department } = useParams<{
@@ -79,24 +80,14 @@ export default function DepartmentPage() {
             </Link>
           ))}
 
-          {!isLoading && courses?.length === 0 && (
-            <p className="col-span-full mt-12 text-center text-sm text-muted">
-              No courses found for this department.
-            </p>
-          )}
-
-          {!isLoading && !courses && (
-            <div className="col-span-full flex flex-col items-center gap-3 py-16 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-paper-warm">
-                <FileText size={24} strokeWidth={1.75} className="text-muted/40" />
-              </div>
-              <div>
-                <p className="text-heading text-ink font-medium">No courses yet</p>
-                <p className="text-caption text-muted mt-1">
-                  Courses will appear here once question papers are uploaded for this department.
-                </p>
-              </div>
-            </div>
+          {!isLoading && (!courses || courses.length === 0) && (
+            <EmptyState
+              icon={FileText}
+              title="No courses found"
+              description="No courses with uploaded papers were found in this department yet."
+              actionLabel="Upload a Question Paper"
+              actionHref="/upload"
+            />
           )}
         </div>
       </div>
