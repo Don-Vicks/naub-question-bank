@@ -8,6 +8,7 @@ import {
   Param,
   UseGuards,
   Req,
+  NotFoundException,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -123,7 +124,7 @@ export class IngestionController {
             storagePath: file.path,   // local tmp path kept for debugging
             fileUrl,
             pageCount: 1,
-            status: 'ready',
+            status: req.user?.role === 'admin' ? 'ready' : 'pending_review',
             courseCode: dto.courseCode ?? dto.subjectHint ?? null,
             subjectHint: dto.subjectHint ?? dto.courseCode ?? null,
             facultyId: dto.facultyId ?? null,
@@ -135,7 +136,7 @@ export class IngestionController {
           }),
         );
 
-        return { filename: file.originalname, documentId: doc.id, fileUrl };
+        return { filename: file.originalname, documentId: doc.id, fileUrl, status: doc.status };
       }),
     );
 
@@ -157,6 +158,51 @@ export class IngestionController {
       failedFilenames: failed.map((f) => f.filename),
       errors: failed,
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('pending')
+  async getPendingDocuments() {
+    const docs = await this.sourceDocRepo.find({
+      where: [{ status: 'pending_review' }, { status: 'uploaded' }],
+      order: { createdAt: 'DESC' },
+    });
+    return docs.map((doc) => ({
+      id: doc.id,
+      title: doc.courseCode
+        ? `${doc.courseCode} — ${doc.examType ?? 'Paper'} ${doc.session ?? ''}`.trim()
+        : doc.originalFilename,
+      originalFilename: doc.originalFilename,
+      mimeType: doc.mimeType,
+      fileUrl: doc.fileUrl,
+      courseCode: doc.courseCode ?? '',
+      facultyId: doc.facultyId ?? '',
+      departmentId: doc.departmentId ?? '',
+      level: doc.level ?? '',
+      examType: doc.examType ?? '',
+      session: doc.session ?? '',
+      status: doc.status,
+      uploaderId: doc.uploaderId,
+      uploadedAt: doc.createdAt.toISOString(),
+    }));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/approve')
+  async approveDocument(@Param('id') id: string) {
+    const doc = await this.sourceDocRepo.findOne({ where: { id } });
+    if (!doc) throw new NotFoundException('Document not found');
+    doc.status = 'ready';
+    return this.sourceDocRepo.save(doc);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/reject')
+  async rejectDocument(@Param('id') id: string) {
+    const doc = await this.sourceDocRepo.findOne({ where: { id } });
+    if (!doc) throw new NotFoundException('Document not found');
+    doc.status = 'failed';
+    return this.sourceDocRepo.save(doc);
   }
 
   @Get(':id/status')
