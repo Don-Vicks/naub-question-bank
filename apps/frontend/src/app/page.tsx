@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { FACULTIES, getDepartmentsByFaculty } from '@/lib/naub-data';
 import { useAuthStore } from '@/lib/auth-store';
+import { Logo } from '@/components/ui/Logo';
 
 function AnimatedCounter({ end, suffix = '' }: { end: number; suffix?: string }) {
   const [count, setCount] = useState(0);
@@ -174,17 +175,7 @@ export default function LandingPage() {
         <div className="relative mx-auto max-w-6xl px-6 py-16 lg:py-0">
           {/* Nav */}
           <nav className="flex items-center justify-between mb-16 lg:mb-24">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm shadow-glow-sm">
-                <span className="text-lg font-extrabold text-white">P</span>
-              </div>
-              <span
-                className="text-xl font-extrabold text-white tracking-tight"
-                style={{ fontFamily: "'Lora', Georgia, serif" }}
-              >
-                Padi
-              </span>
-            </div>
+            <Logo size="md" href="/" />
             <div className="flex items-center gap-3">
               <Link
                 href="/login"
@@ -589,20 +580,12 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
             {/* Brand */}
             <div className="md:col-span-2">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10">
-                  <span className="text-sm font-extrabold text-white">P</span>
-                </div>
-                <span
-                  className="text-lg font-bold text-white"
-                  style={{ fontFamily: "'Lora', Georgia, serif" }}
-                >
-                  Padi
-                </span>
+              <div className="mb-4">
+                <Logo size="md" href="/" />
               </div>
               <p className="text-sm text-white/40 max-w-sm leading-relaxed">
-                The official question bank for Nigerian Army University Biu. Built by students,
-                for students.
+                The past question bank for Nigerian Army University Biu. Built by 3 Software
+                Engineering students to help fellow students study smarter and excel.
               </p>
             </div>
 

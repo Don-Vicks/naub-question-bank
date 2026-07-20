@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
+import { Logo } from '@/components/ui/Logo';
 import { NAV_ITEMS } from '@/lib/nav-items';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { LogOut, Shield } from 'lucide-react';
@@ -26,15 +27,7 @@ export function Sidebar() {
 
       <div className="relative flex flex-1 flex-col">
         {/* Logo */}
-        <Link href="/" className="mb-10 flex items-center gap-3.5 px-1 group">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-army shadow-glow transition-all duration-300 group-hover:shadow-glow group-hover:scale-105">
-            <span className="text-base font-extrabold text-white">P</span>
-          </div>
-          <div>
-            <span className="text-xl font-extrabold text-ink tracking-tight" style={{ fontFamily: "'Lora', Georgia, serif" }}>Padi</span>
-            <p className="text-[10px] font-medium text-muted tracking-wide">NAUB Question Bank</p>
-          </div>
-        </Link>
+        <Logo href="/" className="mb-10 px-1" />
 
         {/* Navigation */}
         <nav className="flex flex-1 flex-col gap-1">

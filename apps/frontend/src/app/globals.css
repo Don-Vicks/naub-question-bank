@@ -37,6 +37,69 @@
   input:focus, select:focus, textarea:focus {
     @apply border-army ring-2 ring-army/10 outline-none;
   }
+
+  /* Dark mode global overrides */
+  html.dark body {
+    background-color: #12162B;
+    color: #F0F1F5;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
+  }
+
+  html.dark .card,
+  html.dark .card-interactive,
+  html.dark .card-elevated,
+  html.dark .card-glass {
+    background-color: #1B2340;
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #F0F1F5;
+  }
+
+  html.dark .card-interactive:hover {
+    border-color: rgba(200, 169, 81, 0.3);
+    background-color: #222B4D;
+  }
+
+  html.dark .input-field,
+  html.dark .select-field {
+    background-color: #12162B;
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #F0F1F5;
+  }
+
+  html.dark .input-field::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  html.dark .text-ink {
+    color: #F0F1F5;
+  }
+
+  html.dark .text-muted {
+    color: #8A90AB;
+  }
+
+  html.dark .bg-white {
+    background-color: #1B2340;
+  }
+
+  html.dark .bg-paper {
+    background-color: #12162B;
+  }
+
+  html.dark .border-line,
+  html.dark .border-line-light {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  html.dark .btn-secondary {
+    background-color: #1B2340;
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #F0F1F5;
+  }
+
+  html.dark .btn-secondary:hover {
+    background-color: #222B4D;
+  }
 }
 
 @layer components {

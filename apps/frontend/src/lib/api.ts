@@ -212,6 +212,18 @@ export const api = {
   getMe: (): Promise<{ id: string; email: string; name: string; role: string }> =>
     request('/auth/me'),
 
+  forgotPassword: (email: string): Promise<{ message: string; sent: boolean }> =>
+    request('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
+
+  updateProfile: (data: { name?: string; facultyId?: string; departmentId?: string; level?: string }): Promise<{ id: string; email: string; name: string; role: string }> =>
+    request('/auth/profile', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
+
   // ── Admin endpoints ──
 
   adminOverview: (): Promise<AdminOverview> =>

@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { FACULTIES, LEVELS, getDepartmentsByFaculty } from '@/lib/naub-data';
+import { Logo } from '@/components/ui/Logo';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -408,13 +409,11 @@ export default function ProfilePage() {
       {activeModal === 'about' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm animate-fade-in" onClick={() => setActiveModal(null)}>
           <div className="w-full max-w-md rounded-card-xl bg-white p-6 shadow-2xl text-center animate-scale-in" onClick={(e) => e.stopPropagation()}>
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-army text-white shadow-glow-sm">
-              <span className="text-xl font-extrabold">P</span>
-            </div>
+            <Logo size="lg" className="justify-center mb-4" />
             <h3 className="text-xl font-bold text-ink" style={{ fontFamily: "'Lora', Georgia, serif" }}>Padi — NAUB Question Bank</h3>
             <p className="text-xs font-semibold text-army mt-1">Version 1.0.0</p>
             <p className="text-xs text-muted leading-relaxed mt-3">
-              Padi is the official digital past question repository and AI study platform for Nigerian Army University Biu. Built to help students study smarter and excel in exams.
+              Padi was built by 3 Software Engineering students at Nigerian Army University Biu to help fellow students study smarter and excel in exams.
             </p>
             <div className="mt-6 border-t border-line-light pt-4 flex items-center justify-center gap-2 text-xs text-muted">
               <Building2 size={14} />
