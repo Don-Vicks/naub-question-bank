@@ -16,7 +16,7 @@
   }
 
   body {
-    @apply bg-paper text-ink font-sans;
+    @apply bg-paper text-ink font-sans overflow-x-hidden w-full max-w-full;
     text-rendering: optimizeLegibility;
     background-image: radial-gradient(circle at 1px 1px, rgba(27, 35, 64, 0.015) 1px, transparent 0);
     background-size: 32px 32px;
@@ -43,6 +43,7 @@
   /* Buttons */
   .btn-primary {
     @apply relative overflow-hidden rounded-2xl bg-army px-6 py-3 text-sm font-semibold text-white
+      min-h-[44px] flex items-center justify-center
       transition-all duration-300 ease-premium
       hover:shadow-glow hover:translate-y-[-1px] hover:brightness-110
       active:scale-[0.98] active:translate-y-0 active:shadow-card;
@@ -60,6 +61,7 @@
 
   .btn-secondary {
     @apply rounded-2xl border border-line bg-white px-6 py-3 text-sm font-medium text-ink
+      min-h-[44px] flex items-center justify-center
       transition-all duration-300 ease-premium
       hover:border-army/20 hover:shadow-card-hover hover:translate-y-[-1px]
       active:scale-[0.98] active:translate-y-0;
@@ -67,18 +69,20 @@
 
   .btn-ghost {
     @apply rounded-2xl px-4 py-2.5 text-sm font-medium text-muted
+      min-h-[44px] flex items-center justify-center
       transition-all duration-200 ease-premium
       hover:bg-army/5 hover:text-army active:scale-[0.98];
   }
 
   .btn-icon {
-    @apply flex h-10 w-10 items-center justify-center rounded-xl
+    @apply flex h-11 w-11 items-center justify-center rounded-xl flex-shrink-0
       transition-all duration-200 ease-premium
       hover:bg-army/5 hover:text-army active:scale-95;
   }
 
   .btn-danger {
     @apply rounded-2xl border border-army/20 bg-army-50 px-6 py-3 text-sm font-semibold text-army
+      min-h-[44px] flex items-center justify-center
       transition-all duration-300 ease-premium
       hover:bg-army-100 hover:border-army/30
       active:scale-[0.98];
@@ -86,6 +90,7 @@
 
   .btn-gold {
     @apply relative overflow-hidden rounded-2xl bg-gradient-gold px-6 py-3 text-sm font-semibold text-white
+      min-h-[44px] flex items-center justify-center
       transition-all duration-300 ease-premium
       hover:shadow-glow-gold hover:translate-y-[-1px] hover:brightness-110
       active:scale-[0.98] active:translate-y-0;
@@ -139,14 +144,14 @@
   /* Inputs */
   .input-field {
     @apply w-full rounded-2xl border border-line bg-white px-4 py-3.5
-      text-sm text-ink placeholder:text-muted/60 outline-none
+      min-h-[44px] text-sm text-ink placeholder:text-muted/60 outline-none
       transition-all duration-200 ease-premium
       focus:border-army focus:ring-2 focus:ring-army/10 focus:shadow-glow-sm;
   }
 
   .select-field {
     @apply w-full appearance-none rounded-2xl border border-line bg-white px-4 py-3.5
-      text-sm text-ink outline-none
+      min-h-[44px] text-sm text-ink outline-none
       transition-all duration-200 ease-premium
       focus:border-army focus:ring-2 focus:ring-army/10 focus:shadow-glow-sm
       bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%238A8578%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')]
@@ -189,9 +194,10 @@
 
   /* Page layout */
   .page-header {
-    @apply relative flex items-center gap-3.5 overflow-hidden bg-gradient-naub px-5 py-5
-      lg:my-6 lg:rounded-card-xl lg:py-6 lg:px-6
-      md:my-4 md:rounded-card-xl md:py-6 md:px-6;
+    @apply relative flex items-center gap-3.5 overflow-hidden bg-gradient-naub
+      mx-4 mt-3 rounded-2xl px-4 py-4 shadow-card
+      md:mx-6 md:mt-4 md:rounded-card-xl md:py-6 md:px-6
+      lg:mx-0 lg:my-6 lg:rounded-card-xl lg:py-6 lg:px-6;
   }
 
   .page-header::before {
@@ -208,27 +214,27 @@
   }
 
   .page-header-title {
-    @apply text-heading text-paper;
+    @apply text-heading text-paper font-semibold;
   }
 
   .page-header-sub {
-    @apply text-caption text-paper/50 mt-0.5;
+    @apply text-caption text-paper/60 mt-0.5;
   }
 
   .breadcrumb {
-    @apply flex items-center gap-1.5 px-5 py-3 text-caption text-muted lg:px-0 lg:py-4;
+    @apply flex items-center gap-1.5 py-2.5 text-caption text-muted overflow-x-auto scrollbar-hide whitespace-nowrap lg:py-4;
   }
 
   .breadcrumb a {
-    @apply transition-colors duration-200 hover:text-army;
+    @apply transition-colors duration-200 hover:text-army flex-shrink-0;
   }
 
   .content-area {
-    @apply px-4 pb-28 pt-4 md:px-6 md:pb-8 md:pt-5 lg:px-8 lg:pb-8 lg:pt-5;
+    @apply px-4 pb-28 pt-3 md:px-6 md:pb-8 md:pt-5 lg:px-8 lg:pb-8 lg:pt-5;
   }
 
   .content-wide {
-    @apply px-4 pb-28 pt-4 md:px-6 md:pb-8 md:pt-5 lg:px-8;
+    @apply px-4 pb-28 pt-3 md:px-6 md:pb-8 md:pt-5 lg:px-8;
   }
 
   .section-header {
