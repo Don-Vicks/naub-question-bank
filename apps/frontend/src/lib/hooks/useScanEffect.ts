@@ -129,6 +129,52 @@ function binarize(data: Uint8ClampedArray, threshold: number): void {
   }
 }
 
+function drawCanvasWatermark(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  text = 'naubpadi.com.ng'
+): void {
+  ctx.save();
+  ctx.rotate((-25 * Math.PI) / 180);
+  ctx.font = `800 ${Math.max(18, Math.floor(width / 24))}px Arial, sans-serif`;
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.14)';
+
+  const rows = 8;
+  const cols = 4;
+  for (let r = 0; r < rows; r++) {
+    const y = (height / 5) * r - height * 0.3;
+    for (let c = 0; c < cols; c++) {
+      const x = (width / 2.5) * c - width * 0.3;
+      ctx.fillText(text.toUpperCase(), x, y);
+    }
+  }
+  ctx.restore();
+
+  // Corner stamp badge
+  ctx.save();
+  const badgeWidth = Math.max(180, Math.floor(width / 3.5));
+  const badgeHeight = Math.max(30, Math.floor(height / 35));
+  const x = width - badgeWidth - 12;
+  const y = height - badgeHeight - 12;
+
+  ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+  if (typeof ctx.roundRect === 'function') {
+    ctx.beginPath();
+    ctx.roundRect(x, y, badgeWidth, badgeHeight, 8);
+    ctx.fill();
+  } else {
+    ctx.fillRect(x, y, badgeWidth, badgeHeight);
+  }
+
+  ctx.font = `bold ${Math.max(11, Math.floor(width / 48))}px Arial, sans-serif`;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`NAUB PADI | ${text}`, x + badgeWidth / 2, y + badgeHeight / 2);
+  ctx.restore();
+}
+
 export function useScanEffect(): ScanEffectResult {
   const [processedUrl, setProcessedUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -169,6 +215,9 @@ export function useScanEffect(): ScanEffectResult {
         const threshold = autoThreshold(data);
         binarize(data, threshold);
         ctx.putImageData(imageData, 0, 0);
+
+        // Apply permanent watermark on canvas before export
+        drawCanvasWatermark(ctx, canvas.width, canvas.height, 'naubpadi.com.ng');
 
         const resultUrl = canvas.toDataURL('image/webp', 0.82);
         setProcessedUrl(resultUrl);

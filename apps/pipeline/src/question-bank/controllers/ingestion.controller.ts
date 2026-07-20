@@ -95,12 +95,25 @@ export class IngestionController {
         if (dto.examType)     objectMetadata['exam-type']     = dto.examType;
         if (dto.session)      objectMetadata['session']       = dto.session;
 
-        const fileUrl = await this.r2Service.uploadFromPath(
-          file.path,
-          r2Key,
-          file.mimetype,
-          objectMetadata,
-        );
+        let fileUrl: string;
+        if (file.mimetype.startsWith('image/')) {
+          const watermarkedBuffer = await this.watermarkImage(file.path, 'naubpadi.com.ng');
+          // Overwrite local file with watermarked buffer for consistency
+          fs.writeFileSync(file.path, watermarkedBuffer);
+          fileUrl = await this.r2Service.uploadFile(
+            r2Key,
+            watermarkedBuffer,
+            file.mimetype,
+            objectMetadata,
+          );
+        } else {
+          fileUrl = await this.r2Service.uploadFromPath(
+            file.path,
+            r2Key,
+            file.mimetype,
+            objectMetadata,
+          );
+        }
 
         const doc = await this.sourceDocRepo.save(
           this.sourceDocRepo.create({
@@ -162,6 +175,63 @@ export class IngestionController {
   }
 
   // ── helpers ──
+
+  private async watermarkImage(filePath: string, text = 'naubpadi.com.ng'): Promise<Buffer> {
+    try {
+      const sharp = (await import('sharp')).default;
+      const image = sharp(filePath);
+      const metadata = await image.metadata();
+      const width = metadata.width ?? 1000;
+      const height = metadata.height ?? 1400;
+
+      const svgOverlay = Buffer.from(`
+        <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+          <style>
+            .wm-text {
+              font-family: Arial, sans-serif;
+              font-size: ${Math.max(22, Math.floor(width / 22))}px;
+              font-weight: 800;
+              fill: rgba(0, 0, 0, 0.16);
+              letter-spacing: 4px;
+            }
+            .badge-bg {
+              fill: rgba(15, 23, 42, 0.88);
+              rx: 8px;
+            }
+            .badge-text {
+              font-family: Arial, sans-serif;
+              font-size: ${Math.max(12, Math.floor(width / 48))}px;
+              font-weight: bold;
+              fill: #ffffff;
+              letter-spacing: 1.5px;
+            }
+          </style>
+          <g transform="rotate(-25, ${width / 2}, ${height / 2})">
+            ${Array.from({ length: 8 })
+              .map((_, r) => {
+                const y = (height / 6) * r - height * 0.2;
+                return Array.from({ length: 4 })
+                  .map((_, c) => {
+                    const x = (width / 3) * c - width * 0.2;
+                    return `<text x="${x}" y="${y}" class="wm-text">${text.toUpperCase()}</text>`;
+                  })
+                  .join('');
+              })
+              .join('')}
+          </g>
+          <rect x="${width - Math.max(190, Math.floor(width / 3.5))}" y="${height - 42}" width="${Math.max(180, Math.floor(width / 3.5))}" height="32" class="badge-bg" />
+          <text x="${width - Math.max(180, Math.floor(width / 3.5)) + 12}" y="${height - 21}" class="badge-text">NAUB PADI | ${text}</text>
+        </svg>
+      `);
+
+      return await image
+        .composite([{ input: svgOverlay, top: 0, left: 0 }])
+        .toBuffer();
+    } catch {
+      const fsPromises = await import('fs/promises');
+      return fsPromises.readFile(filePath);
+    }
+  }
 
   private mimeToExt(mime: string): string {
     const map: Record<string, string> = {
