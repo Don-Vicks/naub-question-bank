@@ -3,7 +3,22 @@ import { type Faculty, type Department } from './naub-data';
 
 export type { UploadResult };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3000/api';
+function getApiBaseUrl(): string {
+  const envUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  if (typeof window !== 'undefined' && window.location?.hostname) {
+    const hostname = window.location.hostname;
+    // If accessing from mobile or another network device via LAN IP/hostname:
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+      if (!envUrl || envUrl.includes('localhost') || envUrl.includes('127.0.0.1')) {
+        const protocol = window.location.protocol;
+        return `${protocol}//${hostname}:3000/api`;
+      }
+    }
+  }
+
+  return envUrl ?? 'http://localhost:3000/api';
+}
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
@@ -19,7 +34,8 @@ function getToken(): string | null {
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const token = getToken();
-  const url = `${API_BASE}${path}`;
+  const apiBase = getApiBaseUrl();
+  const url = `${apiBase}${path}`;
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(init?.headers as Record<string, string>),
@@ -32,7 +48,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   } catch (e: any) {
     console.error('[api] fetch failed for', url, ':', e?.name, e?.message);
     throw new Error(
-      `Could not connect to server at ${API_BASE}. Is the backend running? (${e?.message ?? 'unknown'})`,
+      `Could not connect to server at ${apiBase}. Is the backend running? (${e?.message ?? 'unknown'})`,
     );
   }
 
@@ -147,7 +163,8 @@ export const api = {
 
   uploadPaper: async (formData: FormData): Promise<UploadResult> => {
     const token = getToken();
-    const url = `${API_BASE}/question-bank/documents/upload-batch`;
+    const apiBase = getApiBaseUrl();
+    const url = `${apiBase}/question-bank/documents/upload-batch`;
 
     const headers: Record<string, string> = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -161,7 +178,7 @@ export const api = {
       });
     } catch (e: any) {
       throw new Error(
-        `Could not connect to server at ${API_BASE}. Is the backend running? (${e?.message ?? 'unknown'})`,
+        `Could not connect to server at ${apiBase}. Is the backend running? (${e?.message ?? 'unknown'})`,
       );
     }
 

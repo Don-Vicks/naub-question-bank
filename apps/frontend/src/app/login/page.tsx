@@ -58,6 +58,8 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                autoCapitalize="none"
+                autoCorrect="off"
                 placeholder="you@naub.edu.ng"
                 className="input-field pl-11"
               />

@@ -62,7 +62,7 @@ export default function RegisterPage() {
             <label className="label">Email</label>
             <div className="relative">
               <Mail size={16} strokeWidth={1.75} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted/50" />
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@naub.edu.ng" className="input-field pl-11" />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoCapitalize="none" autoCorrect="off" placeholder="you@naub.edu.ng" className="input-field pl-11" />
             </div>
           </div>
 
