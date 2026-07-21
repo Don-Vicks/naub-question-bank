@@ -12,18 +12,25 @@ import {
   Shuffle,
   CheckCircle2,
   XCircle,
-  HelpCircle,
-  Sparkles,
   Layers,
   Check,
-  BookOpen,
-  Award,
+  Eye,
+  HelpCircle,
 } from 'lucide-react';
 import { getFlashcardDeckByCode, FlashcardItem } from '@/lib/flashcard-data';
 
+function isAnswerMatch(option: string, backAnswer: string): boolean {
+  if (!option || !backAnswer) return false;
+  const cleanOpt = option.replace(/^[A-D0-9][\.\)]\s*/i, '').trim().toLowerCase();
+  const cleanAns = backAnswer.replace(/^[A-D0-9][\.\)]\s*/i, '').trim().toLowerCase();
+  return (
+    cleanOpt === cleanAns ||
+    option.trim().toLowerCase() === backAnswer.trim().toLowerCase()
+  );
+}
+
 export default function FlashcardDeckPage() {
   const params = useParams();
-  const router = useRouter();
   const rawCode = (params.courseCode as string) || '';
   const deck = getFlashcardDeckByCode(rawCode);
 
@@ -74,6 +81,7 @@ export default function FlashcardDeckPage() {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.key === 'ArrowRight') handleNext();
       if (e.key === 'ArrowLeft') handlePrev();
       if (e.key === ' ' || e.key === 'Spacebar') {
@@ -105,7 +113,7 @@ export default function FlashcardDeckPage() {
   const isMastered = masteredSet.has(currentIndex);
 
   return (
-    <div className="page-desktop">
+    <div className="page-desktop max-w-4xl mx-auto">
       {/* Header Bar */}
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -127,7 +135,11 @@ export default function FlashcardDeckPage() {
         {/* Mode Switcher */}
         <div className="flex items-center rounded-xl bg-paper-warm p-1 border border-line-light">
           <button
-            onClick={() => setMode('flashcard')}
+            onClick={() => {
+              setMode('flashcard');
+              setIsFlipped(false);
+              setSelectedOption(null);
+            }}
             className={clsx(
               'px-4 py-1.5 text-xs font-semibold rounded-lg transition-all',
               mode === 'flashcard'
@@ -135,10 +147,14 @@ export default function FlashcardDeckPage() {
                 : 'text-muted hover:text-ink'
             )}
           >
-            Flip Cards
+            Flip Flashcards
           </button>
           <button
-            onClick={() => setMode('cbt')}
+            onClick={() => {
+              setMode('cbt');
+              setIsFlipped(false);
+              setSelectedOption(null);
+            }}
             className={clsx(
               'px-4 py-1.5 text-xs font-semibold rounded-lg transition-all',
               mode === 'cbt'
@@ -146,7 +162,7 @@ export default function FlashcardDeckPage() {
                 : 'text-muted hover:text-ink'
             )}
           >
-            CBT Drill
+            CBT Drill Mode
           </button>
         </div>
       </div>
@@ -155,14 +171,14 @@ export default function FlashcardDeckPage() {
       <div className="mb-6 rounded-card-xl border border-line bg-white p-4 shadow-card">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
           <span className="text-caption font-bold text-ink">
-            Card {currentIndex + 1} of {cards.length}
+            Question {currentIndex + 1} of {cards.length}
           </span>
           <div className="flex items-center gap-3 text-xs text-muted font-medium">
             <span className="text-emerald-600 font-semibold">
               {masteredSet.size} Mastered
             </span>
             <span>·</span>
-            <span>Use Left / Right Arrows & Spacebar</span>
+            <span>Use ← / → Arrow Keys & Spacebar</span>
           </div>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-paper-warm">
@@ -173,20 +189,17 @@ export default function FlashcardDeckPage() {
         </div>
       </div>
 
-      {/* Main Flashcard Container */}
+      {/* Main Study Card Area */}
       <div className="mx-auto max-w-3xl">
         {mode === 'flashcard' ? (
-          /* ── Flashcard Mode (3D Flip) ── */
-          <div className="perspective-1000 relative min-h-[380px]">
-            <div
-              onClick={() => setIsFlipped((f) => !f)}
-              className={clsx(
-                'relative w-full min-h-[380px] cursor-pointer rounded-card-xl border border-line bg-white p-8 shadow-elevated transition-transform duration-500 transform-style-3d select-none hover:shadow-card-hover',
-                isFlipped && 'rotate-y-180'
-              )}
-            >
-              {/* Front Face */}
-              <div className="backface-hidden flex flex-col justify-between h-full min-h-[320px]">
+          /* ── Flashcard Mode ── */
+          <div className="relative min-h-[380px]">
+            {!isFlipped ? (
+              /* FRONT FACE (QUESTION) */
+              <div
+                onClick={() => setIsFlipped(true)}
+                className="flex min-h-[380px] cursor-pointer flex-col justify-between rounded-card-xl border border-line bg-white p-8 shadow-elevated transition-all duration-300 hover:shadow-card-hover select-none"
+              >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-4">
                     <span className="rounded-lg bg-paper-warm px-2.5 py-1 text-xs font-mono text-muted border border-line-light">
@@ -205,13 +218,14 @@ export default function FlashcardDeckPage() {
                       </span>
                     )}
                   </div>
-                  <h2 className="text-xl font-medium text-ink leading-relaxed">
+
+                  <h2 className="text-xl font-medium text-ink leading-relaxed mb-6">
                     {currentCard.front}
                   </h2>
 
-                  {/* Options Preview */}
+                  {/* Options List Preview (without answers revealed) */}
                   {currentCard.options && currentCard.options.length > 0 && (
-                    <div className="mt-6 space-y-2">
+                    <div className="space-y-2 mb-4">
                       {currentCard.options.map((opt, i) => (
                         <div
                           key={i}
@@ -228,35 +242,43 @@ export default function FlashcardDeckPage() {
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-line-light flex items-center justify-between text-caption text-muted">
-                  <span className="flex items-center gap-1">
-                    <RotateCw size={13} /> Click or spacebar to flip
+                  <span className="flex items-center gap-1.5 font-medium text-naub-green">
+                    <RotateCw size={14} /> Click card or press Spacebar to reveal answer
                   </span>
-                  <span>Tap to reveal answer</span>
+                  <span className="btn-secondary !h-8 !px-3 text-xs flex items-center gap-1">
+                    <Eye size={13} />
+                    Reveal Answer
+                  </span>
                 </div>
               </div>
-
-              {/* Back Face */}
-              <div className="backface-hidden rotate-y-180 absolute inset-0 rounded-card-xl bg-gradient-to-br from-white to-emerald-50/30 p-8 flex flex-col justify-between">
+            ) : (
+              /* BACK FACE (ANSWER & EXPLANATION) */
+              <div
+                onClick={() => setIsFlipped(false)}
+                className="flex min-h-[380px] cursor-pointer flex-col justify-between rounded-card-xl border border-emerald-200 bg-gradient-to-br from-white via-white to-emerald-50/40 p-8 shadow-elevated transition-all duration-300 hover:shadow-card-hover select-none"
+              >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-4">
-                    <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-800">
-                      <Check size={14} /> Correct Answer
+                    <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
+                      <Check size={14} strokeWidth={2.5} /> Correct Answer
                     </span>
                     <span className="text-xs font-semibold text-muted">
-                      {deck.courseCode}
+                      Q{currentCard.questionNumber || currentIndex + 1}
                     </span>
                   </div>
 
-                  <div className="rounded-xl border border-emerald-200 bg-emerald-50/80 p-4 text-base font-semibold text-emerald-950 mb-4">
+                  {/* Correct Answer Display */}
+                  <div className="rounded-xl border border-emerald-200 bg-emerald-50/90 p-5 text-lg font-bold text-emerald-950 shadow-sm mb-5">
                     {currentCard.back}
                   </div>
 
+                  {/* Explanation Section */}
                   {currentCard.explanation && (
-                    <div className="rounded-xl border border-line-light bg-white p-4 shadow-sm">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-naub-green mb-1">
-                        Explanation & Context
+                    <div className="rounded-xl border border-line-light bg-white p-5 shadow-sm">
+                      <p className="text-xs font-bold uppercase tracking-wider text-naub-green mb-1.5">
+                        Explanation & Key Takeaway
                       </p>
-                      <p className="text-xs text-ink leading-relaxed">
+                      <p className="text-xs text-ink leading-relaxed font-medium">
                         {currentCard.explanation}
                       </p>
                     </div>
@@ -264,8 +286,8 @@ export default function FlashcardDeckPage() {
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-line-light flex items-center justify-between text-caption text-muted">
-                  <span className="flex items-center gap-1">
-                    <RotateCw size={13} /> Click to flip back
+                  <span className="flex items-center gap-1 font-medium">
+                    <RotateCw size={13} /> Click to flip back to question
                   </span>
                   <button
                     onClick={(e) => {
@@ -273,9 +295,9 @@ export default function FlashcardDeckPage() {
                       toggleMastered(currentIndex);
                     }}
                     className={clsx(
-                      'rounded-xl px-3 py-1.5 text-xs font-semibold transition-all flex items-center gap-1',
+                      'rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all flex items-center gap-1.5',
                       isMastered
-                        ? 'bg-emerald-600 text-white'
+                        ? 'bg-emerald-600 text-white shadow-glow-sm'
                         : 'bg-paper-warm text-ink hover:bg-emerald-100 hover:text-emerald-800'
                     )}
                   >
@@ -284,7 +306,7 @@ export default function FlashcardDeckPage() {
                   </button>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         ) : (
           /* ── CBT Practice Drill Mode ── */
@@ -294,7 +316,7 @@ export default function FlashcardDeckPage() {
                 CBT Question {currentIndex + 1}
               </span>
               <span className="text-xs font-semibold text-naub-green">
-                Interactive Practice
+                Select an Option Below
               </span>
             </div>
 
@@ -302,36 +324,37 @@ export default function FlashcardDeckPage() {
               {currentCard.front}
             </h2>
 
-            {/* CBT Multiple Choice Options */}
+            {/* CBT Options List */}
             <div className="space-y-3 mb-6">
               {currentCard.options?.map((opt, i) => {
-                const isCorrect = opt.trim() === currentCard.back.trim();
+                const isCorrect = isAnswerMatch(opt, currentCard.back);
                 const isSelected = selectedOption === opt;
+                const hasSelected = selectedOption !== null;
 
                 return (
                   <button
                     key={i}
-                    disabled={selectedOption !== null}
+                    disabled={hasSelected}
                     onClick={() => setSelectedOption(opt)}
                     className={clsx(
                       'w-full text-left flex items-center justify-between rounded-xl border p-4 text-xs font-medium transition-all',
-                      selectedOption === null
-                        ? 'border-line-light bg-paper-warm/40 hover:border-naub-green/50 hover:bg-paper-warm'
+                      !hasSelected
+                        ? 'border-line-light bg-paper-warm/40 hover:border-naub-green/50 hover:bg-paper-warm hover:scale-[1.005]'
                         : isCorrect
                         ? 'border-emerald-500 bg-emerald-50 text-emerald-950 font-semibold shadow-sm'
                         : isSelected
                         ? 'border-rose-400 bg-rose-50 text-rose-950 font-semibold'
-                        : 'border-line-light bg-paper-warm/20 opacity-60'
+                        : 'border-line-light bg-paper-warm/20 opacity-50'
                     )}
                   >
                     <div className="flex items-center gap-3">
                       <span
                         className={clsx(
-                          'flex h-6 w-6 items-center justify-center rounded-full font-bold text-xs border',
-                          selectedOption === null
+                          'flex h-6 w-6 items-center justify-center rounded-full font-bold text-xs border flex-shrink-0',
+                          !hasSelected
                             ? 'bg-white text-muted border-line-light'
                             : isCorrect
-                            ? 'bg-emerald-600 text-white border-emerald-600'
+                            ? 'bg-emerald-600 text-white border-emerald-600 shadow-glow-sm'
                             : isSelected
                             ? 'bg-rose-600 text-white border-rose-600'
                             : 'bg-white text-muted border-line-light'
@@ -342,10 +365,10 @@ export default function FlashcardDeckPage() {
                       <span>{opt}</span>
                     </div>
 
-                    {selectedOption !== null && isCorrect && (
+                    {hasSelected && isCorrect && (
                       <CheckCircle2 size={18} className="text-emerald-600 flex-shrink-0" />
                     )}
-                    {selectedOption !== null && isSelected && !isCorrect && (
+                    {hasSelected && isSelected && !isCorrect && (
                       <XCircle size={18} className="text-rose-600 flex-shrink-0" />
                     )}
                   </button>
@@ -353,29 +376,33 @@ export default function FlashcardDeckPage() {
               })}
             </div>
 
-            {/* Feedback / Explanation Box */}
+            {/* Answer Feedback / Explanation (Only shown AFTER option is clicked) */}
             {selectedOption !== null && (
               <div
                 className={clsx(
-                  'rounded-xl border p-4 animate-fade-in',
-                  selectedOption.trim() === currentCard.back.trim()
-                    ? 'border-emerald-200 bg-emerald-50/80 text-emerald-950'
-                    : 'border-rose-200 bg-rose-50/80 text-rose-950'
+                  'rounded-xl border p-5 animate-fade-in',
+                  isAnswerMatch(selectedOption, currentCard.back)
+                    ? 'border-emerald-200 bg-emerald-50/90 text-emerald-950'
+                    : 'border-rose-200 bg-rose-50/90 text-rose-950'
                 )}
               >
-                <div className="flex items-center gap-2 font-bold text-xs mb-1">
-                  {selectedOption.trim() === currentCard.back.trim() ? (
+                <div className="flex items-center gap-2 font-bold text-sm mb-2">
+                  {isAnswerMatch(selectedOption, currentCard.back) ? (
                     <>
-                      <CheckCircle2 size={16} className="text-emerald-600" /> Correct Answer!
+                      <CheckCircle2 size={18} className="text-emerald-600" />
+                      Correct Answer!
                     </>
                   ) : (
                     <>
-                      <XCircle size={16} className="text-rose-600" /> Incorrect
+                      <XCircle size={18} className="text-rose-600" />
+                      Incorrect. Correct Answer: &ldquo;{currentCard.back}&rdquo;
                     </>
                   )}
                 </div>
                 {currentCard.explanation && (
-                  <p className="text-xs mt-1 leading-relaxed">{currentCard.explanation}</p>
+                  <p className="text-xs leading-relaxed font-medium mt-1">
+                    {currentCard.explanation}
+                  </p>
                 )}
               </div>
             )}
@@ -399,7 +426,7 @@ export default function FlashcardDeckPage() {
               title="Shuffle Deck"
             >
               <Shuffle size={14} />
-              Shuffle
+              Shuffle Deck
             </button>
 
             <button
