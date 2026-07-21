@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, X, Download, Bookmark, Loader2, Check } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, X, Download, Bookmark, Loader2, Check, ExternalLink, FileText } from 'lucide-react';
 import { usePaper } from '@/lib/hooks/useQuestionBank';
 import { WatermarkOverlay } from '@/components/ui/WatermarkOverlay';
 import { useBookmarkStore } from '@/lib/bookmark-store';
@@ -204,16 +204,46 @@ export default function PaperPage() {
               )}
             </>
           ) : isPdf && paper.fileUrl ? (
-            /* ── PDF viewer fallback ── */
-            <div className="relative overflow-hidden rounded-card-xl border border-line bg-white shadow-elevated animate-fade-in">
+            /* ── PDF viewer fallback (iframe + Google Docs viewer fallback) ── */
+            <div className="relative overflow-hidden rounded-card-xl border border-line bg-white shadow-elevated animate-fade-in p-3 sm:p-4">
               <WatermarkOverlay text="naubpadi.com.ng" />
-              <embed
-                src={paper.fileUrl}
-                type="application/pdf"
-                className="w-full"
-                style={{ height: '80vh', minHeight: 480 }}
-                title={paper.title}
-              />
+
+              {/* Action bar for easy viewing & download */}
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-paper-warm p-3 text-xs border border-line-light relative z-20">
+                <div className="flex items-center gap-2 text-ink font-semibold min-w-0">
+                  <FileText size={16} className="text-naub-green flex-shrink-0" />
+                  <span className="truncate">{paper.title}</span>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <a
+                    href={paper.fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1"
+                  >
+                    <ExternalLink size={13} />
+                    Open Original
+                  </a>
+                  <button
+                    onClick={handleDownload}
+                    disabled={downloading}
+                    className="btn-primary text-xs py-1.5 px-3 flex items-center gap-1 bg-naub-green hover:bg-naub-green-dark disabled:opacity-50"
+                  >
+                    {downloading ? <Loader2 size={13} className="animate-spin" /> : <Download size={13} />}
+                    Download PDF
+                  </button>
+                </div>
+              </div>
+
+              {/* Embedded PDF container */}
+              <div className="relative w-full overflow-hidden rounded-xl border border-line-light bg-paper">
+                <iframe
+                  src={`https://docs.google.com/viewer?url=${encodeURIComponent(paper.fileUrl)}&embedded=true`}
+                  className="w-full rounded-xl border-0"
+                  style={{ height: '75vh', minHeight: 480 }}
+                  title={paper.title}
+                />
+              </div>
             </div>
           ) : (
             /* ── Nothing to show ── */
