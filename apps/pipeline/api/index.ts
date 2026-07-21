@@ -13,8 +13,29 @@ async function bootstrapServer() {
       AppModule,
       new ExpressAdapter(server),
     );
+    const defaultOrigins = [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'https://naubpadi.vercel.app',
+      'https://www.naubpadi.com.ng',
+      'https://naubpadi.com.ng',
+    ];
+    const envOrigins = process.env.CORS_ORIGIN
+      ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
+      : [];
+    const allowedOrigins = [...defaultOrigins, ...envOrigins];
+
     app.enableCors({
-      origin: process.env.CORS_ORIGIN ?? '*',
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        const cleanOrigin = origin.replace(/\/+$/, '');
+        const isAllowed = allowedOrigins.some((allowed) => {
+          const cleanAllowed = allowed.replace(/\/+$/, '');
+          return cleanAllowed === '*' || cleanOrigin === cleanAllowed;
+        });
+        if (isAllowed) return callback(null, true);
+        return callback(null, true);
+      },
       credentials: true,
     });
     app.useGlobalPipes(
