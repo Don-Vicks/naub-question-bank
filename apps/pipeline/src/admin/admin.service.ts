@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, MoreThan } from 'typeorm';
+import { Repository, MoreThan, In } from 'typeorm';
 import { User } from '../auth/entities/user.entity';
 import { SourceDocument } from '../question-bank/entities/source-document.entity';
 import { Question } from '../question-bank/entities/question.entity';
@@ -63,7 +63,7 @@ export class AdminService {
 
     if (params.search) {
       qb.where(
-        '(doc.originalFilename LIKE :s OR doc.extractedTitle LIKE :s OR doc.extractedSubject LIKE :s)',
+        '(doc.originalFilename LIKE :s OR doc.courseCode LIKE :s OR doc.extractedTitle LIKE :s OR doc.extractedSubject LIKE :s)',
         { s: `%${params.search}%` },
       );
     }
@@ -77,17 +77,30 @@ export class AdminService {
       .take(limit)
       .getManyAndCount();
 
+    const uploaderIds = Array.from(new Set(items.map((d) => d.uploaderId).filter(Boolean))) as string[];
+    let userMap = new Map<string, { name?: string; email: string }>();
+    if (uploaderIds.length > 0) {
+      const users = await this.userRepo.findBy({ id: In(uploaderIds) });
+      userMap = new Map(users.map((u) => [u.id, { name: u.name, email: u.email }]));
+    }
+
     return {
-      items: items.map((doc) => ({
-        id: doc.id,
-        title: doc.extractedTitle ?? doc.originalFilename,
-        courseCode: doc.extractedSubject ?? '—',
-        status: doc.status,
-        pageCount: doc.pageCount,
-        uploadedAt: doc.createdAt.toISOString(),
-        uploaderId: doc.uploaderId,
-        errorMessage: doc.errorMessage,
-      })),
+      items: items.map((doc) => {
+        const uploader = doc.uploaderId ? userMap.get(doc.uploaderId) : null;
+        return {
+          id: doc.id,
+          title: doc.courseCode ? `${doc.courseCode} ${doc.originalFilename}` : doc.originalFilename,
+          courseCode: doc.courseCode ?? doc.extractedSubject ?? '—',
+          status: doc.status,
+          pageCount: doc.pageCount ?? 1,
+          uploadedAt: doc.createdAt.toISOString(),
+          uploaderId: doc.uploaderId,
+          uploaderName: uploader?.name ?? null,
+          uploaderEmail: uploader?.email ?? 'System / Anonymous',
+          fileUrl: doc.fileUrl,
+          errorMessage: doc.errorMessage,
+        };
+      }),
       total,
       page,
       limit,

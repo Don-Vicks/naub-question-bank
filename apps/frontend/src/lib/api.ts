@@ -116,8 +116,11 @@ export interface AdminPaperItem {
   status: string;
   pageCount: number;
   uploadedAt: string;
-  uploaderId: string | null;
-  errorMessage: string | null;
+  uploaderId?: string | null;
+  uploaderName?: string | null;
+  uploaderEmail?: string | null;
+  fileUrl?: string | null;
+  errorMessage?: string | null;
 }
 
 export interface AdminUserItem {
