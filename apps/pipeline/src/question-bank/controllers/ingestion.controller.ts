@@ -102,19 +102,18 @@ export class IngestionController {
         if (file.mimetype === 'application/pdf') {
           // Read local raw PDF buffer
           const rawPdfBuffer = fs.readFileSync(file.path);
-          // Apply watermark to the PDF document
+          // Apply permanent watermark directly onto all pages of the PDF document
           const watermarkedPdfBuffer = await this.watermarkPdf(rawPdfBuffer, 'NAUB PADI | naubpadi.com.ng');
           fs.writeFileSync(file.path, watermarkedPdfBuffer);
 
+          // Upload ONLY the 1 watermarked PDF to R2 to maximize storage & efficiency
           fileUrl = await this.r2Service.uploadFile(
             r2Key,
             watermarkedPdfBuffer,
             file.mimetype,
             objectMetadata,
           );
-
-          // Convert PDF pages to watermarked PNG images for preview
-          pageImageUrls = await this.convertPdfToPngs(file.path, tempDocId);
+          pageImageUrls = [];
         } else if (file.mimetype.startsWith('image/')) {
           const watermarkedBuffer = await this.watermarkImage(file.path, 'naubpadi.com.ng');
           fs.writeFileSync(file.path, watermarkedBuffer);

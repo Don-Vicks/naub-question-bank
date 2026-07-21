@@ -150,18 +150,19 @@ export class PapersController {
 
   @Get('courses/:courseId')
   async getCourse(@Param('courseId') courseId: string) {
+    const cleanId = decodeURIComponent(courseId).replace(/\+/g, ' ');
     let departmentId: string | undefined;
-    let courseCode = courseId;
-    const separator = courseId.indexOf('::');
+    let courseCode = cleanId;
+    const separator = cleanId.indexOf('::');
     if (separator !== -1) {
-      departmentId = courseId.substring(0, separator);
-      courseCode = courseId.substring(separator + 2);
+      departmentId = cleanId.substring(0, separator);
+      courseCode = cleanId.substring(separator + 2);
     }
 
     const qb = this.sourceDocRepo
       .createQueryBuilder('doc')
       .where('doc.status IN (:...statuses)', { statuses: ['ready', 'extracted'] })
-      .andWhere('LOWER(REPLACE(doc.courseCode, \' \', \'\')) = LOWER(REPLACE(:courseCode, \' \', \'\'))', { courseCode });
+      .andWhere("LOWER(REPLACE(REPLACE(doc.courseCode, ' ', ''), '+', '')) = LOWER(REPLACE(REPLACE(:courseCode, ' ', ''), '+', ''))", { courseCode });
 
     if (departmentId) {
       qb.andWhere('LOWER(doc.departmentId) = LOWER(:departmentId)', { departmentId });
@@ -196,14 +197,15 @@ export class PapersController {
       .where('doc.status IN (:...statuses)', { statuses: ['ready', 'extracted'] });
 
     if (courseId) {
-      const separator = courseId.indexOf('::');
-      let targetCode = courseId;
+      const cleanId = decodeURIComponent(courseId).replace(/\+/g, ' ');
+      const separator = cleanId.indexOf('::');
+      let targetCode = cleanId;
       if (separator !== -1) {
-        const dept = courseId.substring(0, separator);
-        targetCode = courseId.substring(separator + 2);
+        const dept = cleanId.substring(0, separator);
+        targetCode = cleanId.substring(separator + 2);
         qb.andWhere('LOWER(doc.departmentId) = LOWER(:dept)', { dept });
       }
-      qb.andWhere('LOWER(REPLACE(doc.courseCode, \' \', \'\')) = LOWER(REPLACE(:targetCode, \' \', \'\'))', { targetCode });
+      qb.andWhere("LOWER(REPLACE(REPLACE(doc.courseCode, ' ', ''), '+', '')) = LOWER(REPLACE(REPLACE(:targetCode, ' ', ''), '+', ''))", { targetCode });
     }
 
     if (facultyId) qb.andWhere('LOWER(doc.facultyId) = LOWER(:facultyId)', { facultyId });
