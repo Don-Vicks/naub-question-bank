@@ -1,0 +1,1702 @@
+[
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "1",
+    "front": "What does the term 'philosophy' etymologically mean?",
+    "frontLatex": "",
+    "back": "Love of wisdom",
+    "backLatex": "",
+    "explanation": "Philosophy is derived from two Greek words: 'Philo' meaning 'Love' and 'Sophia' meaning 'Wisdom'.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Love of power",
+      "Love of wisdom",
+      "Love of knowledge",
+      "Love of truth"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "2",
+    "front": "According to Plato, philosophy is simply:",
+    "frontLatex": "",
+    "back": "The acquisition of knowledge",
+    "backLatex": "",
+    "explanation": "Plato defined philosophy as 'the acquisition of knowledge', implying the field knows no bounds in its search for limitless knowledge.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "The love of wisdom",
+      "The acquisition of knowledge",
+      "The study of reality",
+      "The science of logic"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "3",
+    "front": "Philosophy has been described as a 'Gad-fly' because:",
+    "frontLatex": "",
+    "back": "It keeps human beings always on their toes in respect of received opinions",
+    "backLatex": "",
+    "explanation": "Philosophy is called a Gad-fly because it is a discipline that keeps human beings always on their toes in respect of received opinions, constantly questioning and examining them.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "It is annoying like an insect",
+      "It keeps human beings always on their toes in respect of received opinions",
+      "It flies between science and theology",
+      "It is the mother of all sciences"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "4",
+    "front": "Philosophy is described as a 'no-man's land' between:",
+    "frontLatex": "",
+    "back": "Science and theology",
+    "backLatex": "",
+    "explanation": "Philosophy is like science because it engages in critical understanding of the world, and like theology because it inquires into the world beyond sense-experience. It differs from both due to its critical nature.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Art and religion",
+      "Science and theology",
+      "Logic and ethics",
+      "Reason and faith"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "5",
+    "front": "Which philosopher described philosophy as 'the logical clarification of thoughts'?",
+    "frontLatex": "",
+    "back": "Ludwig Wittgenstein",
+    "backLatex": "",
+    "explanation": "In his Tractatus Logico-Philosophicus, Wittgenstein maintained that the object of philosophy is the logical clarification of thoughts, and that philosophy is not a theory but an activity.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Bertrand Russell",
+      "Plato",
+      "Ludwig Wittgenstein",
+      "Francis Bacon"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "6",
+    "front": "The Socratic conception of philosophy emphasizes that philosophers must:",
+    "frontLatex": "",
+    "back": "Live by examples and be moral exemplars",
+    "backLatex": "",
+    "explanation": "The Socratic conception holds that philosophy should be critical, philosophers must live by examples, be moral exemplars, be ready to stand by the truth, and should not be dogmatic.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Focus only on logical analysis",
+      "Live by examples and be moral exemplars",
+      "Unite theory and practice",
+      "Contemplate the universe as citizens"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "7",
+    "front": "Philosophy as Analysis, associated with Wittgenstein, is concerned with:",
+    "frontLatex": "",
+    "back": "Linguistic clarification and conceptual analysis",
+    "backLatex": "",
+    "explanation": "Philosophy as Analysis holds that philosophy should be contented with linguistic clarification and conceptual analysis, represented by Wittgenstein's idea of philosophy as a method of therapy.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Moral exemplification",
+      "Linguistic clarification and conceptual analysis",
+      "Unity of theory and practice",
+      "Open-ended contemplation"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "8",
+    "front": "Bertrand Russell is associated with which conception of philosophy?",
+    "frontLatex": "",
+    "back": "Philosophy as Contemplation",
+    "backLatex": "",
+    "explanation": "Philosophy as Contemplation holds that philosophical questions and answers are open-ended, and philosophers are citizens of the universe, versatile in the knowledge of the world.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Philosophy as Analysis",
+      "Philosophy as Contemplation",
+      "Socratic conception",
+      "Philosophy as the Unity of Theory and Practice"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "9",
+    "front": "The conception of philosophy as the Unity of Theory and Practice is associated with:",
+    "frontLatex": "",
+    "back": "Marxist philosophy",
+    "backLatex": "",
+    "explanation": "This conception sees philosophy as a way of uniting theory and practice to enable us make the world better. Examples can be found in the Marxist eleventh thesis in his critique of Feuerbach.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "Socratic conception",
+      "Bertrand Russell's view",
+      "Marxist philosophy",
+      "Wittgenstein's analysis"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "10",
+    "front": "According to Arthur Schopenhauer, philosophy is:",
+    "frontLatex": "",
+    "back": "To repeat abstractly, universally, and distinctly in concepts the whole inner nature of the world",
+    "backLatex": "",
+    "explanation": "Schopenhauer defined philosophy as repeating abstractly, universally, and distinctly in concepts the whole inner nature of the world, and depositing it as a reflected image in permanent concepts.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "The acquisition of knowledge",
+      "The study of wisdom and truth",
+      "To repeat abstractly, universally, and distinctly in concepts the whole inner nature of the world",
+      "The science of things in their first causes"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "11",
+    "front": "Jacques Maritain defined philosophy as:",
+    "frontLatex": "",
+    "back": "The science by which the natural light of reason studies the first causes or highest principles of all things",
+    "backLatex": "",
+    "explanation": "Maritain saw philosophy as the science by which the natural light of reason studies the first causes or highest principles of all things \u2014 the science of things in their first causes, in so far as these belong to the natural order.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "The logical clarification of thoughts",
+      "The science by which the natural light of reason studies the first causes or highest principles of all things",
+      "The acquisition of knowledge",
+      "The study of wisdom and truth"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "12",
+    "front": "Which of the following is NOT one of the five main branches of philosophy discussed in the course?",
+    "frontLatex": "",
+    "back": "Linguistics",
+    "backLatex": "",
+    "explanation": "The five main branches discussed are: Epistemology, Aesthetics, Ethics, Logic, and Metaphysics. Linguistics is not listed as one of the main branches.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Epistemology",
+      "Aesthetics",
+      "Linguistics",
+      "Metaphysics"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "13",
+    "front": "The term 'epistemology' is derived from the Greek words:",
+    "frontLatex": "",
+    "back": "'Episteme' (knowledge) and 'logos' (study/discourse)",
+    "backLatex": "",
+    "explanation": "Epistemology comes from 'Episteme' meaning knowledge and 'logos' meaning study, discourse, explanation or reasoning.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "'Epi' (upon) and 'stemos' (standing)",
+      "'Episteme' (knowledge) and 'logos' (study/discourse)",
+      "'Epos' (word) and 'logikos' (logical)",
+      "'Episteme' (belief) and 'nomic' (law)"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "14",
+    "front": "According to the tripartite theory of knowledge, knowledge is defined as:",
+    "frontLatex": "",
+    "back": "Justified true belief",
+    "backLatex": "",
+    "explanation": "The tripartite theory holds that for knowledge to exist, three conditions must be met: the belief must be true, the person must believe it, and there must be justification (reason/proof) for the belief.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "True belief only",
+      "Justified true belief",
+      "Rational opinion",
+      "Empirical observation"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "15",
+    "front": "Walida believed a bridge was safe and attempted to cross it, but it collapsed. According to the tripartite theory, she:",
+    "frontLatex": "",
+    "back": "Did not have knowledge because her belief was not true",
+    "backLatex": "",
+    "explanation": "Even though Walida believed the bridge was safe and may have had justification, her belief was not true (the bridge collapsed), so she did not have knowledge. For something to count as knowledge, it must be true.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Had knowledge because she had justification",
+      "Did not have knowledge because her belief was not true",
+      "Had knowledge because she believed it",
+      "Did not have knowledge because she lacked intuition"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "16",
+    "front": "Which type of truth states that a proposition is true if it corresponds to reality or an actual state of affairs?",
+    "frontLatex": "",
+    "back": "Correspondent truth",
+    "backLatex": "",
+    "explanation": "Correspondent truth theory holds that a statement is true if it corresponds to reality or an actual state of affairs \u2014 it emphasizes agreement between beliefs and facts.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Coherence truth",
+      "Correspondent truth",
+      "Pragmatist truth",
+      "Absolute truth"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "17",
+    "front": "According to the coherence theory of truth:",
+    "frontLatex": "",
+    "back": "A statement is true if it coheres with an already established system of truth",
+    "backLatex": "",
+    "explanation": "Coherence truth sees truth as a relation between judgment and the system to which it belongs, emphasizing agreements among beliefs. However, truth by coherence does not necessarily make the statement correct.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "A statement is true if it corresponds to facts",
+      "A statement is true if it coheres with an already established system of truth",
+      "A statement is true if it is practicable",
+      "A statement is true if it is universally accepted"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "18",
+    "front": "The pragmatist theory of truth determines truth by:",
+    "frontLatex": "",
+    "back": "Practicability \u2014 a proposition is true if what it affirms is practicable or realizable",
+    "backLatex": "",
+    "explanation": "Pragmatist truth considers the idea of truth to be an affair of practical experience. A proposition is true if what it affirms is practicable or realizable.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Correspondence with facts",
+      "Coherence with existing beliefs",
+      "Practicability \u2014 if what it affirms is practicable or realizable",
+      "Universal acceptance"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "19",
+    "front": "Which of the following is NOT one of the five sensory organs required for acquiring knowledge according to the course?",
+    "frontLatex": "",
+    "back": "Brain",
+    "backLatex": "",
+    "explanation": "The five sensory organs listed are: smelling, hearing, touch, sight, and tasting. The brain is not listed among the sensory organs.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Smelling",
+      "Hearing",
+      "Touch",
+      "Brain"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "20",
+    "front": "Intuition as a source of knowledge is described as:",
+    "frontLatex": "",
+    "back": "The ability to acquire knowledge without inference or the use of reasoning",
+    "backLatex": "",
+    "explanation": "Intuition gives us the ability to know something directly without analytic reasoning, bridging the gap between the conscious and non-conscious parts of our mind, and between instinct and reason.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Knowledge gained through experience",
+      "Knowledge based on authority",
+      "The ability to acquire knowledge without inference or the use of reasoning",
+      "Knowledge derived from observation"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "21",
+    "front": "Max Weber identified three types of authority. Which of the following is NOT one of them?",
+    "frontLatex": "",
+    "back": "Democratic authority",
+    "backLatex": "",
+    "explanation": "Max Weber identified three types: charismatic authority, traditional authority, and rational-legal authority. Democratic authority is not one of Weber's types.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Charismatic authority",
+      "Traditional authority",
+      "Rational-legal authority",
+      "Democratic authority"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "22",
+    "front": "The three conditions for knowing are:",
+    "frontLatex": "",
+    "back": "Objective requirement, Subjective requirement, and Evidential requirement",
+    "backLatex": "",
+    "explanation": "These three conditions must be met: objective (factual existence), subjective (personal observation/recognition), and evidential (physical proof of existence).",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Physical, mental, and spiritual requirements",
+      "Objective, subjective, and evidential requirements",
+      "Theoretical, practical, and empirical requirements",
+      "Rational, sensory, and intuitive requirements"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "23",
+    "front": "Propositional knowledge is also known as:",
+    "frontLatex": "",
+    "back": "Descriptive or declarative knowledge",
+    "backLatex": "",
+    "explanation": "Propositional knowledge, also called descriptive or declarative knowledge, refers to knowledge of facts, as in 'X is Y' or 'X is the case'. It is the primary concern of epistemology.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Personal knowledge",
+      "Procedural knowledge",
+      "Descriptive or declarative knowledge",
+      "Intuitive knowledge"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "24",
+    "front": "Procedural knowledge differs from propositional knowledge in that:",
+    "frontLatex": "",
+    "back": "Procedural knowledge involves knowing how to do something, while propositional knowledge is theoretical",
+    "backLatex": "",
+    "explanation": "Procedural knowledge is 'knowledge of how' \u2014 being familiar with a procedure to the extent that one can actually do it. It is practical in nature, unlike propositional knowledge which is theoretical.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Procedural knowledge is about facts",
+      "Procedural knowledge involves knowing how to do something, while propositional knowledge is theoretical",
+      "Procedural knowledge requires personal acquaintance",
+      "There is no difference between them"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "25",
+    "front": "Personal knowledge is also referred to as:",
+    "frontLatex": "",
+    "back": "Knowledge by acquaintance",
+    "backLatex": "",
+    "explanation": "Personal knowledge entails being familiar with something \u2014 it goes beyond mere propositions to knowing something in a particular way through direct acquaintance.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Knowledge by description",
+      "Knowledge by acquaintance",
+      "Knowledge by inference",
+      "Knowledge by deduction"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "26",
+    "front": "A priori knowledge is:",
+    "frontLatex": "",
+    "back": "Knowledge that is independent of experience (non-empirical)",
+    "backLatex": "",
+    "explanation": "A priori knowledge does not depend on experience \u2014 it is non-empirical. For example, mathematical truths like 2+2=4 are known a priori.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Knowledge dependent on experience",
+      "Knowledge independent of experience (non-empirical)",
+      "Knowledge gained through intuition only",
+      "Knowledge based on authority"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "27",
+    "front": "Empiricism holds that:",
+    "frontLatex": "",
+    "back": "All ideas come to us through experience and knowledge is essentially based on or derived from experience",
+    "backLatex": "",
+    "explanation": "Empiricism emphasizes sense experience as the root of knowledge, arguing that all ideas come through the five external senses or inner sensations like pain and pleasure.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Knowledge is innate and independent of experience",
+      "All ideas come to us through experience",
+      "Reason is the sole source of knowledge",
+      "Truth is determined by practical consequences"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "28",
+    "front": "Rationalism holds that:",
+    "frontLatex": "",
+    "back": "The criterion of truth is not sensory but intellectual and deductive",
+    "backLatex": "",
+    "explanation": "Rationalism appeals to reason as a source of knowledge or justification, arguing that the criterion of truth is intellectual and deductive rather than sensory.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Experience is the only source of knowledge",
+      "The criterion of truth is not sensory but intellectual and deductive",
+      "Knowledge comes from authority",
+      "Truth is determined by consensus"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "29",
+    "front": "The 'Discipline of Nature' in psychological knowledge acquisition means:",
+    "frontLatex": "",
+    "back": "Knowledge is acquired through trial and error by observing phenomena",
+    "backLatex": "",
+    "explanation": "The Discipline of Nature allows an individual to acquire knowledge by observing phenomena or undergoing experiences. Knowledge is largely a product of trial and error, and nature always allows a second chance.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Learning through imitation of elders",
+      "Knowledge acquired through trial and error by observing phenomena",
+      "Learning through punishment and reward",
+      "Knowledge gained through formal education"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "30",
+    "front": "The 'Discipline of Superior Force' is also known as:",
+    "frontLatex": "",
+    "back": "The 'sergeant to private' discipline",
+    "backLatex": "",
+    "explanation": "The Discipline of Superior Force uses force as the driving force in knowledge acquisition \u2014 the 'sergeant to private' discipline, where punishment or threat of punishment is used to teach dangerous lessons.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Trial and error discipline",
+      "Imitation discipline",
+      "The 'sergeant to private' discipline",
+      "Natural observation discipline"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "31",
+    "front": "According to skepticism in epistemology:",
+    "frontLatex": "",
+    "back": "There is no such thing as certainty in human knowledge",
+    "backLatex": "",
+    "explanation": "Skepticism holds that there is no certainty in human knowledge, and all human knowledge is only probably true. Skeptics question whether we possess knowledge in the strictest sense.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "All knowledge is absolutely certain",
+      "There is no such thing as certainty in human knowledge",
+      "Knowledge can only be gained through reason",
+      "Knowledge is always true"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "32",
+    "front": "Aesthetics comes from the Greek 'aisthetike', meaning:",
+    "frontLatex": "",
+    "back": "The science of how things are known via the senses",
+    "backLatex": "",
+    "explanation": "Aesthetics is concerned with sensory or sensori-emotional values, sometimes called judgments of sentiment or taste.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "The study of beauty only",
+      "The science of how things are known via the senses",
+      "The philosophy of art",
+      "The study of emotions"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "33",
+    "front": "Aesthetic judgments are influenced by all of the following EXCEPT:",
+    "frontLatex": "",
+    "back": "Mathematical reasoning",
+    "backLatex": "",
+    "explanation": "Factors affecting aesthetic judgment include emotions, cultural conditioning, economic/political/moral value, intellectual capacity, training, and sensory perception \u2014 but not mathematical reasoning.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Emotions",
+      "Cultural conditioning",
+      "Mathematical reasoning",
+      "Intellectual capacity"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "34",
+    "front": "Ethics is derived from the Ancient Greek 'ethikos', meaning:",
+    "frontLatex": "",
+    "back": "Arising from habit or character",
+    "backLatex": "",
+    "explanation": "Ethics, also referred to as moral philosophy, was derived from the Ancient Greek 'ethikos' meaning 'arising from habit or character'.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Love of wisdom",
+      "Arising from habit or character",
+      "The study of knowledge",
+      "The science of logic"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "35",
+    "front": "Which of the following is NOT a type of ethics discussed in the course?",
+    "frontLatex": "",
+    "back": "Theoretical ethics",
+    "backLatex": "",
+    "explanation": "The four types of ethics discussed are: descriptive ethics, meta-ethics, normative ethics, and applied ethics. Theoretical ethics is not listed.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Descriptive ethics",
+      "Meta-ethics",
+      "Normative ethics",
+      "Theoretical ethics"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "36",
+    "front": "Meta-ethics is primarily concerned with:",
+    "frontLatex": "",
+    "back": "The origin and meaning of ethical concepts",
+    "backLatex": "",
+    "explanation": "Meta-ethics examines the meaning, nature and origin of moral standards, raising questions about what ethical standards really mean.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Prescribing moral rules for society",
+      "Applying ethics to real-life situations",
+      "The origin and meaning of ethical concepts",
+      "Describing morality across cultures"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "37",
+    "front": "Moral objectivism holds that moral values:",
+    "frontLatex": "",
+    "back": "Exist in a spirit-like realm beyond subjective human conventions and are absolute and universal",
+    "backLatex": "",
+    "explanation": "Moral objectivism (the 'other-worldly' stance) proffers that moral values are objective, existing beyond human conventions, and are absolute/eternal and universal.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Are created by individual desires",
+      "Are products of cultural conventions",
+      "Exist in a spirit-like realm beyond subjective human conventions and are absolute",
+      "Change with time and space"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "38",
+    "front": "Moral relativism, as opposed to moral objectivism, argues that:",
+    "frontLatex": "",
+    "back": "Moral values are primarily a product of human conventions",
+    "backLatex": "",
+    "explanation": "Moral relativism rejects the objective or divine status of moral values, arguing they are products of human conventions. It includes individual relativism and cultural relativism.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Moral values are absolute and universal",
+      "Moral values come from God",
+      "Moral values are primarily a product of human conventions",
+      "Moral values never change"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "39",
+    "front": "Psychological egoism, as maintained by Thomas Hobbes, holds that:",
+    "frontLatex": "",
+    "back": "Self-oriented interests ultimately motivate all human actions",
+    "backLatex": "",
+    "explanation": "Psychological egoism maintains that most of our actions and judgments are influenced by egoistic or selfish interests \u2014 even seemingly selfless actions have a selfish motivation lurking behind.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "All actions are motivated by altruism",
+      "Self-oriented interests ultimately motivate all human actions",
+      "Pleasure is the driving force behind all actions",
+      "Reason motivates all moral decisions"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "40",
+    "front": "David Hume viewed reason as:",
+    "frontLatex": "",
+    "back": "Slave to emotion",
+    "backLatex": "",
+    "explanation": "David Hume argued that reason is slave to emotion, meaning that moral decisions largely involve emotion rather than reason.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "The master of emotion",
+      "Slave to emotion",
+      "Independent of emotion",
+      "Superior to emotion"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "41",
+    "front": "The Golden Rule in normative ethics states:",
+    "frontLatex": "",
+    "back": "Do unto others what you have others do unto you",
+    "backLatex": "",
+    "explanation": "The Golden Rule is the catch-all principle of normative ethics: 'do unto others what you have others do unto you'.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Do whatever makes you happy",
+      "Do unto others what you have others do unto you",
+      "Follow the law at all times",
+      "Act only out of self-interest"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "42",
+    "front": "Plato identified four cardinal virtues. Which of the following is NOT one of them?",
+    "frontLatex": "",
+    "back": "Generosity",
+    "backLatex": "",
+    "explanation": "Plato's four cardinal virtues are: wisdom, courage, temperance, and justice. Generosity was later added but is not one of the original cardinal virtues.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Wisdom",
+      "Courage",
+      "Generosity",
+      "Justice"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "43",
+    "front": "Samuel Pufendorf classified duties under three main headings. They are:",
+    "frontLatex": "",
+    "back": "Duties to God, duties to oneself, and duties to others",
+    "backLatex": "",
+    "explanation": "Pufendorf's duty theory classifies all duties under three categories: duties to God, duties to oneself (soul and body), and duties to others (absolute and conditional).",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Duties to self, duties to family, duties to state",
+      "Duties to God, duties to oneself, and duties to others",
+      "Moral duties, legal duties, social duties",
+      "Positive duties, negative duties, perfect duties"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "44",
+    "front": "According to W.D. Ross, which of the following is NOT one of his listed duties?",
+    "frontLatex": "",
+    "back": "Obedience",
+    "backLatex": "",
+    "explanation": "Ross's duties include: fidelity, reparation, gratitude, justice, beneficence, self-improvement, and non-maleficence. Obedience is not on his list.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "Fidelity",
+      "Gratitude",
+      "Obedience",
+      "Non-maleficence"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "45",
+    "front": "Ethical egoism holds that an action is morally right if:",
+    "frontLatex": "",
+    "back": "The consequences are more favourable than unfavourable only to the agent performing the action",
+    "backLatex": "",
+    "explanation": "Ethical egoism is a subdivision of consequentialism: an action is morally right if its consequences are more favourable than unfavourable only to the agent performing the action.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "The consequences benefit everyone",
+      "The consequences benefit everyone except the agent",
+      "The consequences are more favourable than unfavourable only to the agent",
+      "The consequences benefit the majority"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "46",
+    "front": "Utilitarianism holds that an action is morally right if:",
+    "frontLatex": "",
+    "back": "The consequences are more favourable than unfavourable to everyone",
+    "backLatex": "",
+    "explanation": "Utilitarianism is the consequentialist view that an action is morally right if its consequences are more favourable than unfavourable to everyone involved.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "It follows divine commands",
+      "It benefits only the agent",
+      "The consequences are more favourable than unfavourable to everyone",
+      "It follows the Golden Rule"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "47",
+    "front": "Applied ethics is defined as:",
+    "frontLatex": "",
+    "back": "The branch of ethics which examines the moral status of concrete social issues",
+    "backLatex": "",
+    "explanation": "Applied ethics applies ethical principles to real life, analyzing controversial issues like abortion, euthanasia, and family planning using normative ethical theories.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "The study of moral language",
+      "The branch that prescribes moral rules",
+      "The branch which examines the moral status of concrete social issues",
+      "The study of the origin of moral codes"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "48",
+    "front": "The term 'Logic' comes from the Greek word 'logos', originally meaning:",
+    "frontLatex": "",
+    "back": "The word, or what is spoken, later meaning thought or reason",
+    "backLatex": "",
+    "explanation": "Logic originally meant 'the word' or 'what is spoken', but later came to mean 'thought or reason'. It is the study of criteria for the evaluation of arguments.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "The science of numbers",
+      "The word, or what is spoken, later meaning thought or reason",
+      "The study of reality",
+      "The love of wisdom"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "49",
+    "front": "Formal logic is the study of:",
+    "frontLatex": "",
+    "back": "Inference with purely formal content, expressed as abstract rules",
+    "backLatex": "",
+    "explanation": "Formal logic studies inference with purely formal content, where the content can be expressed as a particular application of a wholly abstract rule not about any particular thing or property.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Natural language arguments",
+      "Inference with purely formal content expressed as abstract rules",
+      "Symbolic abstractions",
+      "Everyday reasoning"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "50",
+    "front": "Informal logic is concerned with:",
+    "frontLatex": "",
+    "back": "The critical assessment of natural language arguments to detect validity or fallacies",
+    "backLatex": "",
+    "explanation": "Informal logic studies natural language arguments, involving the critical assessment of utterances or statements to detect the validity or fallacies of arguments.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Formal symbolic systems",
+      "Abstract logical rules",
+      "The critical assessment of natural language arguments to detect validity or fallacies",
+      "Mathematical proofs"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "51",
+    "front": "The three valuable properties required of logical arguments are:",
+    "frontLatex": "",
+    "back": "Consistency, soundness, and completeness",
+    "backLatex": "",
+    "explanation": "Consistency requires no contradictions; soundness requires that rules always result in logically valid inferences from true premises; completeness requires rules be exhaustive enough to prove all statements within the system.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Validity, soundness, and truth",
+      "Consistency, soundness, and completeness",
+      "Clarity, precision, and accuracy",
+      "Necessity, sufficiency, and relevance"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "52",
+    "front": "In deductive reasoning:",
+    "frontLatex": "",
+    "back": "The conclusion necessarily follows from the premises \u2014 if the premises are true, the conclusion is necessarily true",
+    "backLatex": "",
+    "explanation": "Deductive reasoning goes from general to particular. The conclusion necessarily tallies with the premises \u2014 if the premises are true, the conclusion must be true.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "The conclusion is only probable",
+      "The conclusion necessarily follows from the premises",
+      "The conclusion goes from particular to general",
+      "The conclusion may or may not follow from the premises"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "53",
+    "front": "Which of the following is an example of deductive reasoning?",
+    "frontLatex": "",
+    "back": "All men are mortal; Mr. John is a man; Therefore, Mr. John is mortal",
+    "backLatex": "",
+    "explanation": "This is a classic deductive syllogism moving from general premises (all men are mortal) to a particular conclusion (Mr. John is mortal).",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Most students study hard; therefore all students study hard",
+      "All men are mortal; Mr. John is a man; Therefore, Mr. John is mortal",
+      "Some birds fly; therefore all birds fly",
+      "I saw two white swans; therefore all swans are white"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "54",
+    "front": "In inductive reasoning:",
+    "frontLatex": "",
+    "back": "The conclusion does not necessarily tally with the premises \u2014 it is a matter of probability",
+    "backLatex": "",
+    "explanation": "Inductive reasoning derives reliable generalizations from observations. The conclusion is only probable, not certain, since there may be exceptions to general rules.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "The conclusion necessarily follows from premises",
+      "The conclusion does not necessarily tally with the premises \u2014 it is a matter of probability",
+      "The conclusion is always true",
+      "The reasoning moves from general to particular"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "55",
+    "front": "Grice's Maxim of Quality requires speakers to:",
+    "frontLatex": "",
+    "back": "Make contributions that are true \u2014 do not say what you believe to be false",
+    "backLatex": "",
+    "explanation": "The Maxim of Quality has two parts: (i) do not say what you believe to be false, and (ii) do not say that for which you lack adequate evidence.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Be as informative as required",
+      "Make contributions that are true \u2014 do not say what you believe to be false",
+      "Make contributions relevant",
+      "Be brief and orderly"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "56",
+    "front": "Grice's Maxim of Quantity requires speakers to:",
+    "frontLatex": "",
+    "back": "Make contributions as informative as required, but not more informative than required",
+    "backLatex": "",
+    "explanation": "The Maxim of Quantity has two parts: (i) make your contribution as informative as is required, and (ii) do not make your contribution more informative than is required.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Only speak the truth",
+      "Make contributions as informative as required, but not more informative than required",
+      "Keep contributions brief and orderly",
+      "Make contributions relevant to the topic"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "57",
+    "front": "The term 'metaphysics' is derived from the Greek words:",
+    "frontLatex": "",
+    "back": "'Meta' (after) + 'physis' (nature)",
+    "backLatex": "",
+    "explanation": "Metaphysics comes from 'Meta' meaning 'after' and 'physis' meaning 'nature'. It is the branch of philosophy concerned with explaining the nature of the world and the study of being or reality.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "'Meta' (beyond) + 'physics' (physical world)",
+      "'Meta' (after) + 'physis' (nature)",
+      "'Meta' (change) + 'physis' (form)",
+      "'Meta' (above) + 'physis' (knowledge)"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "58",
+    "front": "Ontology, a branch of metaphysics, primarily asks the question:",
+    "frontLatex": "",
+    "back": "What actually exists?",
+    "backLatex": "",
+    "explanation": "Ontology is the study of being or existence, which seeks to answer the basic question: 'What actually exists?' It describes basic categories and relationships by defining entities.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "What is truth?",
+      "What is beautiful?",
+      "What actually exists?",
+      "What is right and wrong?"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "59",
+    "front": "Realists believe that ontological questions can be solved by:",
+    "frontLatex": "",
+    "back": "Merely gathering facts readily available in the outside world",
+    "backLatex": "",
+    "explanation": "Realists are concerned that ontological questions can be solved by merely gathering facts readily available in the outside world \u2014 answers about existence are 'readymade' waiting to be discovered.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Subjecting facts to observation and evaluation",
+      "Focusing on the validity of means of drawing conclusions",
+      "Merely gathering facts readily available in the outside world",
+      "Basing all answers on observational claims"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "60",
+    "front": "Positivists focus on:",
+    "frontLatex": "",
+    "back": "The validity and appropriateness of the means through which conclusions are drawn about phenomena",
+    "backLatex": "",
+    "explanation": "Positivists are not as interested in facts as in claims about them \u2014 they focus on the validity and appropriateness of the means through which conclusions are drawn.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "Gathering facts from the outside world",
+      "Subjecting facts to observation and evaluation",
+      "The validity and appropriateness of the means through which conclusions are drawn",
+      "Basing answers on observational claims only"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "61",
+    "front": "Postmodernists hold that:",
+    "frontLatex": "",
+    "back": "Facts can be fluid, elusive, and therefore misleading or at best unreliable",
+    "backLatex": "",
+    "explanation": "Postmodernists argue that facts can be fluid, elusive, and therefore misleading or at best unreliable, and advocate basing all answers on observational claims.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "Facts are absolute and readily available",
+      "Facts can be fluid, elusive, and therefore misleading or at best unreliable",
+      "Facts must be verified through experiments",
+      "Facts are irrelevant to philosophy"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "62",
+    "front": "The four views on the concept of God include all of the following EXCEPT:",
+    "frontLatex": "",
+    "back": "Determinism",
+    "backLatex": "",
+    "explanation": "The four views are: theism (belief God exists), weak atheism (lack of belief in any deity), strong atheism (belief no deity exists), and agnosticism (belief existence of God is unknown or unknowable).",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Theism",
+      "Weak atheism",
+      "Determinism",
+      "Agnosticism"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "63",
+    "front": "Monotheism refers to:",
+    "frontLatex": "",
+    "back": "Belief in only one God",
+    "backLatex": "",
+    "explanation": "Monotheism is the belief in only one God. The three Abrahamic religions \u2014 Judaism, Christianity, and Islam \u2014 are chief examples of monotheistic religions.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Belief in many gods",
+      "Belief in only one God",
+      "Lack of belief in God",
+      "Belief that God cannot be known"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "64",
+    "front": "Deism views God as:",
+    "frontLatex": "",
+    "back": "A 'blind watchmaker' who created the world but left everything to take its own course",
+    "backLatex": "",
+    "explanation": "Deists view God as a 'blind watchmaker' who only created the world ('wound it up') and left everything to take its own course without any interference. This contrasts with theism, which holds that God continues to intervene.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "An all-intervening personal being",
+      "A 'blind watchmaker' who created the world but left everything to take its own course",
+      "A being that does not exist",
+      "A being whose existence cannot be known"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "65",
+    "front": "In Christian thought, God is traditionally described as having three necessary properties. They are:",
+    "frontLatex": "",
+    "back": "Omniscience, omnipotence, and omnibenevolence",
+    "backLatex": "",
+    "explanation": "Christian tradition describes God as omniscient (all-knowing), omnipotent (all-powerful), and omnibenevolent (supremely good).",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Omniscience, omnipotence, and omnipresence",
+      "Omniscience, omnipotence, and omnibenevolence",
+      "Omnibenevolence, omnipresence, and omniscience",
+      "Omnipotence, justice, and mercy"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "66",
+    "front": "The mind-body problem in philosophy of mind is primarily concerned with:",
+    "frontLatex": "",
+    "back": "The relationship between the mind (mental events) and the physical body",
+    "backLatex": "",
+    "explanation": "The mind-body problem examines how the mind (mental events, functions, properties, consciousness) relates to the physical body \u2014 how desires make neurons give muscles the right command to act.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "The relationship between the brain and the nervous system",
+      "The relationship between the mind (mental events) and the physical body",
+      "The relationship between thought and language",
+      "The relationship between perception and reality"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "67",
+    "front": "Dualism, as a perspective on the mind-body problem, maintains that:",
+    "frontLatex": "",
+    "back": "The mind and the body exist separately as different substances",
+    "backLatex": "",
+    "explanation": "Dualism maintains that the mind and body exist separately. Ren\u00e9 Descartes held that the mind is a non-physical substance possessing consciousness, different from the brain which houses intelligence.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "The mind and body are one and the same substance",
+      "The mind and the body exist separately as different substances",
+      "The mind is an illusion",
+      "The body determines all mental states"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "68",
+    "front": "Monism, as opposed to dualism, asserts that:",
+    "frontLatex": "",
+    "back": "The mind and body are one and the same substance",
+    "backLatex": "",
+    "explanation": "Monism asserts that the mind and body are one and the same substance, contradicting dualism's claim that they exist separately.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "The mind and body are separate substances",
+      "Only the mind exists",
+      "The mind and body are one and the same substance",
+      "Neither mind nor body exists"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "69",
+    "front": "Internal perception (proprioception) informs us of:",
+    "frontLatex": "",
+    "back": "What happens within us or in our bodies",
+    "backLatex": "",
+    "explanation": "Internal perception, or proprioception, informs us of what happens within us \u2014 whether we are hungry, tired, sitting, lying down, or standing.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "The external world around us",
+      "What happens within us or in our bodies",
+      "The emotions of other people",
+      "The moral status of actions"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "70",
+    "front": "External perception (exteroception) is achieved through:",
+    "frontLatex": "",
+    "back": "Five sense organs \u2014 eyes, ears, skin, nose, and tongue",
+    "backLatex": "",
+    "explanation": "External or sensory perception (exteroception) enables us to feel the world outside our bodies through five sense organs: eyes (sight), ears (hearing), skin (touch), nose (smell), and tongue (taste).",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Reasoning and intuition",
+      "Five sense organs \u2014 eyes, ears, skin, nose, and tongue",
+      "Authority and experience",
+      "Memory and imagination"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "71",
+    "front": "The founder of modern existentialism is:",
+    "frontLatex": "",
+    "back": "S\u00f8ren Kierkegaard",
+    "backLatex": "",
+    "explanation": "S\u00f8ren Kierkegaard, the 19th century Danish thinker, is recognized as the founder of modern existentialism. He formed the concepts and terms that influenced subsequent existentialist writers.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Jean-Paul Sartre",
+      "Martin Heidegger",
+      "S\u00f8ren Kierkegaard",
+      "Karl Jaspers"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "72",
+    "front": "Existentialism is primarily concerned with:",
+    "frontLatex": "",
+    "back": "Human existence and particularly man's freedom",
+    "backLatex": "",
+    "explanation": "Existentialism's one common characteristic is concern for human existence, particularly man's freedom. It represents a rebellion against established ideas and institutions that inhibit personal freedom and choice.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "The nature of reality",
+      "Human existence and particularly man's freedom",
+      "The study of knowledge",
+      "The analysis of language"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "73",
+    "front": "Kierkegaard declared that:",
+    "frontLatex": "",
+    "back": "Truth is subjectivity",
+    "backLatex": "",
+    "explanation": "Kierkegaard declared 'Truth is subjectivity' \u2014 meaning that subjective illusions are true, but that truth is only meaningful as it appears to a personal subject.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "Truth is objective and universal",
+      "Truth is subjectivity",
+      "Truth is relative to culture",
+      "Truth is determined by consensus"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "74",
+    "front": "Kierkegaard argued that religion can only be determined for each individual by:",
+    "frontLatex": "",
+    "back": "A 'leap' of faith",
+    "backLatex": "",
+    "explanation": "Since there was no way of proving God's existence as an object, Kierkegaard argued that one can only accept belief blindly and irrationally \u2014 religion requires a 'leap' of faith.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Rational proof",
+      "Scientific evidence",
+      "A 'leap' of faith",
+      "Philosophical argument"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "75",
+    "front": "According to Kierkegaard's parable, the man who prays to an idol with 'the entire passion of the infinite' has:",
+    "frontLatex": "",
+    "back": "The most truth, because the subjective mode of relationship is what matters",
+    "backLatex": "",
+    "explanation": "Kierkegaard compared two men: one with a true conception of God who prays in a false spirit, and another who prays to an idol with infinite passion. He concluded the second man has 'the most truth' because subjective commitment matters more.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "No truth at all because he worships an idol",
+      "The most truth, because the subjective mode of relationship is what matters",
+      "Equal truth to the other man",
+      "Partial truth depending on context"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "76",
+    "front": "Martin Heidegger's principal work is:",
+    "frontLatex": "",
+    "back": "Sein und Zeit (Being and Time)",
+    "backLatex": "",
+    "explanation": "Heidegger's principal work 'Sein und Zeit', translated as 'Being and Time' (or 'Time and Being'), built his ontology of human existence focusing on anxiety, temporality, and awareness of death.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Being and Nothingness",
+      "Sein und Zeit (Being and Time)",
+      "The Phenomenology of Spirit",
+      "Meditations on First Philosophy"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "77",
+    "front": "Heidegger's concept of 'Dasein' refers to:",
+    "frontLatex": "",
+    "back": "The way in which human beings, separate from things, exist",
+    "backLatex": "",
+    "explanation": "'Dasein' is practically untranslatable but refers to the way human beings exist, separate from things. Heidegger argued that 'the essence of man lies in his existence'.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "The physical body",
+      "The way in which human beings, separate from things, exist",
+      "The unconscious mind",
+      "Social relationships"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "78",
+    "front": "Heidegger contrasts with Kierkegaard's 'leap into faith' by advocating:",
+    "frontLatex": "",
+    "back": "Resolute decision",
+    "backLatex": "",
+    "explanation": "While Kierkegaard advocated a 'leap into faith' for the problem of existence, Heidegger answered through 'resolute decision' \u2014 each individual must seek his own relation with Being.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "Leap of faith",
+      "Rational contemplation",
+      "Resolute decision",
+      "Silent meditation"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "79",
+    "front": "Jean-Paul Sartre observed that:",
+    "frontLatex": "",
+    "back": "Man is condemned to be free",
+    "backLatex": "",
+    "explanation": "Sartre famously observed that 'man is condemned to be free', that his life is 'an ineffective passion', and that 'hell is other people'.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Man is condemned to suffer",
+      "Man is condemned to be free",
+      "Man is condemned to ignorance",
+      "Man is condemned to loneliness"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "80",
+    "front": "Sartre argued that physical characteristics like a disability:",
+    "frontLatex": "",
+    "back": "Are not limitations but a particular way of existing in the world",
+    "backLatex": "",
+    "explanation": "Sartre argued that physical characteristics are not limitations to a person's situation. For example, a physical disability is not really a limitation, but instead a particular way of existing in the world.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "Are absolute limitations on freedom",
+      "Are not limitations but a particular way of existing in the world",
+      "Should be eliminated through willpower",
+      "Determine a person's destiny"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "81",
+    "front": "The existentialist position that 'existence precedes essence' means:",
+    "frontLatex": "",
+    "back": "Man exists first and through existence defines himself and the world",
+    "backLatex": "",
+    "explanation": "Existence precedes essence means that man exists and in that existence he defines himself and the world in his own subjectivity, wandering between choice, freedom, and existential angst.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Essence precedes existence",
+      "Man exists first and through existence defines himself and the world",
+      "Essence and existence are identical",
+      "Neither essence nor existence matters"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "82",
+    "front": "Karl Jaspers, like Kierkegaard, rejected:",
+    "frontLatex": "",
+    "back": "Hegel's rational metaphysical system",
+    "backLatex": "",
+    "explanation": "Jaspers rejected Hegel's rational metaphysical system and instead spoke of 'transcendence' \u2014 an unknown and unknowable source of being responsible for the incompleteness of our knowledge.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "Empiricism",
+      "Hegel's rational metaphysical system",
+      "Scientific method",
+      "Religious faith"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "83",
+    "front": "Idealism holds that:",
+    "frontLatex": "",
+    "back": "Idea, spirit, or non-matter provides the origin and ultimate constituent of the universe",
+    "backLatex": "",
+    "explanation": "Idealism states that idea, spirit, or non-matter provides the origin and the ultimate constituent of the universe. The physical world exists but its reality and existence depend on the mind.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Matter is the basic substance of everything",
+      "Idea, spirit, or non-matter provides the origin and ultimate constituent of the universe",
+      "Only physical objects exist",
+      "Reality is an illusion"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "84",
+    "front": "The idealist adage 'To be is to be perceived' means:",
+    "frontLatex": "",
+    "back": "An object's existence depends on being perceived by a mind",
+    "backLatex": "",
+    "explanation": "Idealists believe that the physical world exists but its reality and existence depend on the mind. 'To be is to be perceived' confirms that ideas are conceived in the mind.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Objects exist independently of perception",
+      "An object's existence depends on being perceived by a mind",
+      "Perception is always unreliable",
+      "Only the self exists"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "85",
+    "front": "Materialism holds that:",
+    "frontLatex": "",
+    "back": "Matter is the basic substance of everything \u2014 the ultimate constituent of the universe",
+    "backLatex": "",
+    "explanation": "Materialism holds that matter is the basic substance of everything. The existence of entities like gods, spirits, angels, and mind must be explainable in material terms.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Idea is the primary substance",
+      "Matter is the basic substance of everything",
+      "Spirit is the ultimate reality",
+      "Only mathematical objects exist"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "86",
+    "front": "Materialists do NOT deny the existence of spirits and gods; rather they argue that:",
+    "frontLatex": "",
+    "back": "The existence of such entities must be explainable in material terms",
+    "backLatex": "",
+    "explanation": "Materialists do not necessarily deny the existence of spirits and gods \u2014 what they argue is that the existence of such entities must be explainable in material terms.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "Spirits and gods definitely exist",
+      "The existence of such entities must be explainable in material terms",
+      "Spirits and gods are illusions",
+      "Science has proven they don't exist"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "87",
+    "front": "The key difference between idealism and materialism is:",
+    "frontLatex": "",
+    "back": "Idealists say idea is primary; materialists say matter is primary",
+    "backLatex": "",
+    "explanation": "While idealists claim idea/spirit is primary and the physical world depends on the mind, materialists claim matter is primary and the ultimate constituent of the universe.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Idealists deny the physical world; materialists deny the mind",
+      "Idealists say idea is primary; materialists say matter is primary",
+      "They agree on everything except God's existence",
+      "Idealism is scientific; materialism is religious"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "88",
+    "front": "Existentialism is described as a tendency or attitude rather than a philosophical school because:",
+    "frontLatex": "",
+    "back": "Few doctrines are common to all of its primary exponents",
+    "backLatex": "",
+    "explanation": "Since existentialism is a tendency or attitude rather than a philosophical school, few doctrines are common to all of its primary exponents (Kierkegaard, Jaspers, Heidegger, Sartre).",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "It has no defined principles",
+      "Few doctrines are common to all of its primary exponents",
+      "It was never formally taught in universities",
+      "It has only one founder"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "89",
+    "front": "Kierkegaard criticized Hegel's concept of the world as a rational system because:",
+    "frontLatex": "",
+    "back": "No one knows what the world in its completed form will be",
+    "backLatex": "",
+    "explanation": "Kierkegaard argued that Hegel's concept is based on pure assumption since no one is aware of what the world in its completed form will be \u2014 'If the world were a system it would take God Himself, not Hegel, to know it.'",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "Hegel was not a philosopher",
+      "No one knows what the world in its completed form will be",
+      "The world is already complete",
+      "Systems are always correct"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "90",
+    "front": "According to existentialism, which of the following takes precedence over scientific and philosophical pursuits?",
+    "frontLatex": "",
+    "back": "Issues concerning the meaning of life and subjective experience",
+    "backLatex": "",
+    "explanation": "Existentialism values individual subjectivity over objectivity, meaning issues concerning the meaning of life and subjective experience take precedence over all other scientific and philosophical pursuits.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Logic and reason",
+      "Issues concerning the meaning of life and subjective experience",
+      "Scientific experimentation",
+      "Cultural traditions"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "91",
+    "front": "Existentialism is strongly opposed to the rationalist view that:",
+    "frontLatex": "",
+    "back": "Humans are rational beings whose actions are guided by rational principles",
+    "backLatex": "",
+    "explanation": "Existentialism is strongly opposed to the rationalist view that humans are rational beings whose actions are guided by rational principles, and instead emphasizes action, freedom, and decision.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Humans are emotional beings",
+      "Humans are rational beings whose actions are guided by rational principles",
+      "Humans cannot make decisions",
+      "Humans are controlled by society"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "92",
+    "front": "Sartre argued that because values are chosen and not given:",
+    "frontLatex": "",
+    "back": "It is impossible to choose in accordance with pre-existing values",
+    "backLatex": "",
+    "explanation": "Sartre emphasized that because values are chosen and not given, it is impossible to choose in accordance with them. He represents every choice as a choice of values, finding no rational argument in favour of one choice over another.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "All choices are equally rational",
+      "It is impossible to choose in accordance with pre-existing values",
+      "Values should never change",
+      "Values are determined by God"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "93",
+    "front": "Heidegger stated that 'Dasein' has three important characteristics. Which of the following is one of them?",
+    "frontLatex": "",
+    "back": "Forfeiture (along with facticity and existentiality)",
+    "backLatex": "",
+    "explanation": "Heidegger identified three characteristics of Dasein: facticity, existentiality, and forfeiture. These describe how human beings exist in the world.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "Perception",
+      "Forfeiture",
+      "Imagination",
+      "Instinct"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "94",
+    "front": "Heidegger says that man is 'thrown without choice into a world' and the response to this is:",
+    "frontLatex": "",
+    "back": "Contemplation of his own death",
+    "backLatex": "",
+    "explanation": "Heidegger argues it is necessary for each individual to 'seek his own relation with Being via the contemplation of his own death'. Man is thrown into a world that sets limitations for him.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "Blind faith",
+      "Rational analysis",
+      "Contemplation of his own death",
+      "Social conformity"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "95",
+    "front": "The three theological virtues outlined by medieval theologians are:",
+    "frontLatex": "",
+    "back": "Faith, hope, and charity",
+    "backLatex": "",
+    "explanation": "Alongside the cardinal virtues (wisdom, courage, temperance, justice), medieval theologians added three theological virtues: faith, hope, and charity.",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "Wisdom, courage, and justice",
+      "Faith, hope, and charity",
+      "Love, joy, and peace",
+      "Temperance, fortitude, and prudence"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "96",
+    "front": "Kierkegaard distinguished between 'existence' and 'real existence' based on his view of:",
+    "frontLatex": "",
+    "back": "Christian tradition \u2014 the difference between admiring Christianity from a distance and truly being a Christian",
+    "backLatex": "",
+    "explanation": "Kierkegaard related this distinction to the difference between admiring Christianity from a distance (talking and acting like a Christian) and really being or existing as a Christian.",
+    "difficulty": "hard",
+    "hasDiagram": false,
+    "options": [
+      "Scientific method",
+      "Political theory",
+      "Christian tradition \u2014 the difference between admiring Christianity from a distance and truly being a Christian",
+      "Aesthetic experience"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "97",
+    "front": "Polytheistic religions believe in:",
+    "frontLatex": "",
+    "back": "Several deities, each with separate responsibilities",
+    "backLatex": "",
+    "explanation": "Polytheists believe in several deities. For example, in Yoruba beliefs, apart from the supreme god Oludumare, others are attributed responsibilities like Shango (thunderstorm), Ogun (iron forging), and Ifa (healing).",
+    "difficulty": "easy",
+    "hasDiagram": false,
+    "options": [
+      "One supreme God only",
+      "No God at all",
+      "Several deities, each with separate responsibilities",
+      "A single impersonal force"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "98",
+    "front": "In Greek mythology, Athena (Greek) / Minerva (Roman) is the goddess of:",
+    "frontLatex": "",
+    "back": "Arts and crafts, and war; helper of heroes (late: goddess of wisdom)",
+    "backLatex": "",
+    "explanation": "Athena/Minerva was the goddess of arts and crafts, and war, and helper of heroes. In late Greek/Roman mythology she became the goddess of wisdom.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Love and beauty",
+      "Arts and crafts, and war; helper of heroes (late: goddess of wisdom)",
+      "The sea and earthquakes",
+      "The underworld and the dead"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "99",
+    "front": "W.D. Ross maintained that our duties are:",
+    "frontLatex": "",
+    "back": "Part of the fundamental nature of the universe",
+    "backLatex": "",
+    "explanation": "W.D. Ross maintained that our duties are 'part of the fundamental nature of the universe' and his list of duties reflects our actual moral convictions.",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Created by social convention",
+      "Part of the fundamental nature of the universe",
+      "Determined by God alone",
+      "Products of cultural evolution"
+    ]
+  },
+  {
+    "courseCode": "GST 212",
+    "questionNumber": "100",
+    "front": "Psychological hedonism holds that:",
+    "frontLatex": "",
+    "back": "Pleasure is the specific driving force behind all of our actions",
+    "backLatex": "",
+    "explanation": "Psychological hedonism holds that pleasure is the specific driving force behind all of our actions, as opposed to egoism (self-interest) or altruism (benevolence to help others).",
+    "difficulty": "medium",
+    "hasDiagram": false,
+    "options": [
+      "Self-interest motivates all actions",
+      "Pleasure is the specific driving force behind all of our actions",
+      "We act to help others inherently",
+      "Reason drives all moral decisions"
+    ]
+  }
+]
