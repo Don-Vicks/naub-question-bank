@@ -314,26 +314,21 @@ export class IngestionController {
       const opts = {
         format: 'png',
         out_dir: outputDir,
-        out_prefix: 'page',
-        page: null,
+        out_prefix: 'thumbnail',
+        page: 1, // Extract Page 1 thumbnail for lightweight preview
       };
 
       await pdfPoppler.convert(filePath, opts);
 
-      const files = fs.readdirSync(outputDir).filter((f) => f.startsWith('page') && f.endsWith('.png'));
-      files.sort((a, b) => {
-        const numA = parseInt(a.replace(/[^0-9]/g, ''), 10) || 0;
-        const numB = parseInt(b.replace(/[^0-9]/g, ''), 10) || 0;
-        return numA - numB;
-      });
+      const files = fs.readdirSync(outputDir).filter((f) => f.startsWith('thumbnail') && f.endsWith('.png'));
 
       const pageUrls: string[] = [];
-      for (let i = 0; i < files.length; i++) {
-        const pageFile = files[i];
+      if (files.length > 0) {
+        const pageFile = files[0];
         const pagePath = path.join(outputDir, pageFile);
 
         const watermarkedPage = await this.watermarkImage(pagePath, 'naubpadi.com.ng');
-        const pageR2Key = `papers/${docId}/pages/page_${i + 1}.png`;
+        const pageR2Key = `papers/${docId}/thumbnail.png`;
 
         const pageUrl = await this.r2Service.uploadFile(
           pageR2Key,
@@ -349,7 +344,7 @@ export class IngestionController {
 
       return pageUrls;
     } catch (e) {
-      console.warn('[IngestionController] PDF to PNG conversion skipped or unsupported in environment:', e);
+      console.warn('[IngestionController] PDF thumbnail extraction skipped or unsupported in environment:', e);
       return [];
     }
   }
