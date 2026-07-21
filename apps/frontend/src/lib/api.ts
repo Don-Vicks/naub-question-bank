@@ -9,10 +9,15 @@ function isLocalLanHost(hostname: string): boolean {
 }
 
 function getApiBaseUrl(): string {
-  const envUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  let envUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   if (typeof window !== 'undefined' && window.location?.hostname) {
     const hostname = window.location.hostname;
+    // Upgrade http:// to https:// on secure pages if envUrl is non-localhost
+    if (window.location.protocol === 'https:' && envUrl?.startsWith('http://') && !envUrl.includes('localhost') && !envUrl.includes('127.0.0.1')) {
+      envUrl = envUrl.replace('http://', 'https://');
+    }
+
     // If accessing on local Wi-Fi / LAN IP (e.g. 192.168.x.x) and envUrl is unset or pointing to localhost:
     if (isLocalLanHost(hostname) && hostname !== 'localhost' && hostname !== '127.0.0.1') {
       if (!envUrl || envUrl.includes('localhost') || envUrl.includes('127.0.0.1')) {
@@ -22,7 +27,8 @@ function getApiBaseUrl(): string {
     }
   }
 
-  return envUrl ?? 'http://localhost:3000/api';
+  const url = envUrl ?? 'http://localhost:3000/api';
+  return url.replace(/\/+$/, '');
 }
 
 function getToken(): string | null {
@@ -40,7 +46,8 @@ function getToken(): string | null {
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const token = getToken();
   const apiBase = getApiBaseUrl();
-  const url = `${apiBase}${path}`;
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  const url = `${apiBase}${cleanPath}`;
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(init?.headers as Record<string, string>),
@@ -57,17 +64,28 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     );
   }
 
-  if (res.status === 401) {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('padi-auth');
-      window.location.href = `/login?message=${encodeURIComponent('Your session has expired. Please sign in again.')}`;
+  if (!res.ok) {
+    let errorMessage = `API error ${res.status}`;
+    try {
+      const data = await res.json();
+      if (data?.message) {
+        errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
+      }
+    } catch {
+      const text = await res.text();
+      if (text) errorMessage = text;
     }
-    throw new Error('Unauthorized');
+
+    if (res.status === 401 && !cleanPath.startsWith('/auth/login') && !cleanPath.startsWith('/auth/register')) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('padi-auth');
+        window.location.href = `/login?message=${encodeURIComponent('Your session has expired. Please sign in again.')}`;
+      }
+    }
+
+    throw new Error(errorMessage);
   }
 
-  if (!res.ok) {
-    throw new Error(`API error ${res.status}: ${await res.text()}`);
-  }
   return res.json();
 }
 
