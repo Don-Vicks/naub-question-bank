@@ -179,6 +179,11 @@ export const api = {
   getPaper: (paperId: string): Promise<QuestionPaper | undefined> =>
     request<QuestionPaper>(`/question-bank/papers/${paperId}`),
 
+  getPaperDownloadUrl: (paperId: string): string => {
+    const apiBase = getApiBaseUrl();
+    return `${apiBase}/question-bank/papers/${paperId}/download`;
+  },
+
   search: (query: string): Promise<QuestionPaper[]> =>
     request<QuestionPaper[]>(
       `/question-bank/search?q=${encodeURIComponent(query)}`,
@@ -297,6 +302,12 @@ export const api = {
 
   approveDocument: (id: string): Promise<any> =>
     request(`/question-bank/documents/${id}/approve`, { method: 'POST' }),
+
+  approveBatchDocuments: (ids?: string[]): Promise<{ approvedCount: number; ids: string[] }> =>
+    request('/question-bank/documents/approve-batch', {
+      method: 'POST',
+      body: JSON.stringify({ ids }),
+    }),
 
   rejectDocument: (id: string): Promise<any> =>
     request(`/question-bank/documents/${id}/reject`, { method: 'POST' }),

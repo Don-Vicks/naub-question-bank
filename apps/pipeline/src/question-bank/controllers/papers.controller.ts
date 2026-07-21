@@ -1,4 +1,5 @@
-import { Controller, Get, Param, Query, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, Query, NotFoundException, Res } from '@nestjs/common';
+import type { Response } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SourceDocument } from '../entities/source-document.entity';
@@ -269,11 +270,50 @@ export class PapersController {
     return docs.map((doc) => this.toQuestionPaper(doc));
   }
 
+  @Get('papers/:id/download')
+  async downloadPaper(@Param('id') id: string, @Res() res: Response) {
+    const doc = await this.sourceDocRepo.findOne({ where: { id } });
+    if (!doc || !doc.fileUrl) {
+      throw new NotFoundException('Paper file not found');
+    }
+
+    const ext = doc.mimeType === 'application/pdf' ? '.pdf' : '.png';
+    const parts = [
+      doc.courseCode,
+      doc.examType,
+      doc.session,
+      doc.originalFilename ? doc.originalFilename.replace(/\.[^/.]+$/, '') : '',
+    ].filter(Boolean);
+    const rawName = parts.length > 0 ? parts.join('_') : 'paper';
+    const cleanFilename = `${rawName.replace(/[^a-zA-Z0-9_-]/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '')}${ext}`;
+
+    try {
+      const response = await fetch(doc.fileUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch file: ${response.status}`);
+      }
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      res.setHeader('Content-Type', doc.mimeType || 'application/octet-stream');
+      res.setHeader('Content-Disposition', `attachment; filename="${cleanFilename}"`);
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+      res.send(buffer);
+    } catch {
+      res.redirect(doc.fileUrl);
+    }
+  }
+
   // ── helpers ──
 
   private toQuestionPaper(doc: SourceDocument) {
     const isImage = doc.mimeType?.startsWith('image/') ?? false;
     const cleanFilename = doc.originalFilename ? doc.originalFilename.replace(/\.[^/.]+$/, '') : 'Question Paper';
+
+    const pageImages = doc.pageImageUrls && doc.pageImageUrls.length > 0
+      ? doc.pageImageUrls
+      : (isImage && doc.fileUrl ? [doc.fileUrl] : []);
 
     return {
       id: doc.id,
@@ -289,12 +329,12 @@ export class PapersController {
       level: doc.level ?? '',
       examType: doc.examType ?? '',
       session: doc.session ?? '',
-      pageCount: doc.pageCount ?? 1,
+      pageCount: doc.pageCount ?? (pageImages.length > 0 ? pageImages.length : 1),
       status: doc.status,
       mimeType: doc.mimeType,
       fileUrl: doc.fileUrl ?? null,
-      thumbnailUrl: isImage ? (doc.fileUrl ?? null) : null,
-      pageImageUrls: isImage && doc.fileUrl ? [doc.fileUrl] : [],
+      thumbnailUrl: pageImages[0] ?? (isImage ? (doc.fileUrl ?? null) : null),
+      pageImageUrls: pageImages,
       uploadedAt: doc.createdAt.toISOString(),
     };
   }

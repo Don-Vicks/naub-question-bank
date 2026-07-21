@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { Search, Trash2, ExternalLink, Loader2 } from 'lucide-react';
+import { Search, Trash2, ExternalLink, Loader2, Check } from 'lucide-react';
 import { api, AdminPaperItem, PaginatedResponse } from '@/lib/api';
 import Link from 'next/link';
 
@@ -24,6 +24,14 @@ export default function AdminUploadsPage() {
   const { data, isLoading } = useQuery<PaginatedResponse<AdminPaperItem>>({
     queryKey: ['admin', 'papers', search, page],
     queryFn: () => api.adminPapers({ search: search || undefined, page, limit: 15 }),
+  });
+
+  const approveMutation = useMutation({
+    mutationFn: (id: string) => api.approveDocument(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'papers'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'overview'] });
+    },
   });
 
   const deleteMutation = useMutation({
@@ -87,6 +95,17 @@ export default function AdminUploadsPage() {
                     <td className="hidden px-5 py-3.5 text-muted lg:table-cell">{paper.pageCount}</td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-1">
+                        {(paper.status === 'pending_review' || paper.status === 'uploaded') && (
+                          <button
+                            onClick={() => approveMutation.mutate(paper.id)}
+                            disabled={approveMutation.isPending}
+                            className="btn-secondary !h-8 !px-2 text-xs text-naub-green hover:!bg-naub-green-light flex items-center gap-1"
+                            title="Approve paper"
+                          >
+                            <Check size={14} />
+                            Approve
+                          </button>
+                        )}
                         <Link href={`/paper/${paper.id}`} className="btn-icon !h-8 !w-8" title="View paper"><ExternalLink size={14} strokeWidth={1.75} /></Link>
                         <button onClick={() => { if (confirm(`Delete "${paper.title}"?`)) deleteMutation.mutate(paper.id); }} disabled={deleteMutation.isPending} className="btn-icon !h-8 !w-8 hover:!bg-army-50 hover:!text-army disabled:opacity-50" title="Delete paper"><Trash2 size={14} strokeWidth={1.75} /></button>
                       </div>

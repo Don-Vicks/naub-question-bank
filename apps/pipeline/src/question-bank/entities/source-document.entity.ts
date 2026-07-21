@@ -42,6 +42,9 @@ export class SourceDocument {
   @Column({ default: 1 })
   pageCount: number;
 
+  @Column({ type: 'simple-json', nullable: true })
+  pageImageUrls?: string[] | null;
+
   @Column({ type: 'varchar', default: 'uploaded' })
   status: DocumentStatus;
 

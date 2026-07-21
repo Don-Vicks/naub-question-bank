@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { diskStorage } from 'multer';
 import { randomUUID as uuid } from 'crypto';
 import * as path from 'path';
@@ -97,9 +97,26 @@ export class IngestionController {
         if (dto.session)      objectMetadata['session']       = dto.session;
 
         let fileUrl: string;
-        if (file.mimetype.startsWith('image/')) {
+        let pageImageUrls: string[] = [];
+
+        if (file.mimetype === 'application/pdf') {
+          // Read local raw PDF buffer
+          const rawPdfBuffer = fs.readFileSync(file.path);
+          // Apply watermark to the PDF document
+          const watermarkedPdfBuffer = await this.watermarkPdf(rawPdfBuffer, 'NAUB PADI | naubpadi.com.ng');
+          fs.writeFileSync(file.path, watermarkedPdfBuffer);
+
+          fileUrl = await this.r2Service.uploadFile(
+            r2Key,
+            watermarkedPdfBuffer,
+            file.mimetype,
+            objectMetadata,
+          );
+
+          // Convert PDF pages to watermarked PNG images for preview
+          pageImageUrls = await this.convertPdfToPngs(file.path, tempDocId);
+        } else if (file.mimetype.startsWith('image/')) {
           const watermarkedBuffer = await this.watermarkImage(file.path, 'naubpadi.com.ng');
-          // Overwrite local file with watermarked buffer for consistency
           fs.writeFileSync(file.path, watermarkedBuffer);
           fileUrl = await this.r2Service.uploadFile(
             r2Key,
@@ -107,6 +124,7 @@ export class IngestionController {
             file.mimetype,
             objectMetadata,
           );
+          pageImageUrls = [fileUrl];
         } else {
           fileUrl = await this.r2Service.uploadFromPath(
             file.path,
@@ -123,7 +141,8 @@ export class IngestionController {
             mimeType: file.mimetype,
             storagePath: file.path,   // local tmp path kept for debugging
             fileUrl,
-            pageCount: 1,
+            pageCount: pageImageUrls.length > 0 ? pageImageUrls.length : 1,
+            pageImageUrls: pageImageUrls.length > 0 ? pageImageUrls : null,
             status: req.user?.role === 'admin' ? 'ready' : 'pending_review',
             courseCode: dto.courseCode ?? dto.subjectHint ?? null,
             subjectHint: dto.subjectHint ?? dto.courseCode ?? null,
@@ -188,6 +207,29 @@ export class IngestionController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('approve-batch')
+  async approveBatch(@Body() body: { ids?: string[] }) {
+    let docsToApprove: SourceDocument[] = [];
+    if (body?.ids && Array.isArray(body.ids) && body.ids.length > 0) {
+      docsToApprove = await this.sourceDocRepo.findBy({ id: In(body.ids) });
+    } else {
+      docsToApprove = await this.sourceDocRepo.find({
+        where: [{ status: 'pending_review' }, { status: 'uploaded' }],
+      });
+    }
+
+    for (const doc of docsToApprove) {
+      doc.status = 'ready';
+    }
+    await this.sourceDocRepo.save(docsToApprove);
+
+    return {
+      approvedCount: docsToApprove.length,
+      ids: docsToApprove.map((d) => d.id),
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post(':id/approve')
   async approveDocument(@Param('id') id: string) {
     const doc = await this.sourceDocRepo.findOne({ where: { id } });
@@ -221,6 +263,96 @@ export class IngestionController {
   }
 
   // ── helpers ──
+
+  private async watermarkPdf(pdfBuffer: Buffer, text = 'NAUB PADI | naubpadi.com.ng'): Promise<Buffer> {
+    try {
+      const { PDFDocument, rgb, degrees, StandardFonts } = await import('pdf-lib');
+      const pdfDoc = await PDFDocument.load(pdfBuffer);
+      const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+      const pages = pdfDoc.getPages();
+
+      for (const page of pages) {
+        const { width, height } = page.getSize();
+        const fontSize = Math.max(16, Math.min(32, Math.floor(width / 20)));
+
+        page.drawText(text, {
+          x: width / 6,
+          y: height / 2,
+          size: fontSize,
+          font,
+          color: rgb(0.2, 0.2, 0.2),
+          opacity: 0.18,
+          rotate: degrees(30),
+        });
+
+        const bannerText = `NAUB PADI · ${text}`;
+        const bannerFontSize = Math.max(10, Math.floor(width / 50));
+        page.drawText(bannerText, {
+          x: width - Math.max(200, Math.floor(width / 3.2)),
+          y: 20,
+          size: bannerFontSize,
+          font,
+          color: rgb(0.1, 0.15, 0.3),
+          opacity: 0.7,
+        });
+      }
+
+      const watermarkedBytes = await pdfDoc.save();
+      return Buffer.from(watermarkedBytes);
+    } catch (e) {
+      console.error('[IngestionController] PDF watermarking error:', e);
+      return pdfBuffer;
+    }
+  }
+
+  private async convertPdfToPngs(filePath: string, docId: string): Promise<string[]> {
+    try {
+      const pdfPoppler = await import('pdf-poppler');
+      const outputDir = path.join(path.dirname(filePath), docId);
+      fs.mkdirSync(outputDir, { recursive: true });
+
+      const opts = {
+        format: 'png',
+        out_dir: outputDir,
+        out_prefix: 'page',
+        page: null,
+      };
+
+      await pdfPoppler.convert(filePath, opts);
+
+      const files = fs.readdirSync(outputDir).filter((f) => f.startsWith('page') && f.endsWith('.png'));
+      files.sort((a, b) => {
+        const numA = parseInt(a.replace(/[^0-9]/g, ''), 10) || 0;
+        const numB = parseInt(b.replace(/[^0-9]/g, ''), 10) || 0;
+        return numA - numB;
+      });
+
+      const pageUrls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const pageFile = files[i];
+        const pagePath = path.join(outputDir, pageFile);
+
+        const watermarkedPage = await this.watermarkImage(pagePath, 'naubpadi.com.ng');
+        const pageR2Key = `papers/${docId}/pages/page_${i + 1}.png`;
+
+        const pageUrl = await this.r2Service.uploadFile(
+          pageR2Key,
+          watermarkedPage,
+          'image/png',
+        );
+        pageUrls.push(pageUrl);
+      }
+
+      try {
+        fs.rmSync(outputDir, { recursive: true, force: true });
+      } catch {}
+
+      return pageUrls;
+    } catch (e) {
+      console.warn('[IngestionController] PDF to PNG conversion skipped or unsupported in environment:', e);
+      return [];
+    }
+  }
 
   private async watermarkImage(filePath: string, text = 'naubpadi.com.ng'): Promise<Buffer> {
     try {

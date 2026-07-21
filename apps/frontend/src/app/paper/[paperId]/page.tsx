@@ -2,11 +2,12 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, X, Download, Bookmark, Loader2 } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, X, Download, Bookmark, Loader2, Check } from 'lucide-react';
 import { usePaper } from '@/lib/hooks/useQuestionBank';
 import { WatermarkOverlay } from '@/components/ui/WatermarkOverlay';
 import { useBookmarkStore } from '@/lib/bookmark-store';
 import { downloadFile } from '@/lib/download';
+import { api } from '@/lib/api';
 
 export default function PaperPage() {
   const { paperId } = useParams<{ paperId: string }>();
@@ -15,16 +16,45 @@ export default function PaperPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const bookmarked = useBookmarkStore((s) => s.bookmarkedPaperIds.includes(paperId));
+  const bookmarked = useBookmarkStore((s) =>
+    paper ? s.bookmarkedPaperIds.includes(paper.id) || s.bookmarkedPaperIds.includes(paperId) : false
+  );
   const toggleBookmark = useBookmarkStore((s) => s.toggleBookmark);
 
+  const handleToggleBookmark = () => {
+    if (!paper) return;
+    const targetId = paper.id || paperId;
+    toggleBookmark(targetId);
+    const nextState = !bookmarked;
+    showToast(nextState ? 'Saved to bookmarks' : 'Removed from bookmarks');
+  };
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   const handleDownload = async () => {
-    if (!paper?.fileUrl) return;
+    if (!paper) return;
     setDownloading(true);
     try {
       const ext = paper.mimeType === 'application/pdf' ? '.pdf' : '.png';
-      await downloadFile(paper.fileUrl, `${paper.title.replace(/[^a-zA-Z0-9]/g, '_')}${ext}`);
+      const parts = [
+        paper.courseCode,
+        paper.examType,
+        paper.session,
+        paper.title,
+      ].filter(Boolean);
+      const rawName = parts.join('_');
+      const filename = `${rawName.replace(/[^a-zA-Z0-9_-]/g, '_').replace(/_+/g, '_')}${ext}`;
+
+      const downloadUrl = api.getPaperDownloadUrl(paper.id || paperId);
+      await downloadFile(downloadUrl, filename);
+      showToast('Download started');
+    } catch {
+      showToast('Download failed. Please try again.');
     } finally {
       setDownloading(false);
     }
@@ -45,11 +75,19 @@ export default function PaperPage() {
   }
 
   const isPdf = paper.mimeType === 'application/pdf';
-  const pages = paper.pageImageUrls;
+  const pages = paper.pageImageUrls ?? [];
   const hasImagePages = pages.length > 0;
 
   return (
-    <div className="page-desktop">
+    <div className="page-desktop relative">
+      {/* ── Notification Toast ── */}
+      {toastMessage && (
+        <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2 rounded-xl bg-ink px-4 py-2.5 text-xs font-semibold text-paper shadow-elevated animate-fade-in">
+          <Check size={14} className="text-naub-gold" />
+          {toastMessage}
+        </div>
+      )}
+
       <div className="page-header lg:rounded-card-xl lg:mx-0 lg:my-6">
         <button onClick={() => router.back()} aria-label="Back" className="btn-icon text-paper flex-shrink-0 transition-transform duration-200 hover:scale-110 active:scale-95">
           <ArrowLeft size={20} strokeWidth={1.75} />
@@ -62,7 +100,7 @@ export default function PaperPage() {
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => toggleBookmark(paper.id)}
+            onClick={handleToggleBookmark}
             aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark paper'}
             className={`btn-icon flex-shrink-0 transition-all duration-200 ${
               bookmarked ? 'text-naub-gold bg-white/20' : 'text-paper hover:bg-white/10'
@@ -90,22 +128,8 @@ export default function PaperPage() {
       <div className="content-area">
         <div className="mx-auto max-w-2xl">
 
-          {/* ── PDF viewer ── */}
-          {isPdf && paper.fileUrl && (
-            <div className="relative overflow-hidden rounded-card-xl border border-line bg-white shadow-elevated animate-fade-in">
-              <WatermarkOverlay text="naubpadi.com.ng" />
-              <embed
-                src={paper.fileUrl}
-                type="application/pdf"
-                className="w-full"
-                style={{ height: '80vh', minHeight: 480 }}
-                title={paper.title}
-              />
-            </div>
-          )}
-
-          {/* ── Image viewer ── */}
-          {hasImagePages && (
+          {/* ── Image viewer / Mobile page preview ── */}
+          {hasImagePages ? (
             <>
               <div className="relative overflow-hidden rounded-card-xl border border-line bg-white shadow-elevated animate-fade-in">
                 <WatermarkOverlay text="naubpadi.com.ng" />
@@ -179,10 +203,20 @@ export default function PaperPage() {
                 </>
               )}
             </>
-          )}
-
-          {/* ── Nothing to show ── */}
-          {!isPdf && !hasImagePages && (
+          ) : isPdf && paper.fileUrl ? (
+            /* ── PDF viewer fallback ── */
+            <div className="relative overflow-hidden rounded-card-xl border border-line bg-white shadow-elevated animate-fade-in">
+              <WatermarkOverlay text="naubpadi.com.ng" />
+              <embed
+                src={paper.fileUrl}
+                type="application/pdf"
+                className="w-full"
+                style={{ height: '80vh', minHeight: 480 }}
+                title={paper.title}
+              />
+            </div>
+          ) : (
+            /* ── Nothing to show ── */
             <div className="rounded-card-xl border border-line bg-white p-12 text-center">
               <p className="text-body text-muted">
                 {paper.status === 'failed'
