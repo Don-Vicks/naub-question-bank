@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { ShieldCheck, Check, X, Eye, FileText, Loader2, Clock, AlertCircle } from 'lucide-react';
 import { api } from '@/lib/api';
 
@@ -22,6 +23,7 @@ interface PendingDoc {
 }
 
 export default function AdminReviewPage() {
+  const queryClient = useQueryClient();
   const [docs, setDocs] = useState<PendingDoc[]>([]);
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -65,6 +67,15 @@ export default function AdminReviewPage() {
     });
   };
 
+  const invalidatePublicQueries = () => {
+    queryClient.invalidateQueries({ queryKey: ['papers'] });
+    queryClient.invalidateQueries({ queryKey: ['courses'] });
+    queryClient.invalidateQueries({ queryKey: ['faculties'] });
+    queryClient.invalidateQueries({ queryKey: ['departments'] });
+    queryClient.invalidateQueries({ queryKey: ['search'] });
+    queryClient.invalidateQueries({ queryKey: ['admin'] });
+  };
+
   const handleApprove = async (id: string) => {
     setProcessingId(id);
     try {
@@ -75,6 +86,7 @@ export default function AdminReviewPage() {
         next.delete(id);
         return next;
       });
+      invalidatePublicQueries();
       showSuccess('Paper approved successfully!');
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : 'Failed to approve document');
@@ -91,6 +103,7 @@ export default function AdminReviewPage() {
       const res = await api.approveBatchDocuments(idsArray);
       setDocs((prev) => prev.filter((d) => !idsArray.includes(d.id)));
       setSelectedIds(new Set());
+      invalidatePublicQueries();
       showSuccess(`Successfully approved ${res.approvedCount} question paper(s)!`);
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : 'Failed to approve selected documents');
@@ -107,6 +120,7 @@ export default function AdminReviewPage() {
       const res = await api.approveBatchDocuments();
       setDocs([]);
       setSelectedIds(new Set());
+      invalidatePublicQueries();
       showSuccess(`Successfully approved all ${res.approvedCount} pending paper(s)!`);
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : 'Failed to approve all documents');
