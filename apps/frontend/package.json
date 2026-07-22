@@ -12,6 +12,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.51.1",
     "@tanstack/react-query-devtools": "^5.51.1",
+    "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "idb-keyval": "^6.2.1",
     "katex": "^0.16.11",
