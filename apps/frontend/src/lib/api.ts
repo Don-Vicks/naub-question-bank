@@ -209,7 +209,7 @@ export const api = {
       });
     } catch (e: any) {
       throw new Error(
-        `Could not connect to server at ${apiBase}. Is the backend running? (${e?.message ?? 'unknown'})`,
+        `Network error reaching ${apiBase}: ${e?.message ?? 'request failed'}. Check your connection and try again.`,
       );
     }
 
