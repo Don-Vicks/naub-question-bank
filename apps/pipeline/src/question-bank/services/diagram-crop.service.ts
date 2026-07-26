@@ -30,11 +30,11 @@ export class DiagramCropService {
     const top = Math.max(0, Math.floor((bbox.y / 1000 - margin) * height));
     const cropWidth = Math.min(
       width - left,
-      Math.ceil(((bbox.width / 1000) + margin * 2) * width),
+      Math.ceil((bbox.width / 1000 + margin * 2) * width),
     );
     const cropHeight = Math.min(
       height - top,
-      Math.ceil(((bbox.height / 1000) + margin * 2) * height),
+      Math.ceil((bbox.height / 1000 + margin * 2) * height),
     );
 
     const outPath = path.join(outputDir, `${fileNameHint}.png`);

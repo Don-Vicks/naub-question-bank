@@ -213,9 +213,24 @@ export const api = {
       );
     }
 
+    if (res.status === 413) {
+      throw new Error(
+        'Files too large. Each file must be under 4 MB. Try compressing your images or splitting PDFs into smaller parts.',
+      );
+    }
+
     if (!res.ok) {
-      const body = await res.text();
-      throw new Error(body || `Upload failed: ${res.status}`);
+      let errorMessage = `Upload failed (${res.status})`;
+      try {
+        const data = await res.json();
+        if (data?.message) {
+          errorMessage = Array.isArray(data.message) ? data.message.join(', ') : data.message;
+        }
+      } catch {
+        const text = await res.text();
+        if (text) errorMessage = text;
+      }
+      throw new Error(errorMessage);
     }
     return res.json();
   },

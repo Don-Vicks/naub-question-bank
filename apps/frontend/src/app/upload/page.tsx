@@ -44,6 +44,15 @@ function UploadForm() {
       return;
     }
 
+    const totalSize = files.reduce((sum, f) => sum + f.size, 0);
+    const MAX_TOTAL_MB = 4;
+    if (totalSize > MAX_TOTAL_MB * 1024 * 1024) {
+      setError(
+        `Total upload size is ${(totalSize / (1024 * 1024)).toFixed(1)} MB. Maximum total size is ${MAX_TOTAL_MB} MB. Try uploading fewer files at a time.`,
+      );
+      return;
+    }
+
     setUploading(true);
     setError(null);
 
@@ -68,6 +77,8 @@ function UploadForm() {
       const message = err instanceof Error ? err.message : 'Upload failed. Please try again.';
       if (message.includes('401') || message.toLowerCase().includes('unauthorized')) {
         setError('Your session has expired. Please log in again.');
+      } else if (message.includes('413') || message.toLowerCase().includes('too large') || message.toLowerCase().includes('too big')) {
+        setError('Files too large. Each file must be under 4 MB. Try compressing images or splitting large PDFs.');
       } else {
         setError(message);
       }
@@ -247,7 +258,12 @@ function UploadForm() {
 
           {error && (
             <div className="rounded-2xl border border-terracotta-100 bg-terracotta-50 px-4 py-3 text-sm text-terracotta animate-fade-in">
-              {error}
+              <p>{error}</p>
+              {(error.includes('large') || error.includes('size') || error.includes('MB')) && (
+                <p className="mt-1.5 text-xs text-terracotta/70">
+                  Tip: Use the scan feature to compress images, or split large PDFs into smaller files before uploading.
+                </p>
+              )}
             </div>
           )}
 

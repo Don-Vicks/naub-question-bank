@@ -1,5 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
@@ -12,7 +17,7 @@ export class R2Service {
   constructor() {
     this.bucketName = process.env.R2_BUCKET_NAME ?? 'naub-question-bank';
     this.publicUrl = process.env.R2_PUBLIC_URL ?? null;
-    
+
     this.client = new S3Client({
       region: 'auto',
       endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
@@ -29,13 +34,17 @@ export class R2Service {
     contentType: string,
     metadata?: Record<string, string>,
   ): Promise<string> {
-    await this.client.send(new PutObjectCommand({
-      Bucket: this.bucketName,
-      Key: key,
-      Body: body,
-      ContentType: contentType,
-      ...(metadata && Object.keys(metadata).length > 0 ? { Metadata: metadata } : {}),
-    }));
+    await this.client.send(
+      new PutObjectCommand({
+        Bucket: this.bucketName,
+        Key: key,
+        Body: body,
+        ContentType: contentType,
+        ...(metadata && Object.keys(metadata).length > 0
+          ? { Metadata: metadata }
+          : {}),
+      }),
+    );
     this.logger.log(`Uploaded to R2: ${key}`);
     return this.getUrl(key);
   }
@@ -67,10 +76,12 @@ export class R2Service {
   }
 
   async deleteFile(key: string): Promise<void> {
-    await this.client.send(new DeleteObjectCommand({
-      Bucket: this.bucketName,
-      Key: key,
-    }));
+    await this.client.send(
+      new DeleteObjectCommand({
+        Bucket: this.bucketName,
+        Key: key,
+      }),
+    );
     this.logger.log(`Deleted from R2: ${key}`);
   }
 

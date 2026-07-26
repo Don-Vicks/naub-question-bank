@@ -40,7 +40,12 @@ export class AuthService {
     const token = this.signToken(saved);
     return {
       access_token: token,
-      user: { id: saved.id, email: saved.email, name: saved.name, role: saved.role },
+      user: {
+        id: saved.id,
+        email: saved.email,
+        name: saved.name,
+        role: saved.role,
+      },
     };
   }
 
@@ -61,7 +66,12 @@ export class AuthService {
     const token = this.signToken(user);
     return {
       access_token: token,
-      user: { id: user.id, email: user.email, name: user.name, role: user.role },
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
     };
   }
 
@@ -76,15 +86,26 @@ export class AuthService {
 
   async forgotPassword(email: string) {
     const normalizedEmail = email.toLowerCase().trim();
-    const user = await this.userRepository.findOne({ where: { email: normalizedEmail } });
+    const user = await this.userRepository.findOne({
+      where: { email: normalizedEmail },
+    });
     // Always return generic success message to prevent user enumeration
     return {
-      message: 'If an account exists with that email address, password reset instructions have been sent.',
+      message:
+        'If an account exists with that email address, password reset instructions have been sent.',
       sent: Boolean(user),
     };
   }
 
-  async updateProfile(userId: string, dto: { name?: string; facultyId?: string; departmentId?: string; level?: string }) {
+  async updateProfile(
+    userId: string,
+    dto: {
+      name?: string;
+      facultyId?: string;
+      departmentId?: string;
+      level?: string;
+    },
+  ) {
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new NotFoundException('User not found');

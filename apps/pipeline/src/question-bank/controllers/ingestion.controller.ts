@@ -24,7 +24,8 @@ import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { R2Service } from '../../storage/r2.service';
 
 const getUploadDir = (): string => {
-  const dir = process.env.UPLOAD_DIR ?? path.join(os.tmpdir(), 'uploads', 'raw');
+  const dir =
+    process.env.UPLOAD_DIR ?? path.join(os.tmpdir(), 'uploads', 'raw');
   fs.mkdirSync(dir, { recursive: true });
   return dir;
 };
@@ -66,7 +67,7 @@ export class IngestionController {
           cb(null, `${uuid()}${path.extname(file.originalname)}`);
         },
       }),
-      limits: { fileSize: 50 * 1024 * 1024 },
+      limits: { fileSize: 4 * 1024 * 1024 },
     }),
   )
   async uploadBatch(
@@ -78,7 +79,10 @@ export class IngestionController {
       files.map(async (file) => {
         // Determine R2 key — use a clean extension from the MIME type when
         // the browser sends a processed WebP blob with a generic name.
-        const ext = this.mimeToExt(file.mimetype) ?? path.extname(file.originalname) ?? '';
+        const ext =
+          this.mimeToExt(file.mimetype) ??
+          path.extname(file.originalname) ??
+          '';
         const tempDocId = uuid();
         const r2Key = `papers/${tempDocId}/original${ext}`;
 
@@ -89,12 +93,14 @@ export class IngestionController {
           'original-filename': file.originalname,
           'uploaded-by': req.user.id ?? 'unknown',
         };
-        if (dto.courseCode)   objectMetadata['course-code']   = dto.courseCode.toUpperCase();
-        if (dto.facultyId)    objectMetadata['faculty-id']    = dto.facultyId;
-        if (dto.departmentId) objectMetadata['department-id'] = dto.departmentId;
-        if (dto.level)        objectMetadata['level']         = dto.level;
-        if (dto.examType)     objectMetadata['exam-type']     = dto.examType;
-        if (dto.session)      objectMetadata['session']       = dto.session;
+        if (dto.courseCode)
+          objectMetadata['course-code'] = dto.courseCode.toUpperCase();
+        if (dto.facultyId) objectMetadata['faculty-id'] = dto.facultyId;
+        if (dto.departmentId)
+          objectMetadata['department-id'] = dto.departmentId;
+        if (dto.level) objectMetadata['level'] = dto.level;
+        if (dto.examType) objectMetadata['exam-type'] = dto.examType;
+        if (dto.session) objectMetadata['session'] = dto.session;
 
         let fileUrl: string;
         let pageImageUrls: string[] = [];
@@ -103,7 +109,10 @@ export class IngestionController {
           // Read local raw PDF buffer
           const rawPdfBuffer = fs.readFileSync(file.path);
           // Apply permanent watermark directly onto all pages of the PDF document
-          const watermarkedPdfBuffer = await this.watermarkPdf(rawPdfBuffer, 'NAUB PADI | naubpadi.com.ng');
+          const watermarkedPdfBuffer = await this.watermarkPdf(
+            rawPdfBuffer,
+            'NAUB PADI | naubpadi.com.ng',
+          );
           fs.writeFileSync(file.path, watermarkedPdfBuffer);
 
           // Upload ONLY the 1 watermarked PDF to R2 to maximize storage & efficiency
@@ -115,7 +124,10 @@ export class IngestionController {
           );
           pageImageUrls = [];
         } else if (file.mimetype.startsWith('image/')) {
-          const watermarkedBuffer = await this.watermarkImage(file.path, 'naubpadi.com.ng');
+          const watermarkedBuffer = await this.watermarkImage(
+            file.path,
+            'naubpadi.com.ng',
+          );
           fs.writeFileSync(file.path, watermarkedBuffer);
           fileUrl = await this.r2Service.uploadFile(
             r2Key,
@@ -138,7 +150,7 @@ export class IngestionController {
             id: tempDocId,
             originalFilename: file.originalname,
             mimeType: file.mimetype,
-            storagePath: file.path,   // local tmp path kept for debugging
+            storagePath: file.path, // local tmp path kept for debugging
             fileUrl,
             pageCount: pageImageUrls.length > 0 ? pageImageUrls.length : 1,
             pageImageUrls: pageImageUrls.length > 0 ? pageImageUrls : null,
@@ -154,7 +166,12 @@ export class IngestionController {
           }),
         );
 
-        return { filename: file.originalname, documentId: doc.id, fileUrl, status: doc.status };
+        return {
+          filename: file.originalname,
+          documentId: doc.id,
+          fileUrl,
+          status: doc.status,
+        };
       }),
     );
 
@@ -263,9 +280,13 @@ export class IngestionController {
 
   // ── helpers ──
 
-  private async watermarkPdf(pdfBuffer: Buffer, text = 'NAUB PADI | naubpadi.com.ng'): Promise<Buffer> {
+  private async watermarkPdf(
+    pdfBuffer: Buffer,
+    text = 'NAUB PADI | naubpadi.com.ng',
+  ): Promise<Buffer> {
     try {
-      const { PDFDocument, rgb, degrees, StandardFonts } = await import('pdf-lib');
+      const { PDFDocument, rgb, degrees, StandardFonts } =
+        await import('pdf-lib');
       const pdfDoc = await PDFDocument.load(pdfBuffer);
       const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
       const pages = pdfDoc.getPages();
@@ -304,7 +325,10 @@ export class IngestionController {
     }
   }
 
-  private async convertPdfToPngs(filePath: string, docId: string): Promise<string[]> {
+  private async convertPdfToPngs(
+    filePath: string,
+    docId: string,
+  ): Promise<string[]> {
     try {
       const pdfPoppler = await import('pdf-poppler');
       const outputDir = path.join(path.dirname(filePath), docId);
@@ -319,14 +343,19 @@ export class IngestionController {
 
       await pdfPoppler.convert(filePath, opts);
 
-      const files = fs.readdirSync(outputDir).filter((f) => f.startsWith('thumbnail') && f.endsWith('.png'));
+      const files = fs
+        .readdirSync(outputDir)
+        .filter((f) => f.startsWith('thumbnail') && f.endsWith('.png'));
 
       const pageUrls: string[] = [];
       if (files.length > 0) {
         const pageFile = files[0];
         const pagePath = path.join(outputDir, pageFile);
 
-        const watermarkedPage = await this.watermarkImage(pagePath, 'naubpadi.com.ng');
+        const watermarkedPage = await this.watermarkImage(
+          pagePath,
+          'naubpadi.com.ng',
+        );
         const pageR2Key = `papers/${docId}/thumbnail.png`;
 
         const pageUrl = await this.r2Service.uploadFile(
@@ -343,12 +372,18 @@ export class IngestionController {
 
       return pageUrls;
     } catch (e) {
-      console.warn('[IngestionController] PDF thumbnail extraction skipped or unsupported in environment:', e);
+      console.warn(
+        '[IngestionController] PDF thumbnail extraction skipped or unsupported in environment:',
+        e,
+      );
       return [];
     }
   }
 
-  private async watermarkImage(filePath: string, text = 'naubpadi.com.ng'): Promise<Buffer> {
+  private async watermarkImage(
+    filePath: string,
+    text = 'naubpadi.com.ng',
+  ): Promise<Buffer> {
     try {
       const sharp = (await import('sharp')).default;
       const image = sharp(filePath);

@@ -1,4 +1,11 @@
-import { Controller, Get, Param, Query, NotFoundException, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  NotFoundException,
+  Res,
+} from '@nestjs/common';
 import type { Response } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,22 +16,50 @@ import { SourceDocument } from '../entities/source-document.entity';
  * These are hardcoded since they represent the university's fixed structure.
  */
 const FACULTIES = [
-  { id: 'famss', name: 'Faculty of Arts, Management and Social Sciences', abbreviation: 'FAMSS' },
+  {
+    id: 'famss',
+    name: 'Faculty of Arts, Management and Social Sciences',
+    abbreviation: 'FAMSS',
+  },
   { id: 'fcom', name: 'Faculty of Computing', abbreviation: 'FCOM' },
   { id: 'feng', name: 'Faculty of Engineering', abbreviation: 'FENG' },
-  { id: 'fevs', name: 'Faculty of Environmental Sciences', abbreviation: 'FEVS' },
-  { id: 'fnas', name: 'Faculty of Natural and Applied Sciences', abbreviation: 'FNAS' },
+  {
+    id: 'fevs',
+    name: 'Faculty of Environmental Sciences',
+    abbreviation: 'FEVS',
+  },
+  {
+    id: 'fnas',
+    name: 'Faculty of Natural and Applied Sciences',
+    abbreviation: 'FNAS',
+  },
 ];
 
 const DEPARTMENTS = [
   { id: 'accounting', name: 'Accounting', facultyId: 'famss' },
   { id: 'economics', name: 'Economics', facultyId: 'famss' },
   { id: 'management', name: 'Management', facultyId: 'famss' },
-  { id: 'transport-logistics', name: 'Transport and Logistics Management', facultyId: 'famss' },
-  { id: 'criminology', name: 'Criminology and Security Studies', facultyId: 'famss' },
+  {
+    id: 'transport-logistics',
+    name: 'Transport and Logistics Management',
+    facultyId: 'famss',
+  },
+  {
+    id: 'criminology',
+    name: 'Criminology and Security Studies',
+    facultyId: 'famss',
+  },
   { id: 'geography', name: 'Geography', facultyId: 'famss' },
-  { id: 'international-relations', name: 'International Relations', facultyId: 'famss' },
-  { id: 'peace-conflict', name: 'Peace Studies and Conflict Resolution', facultyId: 'famss' },
+  {
+    id: 'international-relations',
+    name: 'International Relations',
+    facultyId: 'famss',
+  },
+  {
+    id: 'peace-conflict',
+    name: 'Peace Studies and Conflict Resolution',
+    facultyId: 'famss',
+  },
   { id: 'political-science', name: 'Political Science', facultyId: 'famss' },
   { id: 'psychology', name: 'Psychology', facultyId: 'famss' },
   { id: 'sociology', name: 'Sociology', facultyId: 'famss' },
@@ -34,16 +69,44 @@ const DEPARTMENTS = [
   { id: 'computer-science', name: 'Computer Science', facultyId: 'fcom' },
   { id: 'cyber-security', name: 'Cyber Security', facultyId: 'fcom' },
   { id: 'information-system', name: 'Information System', facultyId: 'fcom' },
-  { id: 'information-technology', name: 'Information Technology', facultyId: 'fcom' },
-  { id: 'software-engineering', name: 'Software Engineering', facultyId: 'fcom' },
+  {
+    id: 'information-technology',
+    name: 'Information Technology',
+    facultyId: 'fcom',
+  },
+  {
+    id: 'software-engineering',
+    name: 'Software Engineering',
+    facultyId: 'fcom',
+  },
   { id: 'civil-engineering', name: 'Civil Engineering', facultyId: 'feng' },
-  { id: 'electrical-electronic', name: 'Electrical and Electronic Engineering', facultyId: 'feng' },
-  { id: 'mechanical-engineering', name: 'Mechanical Engineering', facultyId: 'feng' },
+  {
+    id: 'electrical-electronic',
+    name: 'Electrical and Electronic Engineering',
+    facultyId: 'feng',
+  },
+  {
+    id: 'mechanical-engineering',
+    name: 'Mechanical Engineering',
+    facultyId: 'feng',
+  },
   { id: 'building', name: 'Building', facultyId: 'fevs' },
-  { id: 'environmental-management', name: 'Environmental Management', facultyId: 'fevs' },
+  {
+    id: 'environmental-management',
+    name: 'Environmental Management',
+    facultyId: 'fevs',
+  },
   { id: 'estate-management', name: 'Estate Management', facultyId: 'fevs' },
-  { id: 'survey-geoinformatics', name: 'Survey and Geo-Informatics', facultyId: 'fevs' },
-  { id: 'urban-regional-planning', name: 'Urban and Regional Planning', facultyId: 'fevs' },
+  {
+    id: 'survey-geoinformatics',
+    name: 'Survey and Geo-Informatics',
+    facultyId: 'fevs',
+  },
+  {
+    id: 'urban-regional-planning',
+    name: 'Urban and Regional Planning',
+    facultyId: 'fevs',
+  },
   { id: 'biology', name: 'Biology', facultyId: 'fnas' },
   { id: 'chemistry', name: 'Chemistry', facultyId: 'fnas' },
   { id: 'mathematics', name: 'Mathematics', facultyId: 'fnas' },
@@ -71,12 +134,16 @@ export class PapersController {
       .createQueryBuilder('doc')
       .select('LOWER(doc.facultyId)', 'facultyId')
       .addSelect('COUNT(doc.id)', 'paperCount')
-      .where('doc.status IN (:...statuses)', { statuses: ['ready', 'extracted'] })
+      .where('doc.status IN (:...statuses)', {
+        statuses: ['ready', 'extracted'],
+      })
       .andWhere('doc.facultyId IS NOT NULL')
       .groupBy('LOWER(doc.facultyId)')
       .getRawMany();
 
-    const countMap = new Map(counts.map((c) => [c.facultyId, Number(c.paperCount)]));
+    const countMap = new Map(
+      counts.map((c) => [c.facultyId, Number(c.paperCount)]),
+    );
 
     return FACULTIES.map((f) => ({
       ...f,
@@ -86,27 +153,33 @@ export class PapersController {
 
   @Get('faculties/:facultyId/departments')
   async getDepartments(@Param('facultyId') facultyId: string) {
-    const faculty = FACULTIES.find((f) => f.id.toLowerCase() === facultyId.toLowerCase());
+    const faculty = FACULTIES.find(
+      (f) => f.id.toLowerCase() === facultyId.toLowerCase(),
+    );
     if (!faculty) throw new NotFoundException('Faculty not found');
 
     const counts = await this.sourceDocRepo
       .createQueryBuilder('doc')
       .select('LOWER(doc.departmentId)', 'departmentId')
       .addSelect('COUNT(doc.id)', 'paperCount')
-      .where('doc.status IN (:...statuses)', { statuses: ['ready', 'extracted'] })
+      .where('doc.status IN (:...statuses)', {
+        statuses: ['ready', 'extracted'],
+      })
       .andWhere('LOWER(doc.facultyId) = LOWER(:facultyId)', { facultyId })
       .andWhere('doc.departmentId IS NOT NULL')
       .groupBy('LOWER(doc.departmentId)')
       .getRawMany();
 
-    const countMap = new Map(counts.map((c) => [c.departmentId, Number(c.paperCount)]));
+    const countMap = new Map(
+      counts.map((c) => [c.departmentId, Number(c.paperCount)]),
+    );
 
-    return DEPARTMENTS
-      .filter((d) => d.facultyId.toLowerCase() === facultyId.toLowerCase())
-      .map((d) => ({
-        ...d,
-        paperCount: countMap.get(d.id.toLowerCase()) ?? 0,
-      }));
+    return DEPARTMENTS.filter(
+      (d) => d.facultyId.toLowerCase() === facultyId.toLowerCase(),
+    ).map((d) => ({
+      ...d,
+      paperCount: countMap.get(d.id.toLowerCase()) ?? 0,
+    }));
   }
 
   @Get('courses')
@@ -124,11 +197,17 @@ export class PapersController {
         'doc.level AS "level"',
         'COUNT(doc.id) AS "questionPaperCount"',
       ])
-      .where('doc.status IN (:...statuses)', { statuses: ['ready', 'extracted'] })
+      .where('doc.status IN (:...statuses)', {
+        statuses: ['ready', 'extracted'],
+      })
       .andWhere('doc.courseCode IS NOT NULL');
 
-    if (facultyId) qb.andWhere('LOWER(doc.facultyId) = LOWER(:facultyId)', { facultyId });
-    if (departmentId) qb.andWhere('LOWER(doc.departmentId) = LOWER(:departmentId)', { departmentId });
+    if (facultyId)
+      qb.andWhere('LOWER(doc.facultyId) = LOWER(:facultyId)', { facultyId });
+    if (departmentId)
+      qb.andWhere('LOWER(doc.departmentId) = LOWER(:departmentId)', {
+        departmentId,
+      });
     if (level) qb.andWhere('LOWER(doc.level) = LOWER(:level)', { level });
 
     const rows = await qb
@@ -161,11 +240,18 @@ export class PapersController {
 
     const qb = this.sourceDocRepo
       .createQueryBuilder('doc')
-      .where('doc.status IN (:...statuses)', { statuses: ['ready', 'extracted'] })
-      .andWhere("LOWER(REPLACE(REPLACE(doc.courseCode, ' ', ''), '+', '')) = LOWER(REPLACE(REPLACE(:courseCode, ' ', ''), '+', ''))", { courseCode });
+      .where('doc.status IN (:...statuses)', {
+        statuses: ['ready', 'extracted'],
+      })
+      .andWhere(
+        "LOWER(REPLACE(REPLACE(doc.courseCode, ' ', ''), '+', '')) = LOWER(REPLACE(REPLACE(:courseCode, ' ', ''), '+', ''))",
+        { courseCode },
+      );
 
     if (departmentId) {
-      qb.andWhere('LOWER(doc.departmentId) = LOWER(:departmentId)', { departmentId });
+      qb.andWhere('LOWER(doc.departmentId) = LOWER(:departmentId)', {
+        departmentId,
+      });
     }
 
     const doc = await qb.getOne();
@@ -194,7 +280,9 @@ export class PapersController {
   ) {
     const qb = this.sourceDocRepo
       .createQueryBuilder('doc')
-      .where('doc.status IN (:...statuses)', { statuses: ['ready', 'extracted'] });
+      .where('doc.status IN (:...statuses)', {
+        statuses: ['ready', 'extracted'],
+      });
 
     if (courseId) {
       const cleanId = decodeURIComponent(courseId).replace(/\+/g, ' ');
@@ -205,11 +293,18 @@ export class PapersController {
         targetCode = cleanId.substring(separator + 2);
         qb.andWhere('LOWER(doc.departmentId) = LOWER(:dept)', { dept });
       }
-      qb.andWhere("LOWER(REPLACE(REPLACE(doc.courseCode, ' ', ''), '+', '')) = LOWER(REPLACE(REPLACE(:targetCode, ' ', ''), '+', ''))", { targetCode });
+      qb.andWhere(
+        "LOWER(REPLACE(REPLACE(doc.courseCode, ' ', ''), '+', '')) = LOWER(REPLACE(REPLACE(:targetCode, ' ', ''), '+', ''))",
+        { targetCode },
+      );
     }
 
-    if (facultyId) qb.andWhere('LOWER(doc.facultyId) = LOWER(:facultyId)', { facultyId });
-    if (departmentId) qb.andWhere('LOWER(doc.departmentId) = LOWER(:departmentId)', { departmentId });
+    if (facultyId)
+      qb.andWhere('LOWER(doc.facultyId) = LOWER(:facultyId)', { facultyId });
+    if (departmentId)
+      qb.andWhere('LOWER(doc.departmentId) = LOWER(:departmentId)', {
+        departmentId,
+      });
     if (level) qb.andWhere('LOWER(doc.level) = LOWER(:level)', { level });
 
     const docs = await qb.orderBy('doc.createdAt', 'DESC').getMany();
@@ -233,7 +328,9 @@ export class PapersController {
 
     const docs = await this.sourceDocRepo
       .createQueryBuilder('doc')
-      .where('doc.status IN (:...statuses)', { statuses: ['ready', 'extracted'] })
+      .where('doc.status IN (:...statuses)', {
+        statuses: ['ready', 'extracted'],
+      })
       .andWhere(
         `(LOWER(doc.courseCode) LIKE :term
           OR LOWER(doc.originalFilename) LIKE :term
@@ -264,7 +361,10 @@ export class PapersController {
       doc.originalFilename ? doc.originalFilename.replace(/\.[^/.]+$/, '') : '',
     ].filter(Boolean);
     const rawName = parts.length > 0 ? parts.join('_') : 'paper';
-    const cleanFilename = `${rawName.replace(/[^a-zA-Z0-9_-]/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '')}${ext}`;
+    const cleanFilename = `${rawName
+      .replace(/[^a-zA-Z0-9_-]/g, '_')
+      .replace(/_+/g, '_')
+      .replace(/^_+|_+$/g, '')}${ext}`;
 
     try {
       const response = await fetch(doc.fileUrl);
@@ -275,7 +375,10 @@ export class PapersController {
       const buffer = Buffer.from(arrayBuffer);
 
       res.setHeader('Content-Type', doc.mimeType || 'application/octet-stream');
-      res.setHeader('Content-Disposition', `attachment; filename="${cleanFilename}"`);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${cleanFilename}"`,
+      );
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
       res.send(buffer);
@@ -288,11 +391,16 @@ export class PapersController {
 
   private toQuestionPaper(doc: SourceDocument) {
     const isImage = doc.mimeType?.startsWith('image/') ?? false;
-    const cleanFilename = doc.originalFilename ? doc.originalFilename.replace(/\.[^/.]+$/, '') : 'Question Paper';
+    const cleanFilename = doc.originalFilename
+      ? doc.originalFilename.replace(/\.[^/.]+$/, '')
+      : 'Question Paper';
 
-    const pageImages = doc.pageImageUrls && doc.pageImageUrls.length > 0
-      ? doc.pageImageUrls
-      : (isImage && doc.fileUrl ? [doc.fileUrl] : []);
+    const pageImages =
+      doc.pageImageUrls && doc.pageImageUrls.length > 0
+        ? doc.pageImageUrls
+        : isImage && doc.fileUrl
+          ? [doc.fileUrl]
+          : [];
 
     return {
       id: doc.id,
@@ -302,13 +410,14 @@ export class PapersController {
       courseCode: doc.courseCode ?? doc.subjectHint ?? 'GENERAL',
       courseId: doc.departmentId
         ? `${doc.departmentId}::${doc.courseCode ?? 'GENERAL'}`
-        : doc.courseCode ?? 'GENERAL',
+        : (doc.courseCode ?? 'GENERAL'),
       facultyId: doc.facultyId ?? '',
       departmentId: doc.departmentId ?? '',
       level: doc.level ?? '',
       examType: doc.examType ?? '',
       session: doc.session ?? '',
-      pageCount: doc.pageCount ?? (pageImages.length > 0 ? pageImages.length : 1),
+      pageCount:
+        doc.pageCount ?? (pageImages.length > 0 ? pageImages.length : 1),
       status: doc.status,
       mimeType: doc.mimeType,
       fileUrl: doc.fileUrl ?? null,

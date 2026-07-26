@@ -51,12 +51,14 @@ export class ExtractionProcessor extends WorkerHost {
 
     const fileUrl = doc.fileUrl;
     if (!fileUrl) {
-      throw new Error(`No storagePath or fileUrl available for document ${doc.id}`);
+      throw new Error(
+        `No storagePath or fileUrl available for document ${doc.id}`,
+      );
     }
 
     throw new Error(
       `R2 download not available — re-upload the file instead. ` +
-      `Document ${doc.id} has no local copy and downloadFile was removed.`,
+        `Document ${doc.id} has no local copy and downloadFile was removed.`,
     );
   }
 
@@ -120,7 +122,13 @@ export class ExtractionProcessor extends WorkerHost {
             );
             const diagramR2Url = await this.r2.uploadFromPath(
               cropPath,
-              'papers/' + doc.id + '/diagrams/page' + page.pageNumber + '-q' + q.number + '.png',
+              'papers/' +
+                doc.id +
+                '/diagrams/page' +
+                page.pageNumber +
+                '-q' +
+                q.number +
+                '.png',
               'image/png',
             );
             diagramUrls[q.number] = diagramR2Url;

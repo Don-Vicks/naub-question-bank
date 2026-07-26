@@ -14,9 +14,7 @@ export class StorageService {
     @InjectRepository(Question)
     private readonly questionRepo: Repository<Question>,
   ) {
-    this.confidenceThreshold = Number(
-      process.env.CONFIDENCE_THRESHOLD ?? 0.75,
-    );
+    this.confidenceThreshold = Number(process.env.CONFIDENCE_THRESHOLD ?? 0.75);
   }
 
   async persistExtractedPage(
@@ -47,7 +45,8 @@ export class StorageService {
         questionNumber: q.number,
         textRaw: q.text_raw,
         textLatex: q.text_latex,
-        subject: page.pageSubjectGuess ?? sourceDocument.subjectHint ?? undefined,
+        subject:
+          page.pageSubjectGuess ?? sourceDocument.subjectHint ?? undefined,
         hasDiagram: q.has_diagram,
         diagramAssetUrl: diagramAssetUrls[q.number] ?? undefined,
         sourcePageImageUrl,

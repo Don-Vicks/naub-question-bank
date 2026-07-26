@@ -48,7 +48,9 @@ export class DocumentMetadataService {
 
       const result = await model.generateContent([
         { inlineData: { data: imageBytes.toString('base64'), mimeType } },
-        { text: 'Extract document metadata. Return JSON with { title, subject, exam_board, year, confidence }' },
+        {
+          text: 'Extract document metadata. Return JSON with { title, subject, exam_board, year, confidence }',
+        },
       ]);
 
       const parsed = JSON.parse(result.response.text());

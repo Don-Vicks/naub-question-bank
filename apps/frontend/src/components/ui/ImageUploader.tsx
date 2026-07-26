@@ -12,10 +12,13 @@ interface FileEntry {
   isPdf: boolean;
 }
 
+const MAX_FILE_SIZE_MB = 4;
+
 interface ImageUploaderProps {
   onFilesChange: (files: File[]) => void;
   processImage: (file: File) => Promise<string>;
   maxFiles?: number;
+  maxFileSizeMb?: number;
   accept?: string;
 }
 
@@ -23,11 +26,13 @@ export function ImageUploader({
   onFilesChange,
   processImage,
   maxFiles = 10,
+  maxFileSizeMb = MAX_FILE_SIZE_MB,
   accept = 'application/pdf,image/jpeg,image/png,image/webp,.pdf,.png,.jpg,.jpeg',
 }: ImageUploaderProps) {
   const [entries, setEntries] = useState<FileEntry[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [sizeError, setSizeError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const formatFileSize = (bytes: number): string => {
@@ -37,7 +42,18 @@ export function ImageUploader({
 
   const addFiles = useCallback(
     async (fileList: FileList | File[]) => {
-      const files = Array.from(fileList).slice(0, maxFiles - entries.length);
+      setSizeError(null);
+      const allFiles = Array.from(fileList);
+      const maxBytes = maxFileSizeMb * 1024 * 1024;
+      const oversized = allFiles.find((f) => f.size > maxBytes);
+      if (oversized) {
+        setSizeError(
+          `"${oversized.name}" is ${formatFileSize(oversized.size)} — max file size is ${maxFileSizeMb} MB.`,
+        );
+        return;
+      }
+
+      const files = allFiles.slice(0, maxFiles - entries.length);
       if (files.length === 0) return;
 
       setProcessing(true);
@@ -147,7 +163,7 @@ export function ImageUploader({
             Drop question papers here
           </p>
           <p className="mt-1 text-caption text-muted">
-            Upload <span className="font-semibold text-army">PDF documents</span> or exam image photos · up to {maxFiles} files
+            Upload <span className="font-semibold text-army">PDF documents</span> or exam image photos · up to {maxFiles} files · {maxFileSizeMb} MB max each
           </p>
         </div>
       </button>
@@ -169,6 +185,13 @@ export function ImageUploader({
         <div className="flex items-center justify-center gap-2 rounded-xl bg-army-50 px-4 py-2.5 text-caption text-army animate-fade-in">
           <Sparkles size={12} strokeWidth={2} className="animate-pulse text-naub-gold" />
           Processing files &amp; compressing...
+        </div>
+      )}
+
+      {/* Size error */}
+      {sizeError && (
+        <div className="rounded-xl border border-terracotta-100 bg-terracotta-50 px-4 py-2.5 text-caption text-terracotta animate-fade-in">
+          {sizeError}
         </div>
       )}
 

@@ -11,10 +11,10 @@ import { Question } from './question.entity';
 export type DocumentStatus =
   | 'uploaded'
   | 'pending_review'
-  | 'ready'       // file is stored in R2 and immediately viewable
-  | 'splitting'   // legacy – kept for old rows
-  | 'extracting'  // legacy – kept for old rows
-  | 'extracted'   // legacy – kept for old rows
+  | 'ready' // file is stored in R2 and immediately viewable
+  | 'splitting' // legacy – kept for old rows
+  | 'extracting' // legacy – kept for old rows
+  | 'extracted' // legacy – kept for old rows
   | 'failed';
 
 @Entity('source_documents')

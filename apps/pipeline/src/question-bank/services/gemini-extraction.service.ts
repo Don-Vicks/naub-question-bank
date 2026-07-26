@@ -51,7 +51,9 @@ export class GeminiExtractionService {
 
     const result = await model.generateContent([
       { inlineData: { data: imageBytes.toString('base64'), mimeType } },
-      { text: `Extract all questions from page ${pageNumber}${subjectHint ? ` (subject: ${subjectHint})` : ''}. Return JSON with { page_subject_guess, questions: [{ number, text_raw, text_latex, options, has_diagram, diagram_bbox, confidence }] }` },
+      {
+        text: `Extract all questions from page ${pageNumber}${subjectHint ? ` (subject: ${subjectHint})` : ''}. Return JSON with { page_subject_guess, questions: [{ number, text_raw, text_latex, options, has_diagram, diagram_bbox, confidence }] }`,
+      },
     ]);
 
     const raw = result.response.text();

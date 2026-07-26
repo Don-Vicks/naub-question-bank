@@ -17,22 +17,44 @@ export class AdminService {
   ) {}
 
   async getOverview() {
-    const [totalPapers, totalQuestions, flagged, approved, rejected, totalUsers, recentPapers, recentUsers] =
-      await Promise.all([
-        this.docRepo.count(),
-        this.questionRepo.count(),
-        this.questionRepo.count({ where: { reviewStatus: 'flagged' } }),
-        this.questionRepo.count({ where: { reviewStatus: 'approved' } }),
-        this.questionRepo.count({ where: { reviewStatus: 'rejected' } }),
-        this.userRepo.count(),
-        this.docRepo.count({ where: { createdAt: MoreThan(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)) } }),
-        this.userRepo.count({ where: { createdAt: MoreThan(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)) } }),
-      ]);
+    const [
+      totalPapers,
+      totalQuestions,
+      flagged,
+      approved,
+      rejected,
+      totalUsers,
+      recentPapers,
+      recentUsers,
+    ] = await Promise.all([
+      this.docRepo.count(),
+      this.questionRepo.count(),
+      this.questionRepo.count({ where: { reviewStatus: 'flagged' } }),
+      this.questionRepo.count({ where: { reviewStatus: 'approved' } }),
+      this.questionRepo.count({ where: { reviewStatus: 'rejected' } }),
+      this.userRepo.count(),
+      this.docRepo.count({
+        where: {
+          createdAt: MoreThan(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)),
+        },
+      }),
+      this.userRepo.count({
+        where: {
+          createdAt: MoreThan(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)),
+        },
+      }),
+    ]);
 
     const recentDocs = await this.docRepo.find({
       order: { createdAt: 'DESC' },
       take: 10,
-      select: ['id', 'originalFilename', 'extractedTitle', 'status', 'createdAt'],
+      select: [
+        'id',
+        'originalFilename',
+        'extractedTitle',
+        'status',
+        'createdAt',
+      ],
     });
 
     return {
@@ -49,14 +71,24 @@ export class AdminService {
       },
       recentActivity: recentDocs.map((doc) => ({
         id: doc.id,
-        action: doc.status === 'extracted' ? 'Paper processed' : doc.status === 'failed' ? 'Processing failed' : 'Paper uploaded',
+        action:
+          doc.status === 'extracted'
+            ? 'Paper processed'
+            : doc.status === 'failed'
+              ? 'Processing failed'
+              : 'Paper uploaded',
         detail: doc.extractedTitle ?? doc.originalFilename,
         time: doc.createdAt.toISOString(),
       })),
     };
   }
 
-  async getPapers(params: { search?: string; status?: string; page?: number; limit?: number }) {
+  async getPapers(params: {
+    search?: string;
+    status?: string;
+    page?: number;
+    limit?: number;
+  }) {
     const page = params.page ?? 1;
     const limit = params.limit ?? 20;
     const qb = this.docRepo.createQueryBuilder('doc');
@@ -77,11 +109,15 @@ export class AdminService {
       .take(limit)
       .getManyAndCount();
 
-    const uploaderIds = Array.from(new Set(items.map((d) => d.uploaderId).filter(Boolean))) as string[];
+    const uploaderIds = Array.from(
+      new Set(items.map((d) => d.uploaderId).filter(Boolean)),
+    ) as string[];
     let userMap = new Map<string, { name?: string; email: string }>();
     if (uploaderIds.length > 0) {
       const users = await this.userRepo.findBy({ id: In(uploaderIds) });
-      userMap = new Map(users.map((u) => [u.id, { name: u.name, email: u.email }]));
+      userMap = new Map(
+        users.map((u) => [u.id, { name: u.name, email: u.email }]),
+      );
     }
 
     return {
@@ -89,7 +125,9 @@ export class AdminService {
         const uploader = doc.uploaderId ? userMap.get(doc.uploaderId) : null;
         return {
           id: doc.id,
-          title: doc.courseCode ? `${doc.courseCode} ${doc.originalFilename}` : doc.originalFilename,
+          title: doc.courseCode
+            ? `${doc.courseCode} ${doc.originalFilename}`
+            : doc.originalFilename,
           courseCode: doc.courseCode ?? doc.extractedSubject ?? '—',
           status: doc.status,
           pageCount: doc.pageCount ?? 1,
@@ -121,7 +159,9 @@ export class AdminService {
     const qb = this.userRepo.createQueryBuilder('user');
 
     if (params.search) {
-      qb.where('(user.name LIKE :s OR user.email LIKE :s)', { s: `%${params.search}%` });
+      qb.where('(user.name LIKE :s OR user.email LIKE :s)', {
+        s: `%${params.search}%`,
+      });
     }
 
     const [items, total] = await qb
@@ -135,11 +175,15 @@ export class AdminService {
       .createQueryBuilder('doc')
       .select('doc.uploaderId', 'uploaderId')
       .addSelect('COUNT(*)', 'count')
-      .where('doc.uploaderId IN (:...ids)', { ids: userIds.length > 0 ? userIds : ['__none__'] })
+      .where('doc.uploaderId IN (:...ids)', {
+        ids: userIds.length > 0 ? userIds : ['__none__'],
+      })
       .groupBy('doc.uploaderId')
       .getRawMany<{ uploaderId: string; count: string }>();
 
-    const countMap = new Map(paperCounts.map((r) => [r.uploaderId, Number(r.count)]));
+    const countMap = new Map(
+      paperCounts.map((r) => [r.uploaderId, Number(r.count)]),
+    );
 
     return {
       items: items.map((u) => ({
@@ -174,7 +218,14 @@ export class AdminService {
   }
 
   async getStats() {
-    const [totalPapers, totalQuestions, flagged, approved, rejected, totalUsers] = await Promise.all([
+    const [
+      totalPapers,
+      totalQuestions,
+      flagged,
+      approved,
+      rejected,
+      totalUsers,
+    ] = await Promise.all([
       this.docRepo.count(),
       this.questionRepo.count(),
       this.questionRepo.count({ where: { reviewStatus: 'flagged' } }),
@@ -187,7 +238,11 @@ export class AdminService {
       { label: 'Approved', count: approved, color: 'verified' },
       { label: 'Flagged', count: flagged, color: 'terracotta' },
       { label: 'Rejected', count: rejected, color: 'ink' },
-      { label: 'Pending', count: totalQuestions - approved - rejected - flagged, color: 'marigold' },
+      {
+        label: 'Pending',
+        count: totalQuestions - approved - rejected - flagged,
+        color: 'marigold',
+      },
     ];
 
     const statusCounts = await this.docRepo
@@ -206,9 +261,10 @@ export class AdminService {
       .orderBy('count', 'DESC')
       .getRawMany<{ subject: string; count: string }>();
 
-    const extractionRate = totalQuestions > 0
-      ? Math.round((approved / totalQuestions) * 1000) / 10
-      : 0;
+    const extractionRate =
+      totalQuestions > 0
+        ? Math.round((approved / totalQuestions) * 1000) / 10
+        : 0;
 
     return {
       totalPapers,
@@ -216,8 +272,14 @@ export class AdminService {
       totalUsers,
       extractionRate,
       statusBreakdown,
-      papersByStatus: statusCounts.map((r) => ({ status: r.status, count: Number(r.count) })),
-      questionsBySubject: subjectCounts.map((r) => ({ subject: r.subject, count: Number(r.count) })),
+      papersByStatus: statusCounts.map((r) => ({
+        status: r.status,
+        count: Number(r.count),
+      })),
+      questionsBySubject: subjectCounts.map((r) => ({
+        subject: r.subject,
+        count: Number(r.count),
+      })),
     };
   }
 }
