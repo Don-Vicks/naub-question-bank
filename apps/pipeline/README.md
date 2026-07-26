@@ -109,6 +109,6 @@ duplicates — it upserts instead.
    for a QA pass (afternoon of work for ~100-150 flagged questions out of 1k).
 2. Once questions are structured + approved, generating AI answers is a
    second, much simpler pass: same Gemini call, prompt = question text_latex
-   + subject context, output = worked solution in LaTeX. Store in a separate
-   `AiAnswer` entity/table so answers are versioned independently from the
-   source question and can go through their own light review pass.
+   - subject context, output = worked solution in LaTeX. Store in a separate
+     `AiAnswer` entity/table so answers are versioned independently from the
+     source question and can go through their own light review pass
