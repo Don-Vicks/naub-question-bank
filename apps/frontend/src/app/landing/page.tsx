@@ -14,7 +14,7 @@ const QUICK_ACTIONS = [
     iconBg: 'bg-white/10',
   },
   {
-    href: '/upload',
+    href: '/login?redirect=/upload',
     label: 'Upload',
     description: 'Add papers',
     icon: Upload,
@@ -186,7 +186,7 @@ export default function HomePage() {
                 Help fellow students by uploading past questions.
               </p>
               <Link
-                href="/upload"
+                href="/login?redirect=/upload"
                 className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-naub-teal transition-all hover:shadow-elevated hover:translate-y-[-1px]"
               >
                 <Upload size={14} strokeWidth={2} />

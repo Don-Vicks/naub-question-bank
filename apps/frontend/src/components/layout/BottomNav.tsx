@@ -4,9 +4,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { MOBILE_NAV_ITEMS } from '@/lib/nav-items';
+import { useAuthStore } from '@/lib/auth-store';
 
 export function BottomNav() {
   const pathname = usePathname();
+  const user = useAuthStore((s) => s.user);
 
   if (pathname.startsWith('/admin')) return null;
 
@@ -17,10 +19,13 @@ export function BottomNav() {
           {MOBILE_NAV_ITEMS.map(({ href, label, icon: Icon }) => {
             const active =
               href === '/' ? pathname === '/' : pathname.startsWith(href);
+            const linkHref = href === '/upload' && !user
+              ? '/login?redirect=/upload'
+              : href;
             return (
               <Link
                 key={href}
-                href={href}
+                href={linkHref}
                 className={clsx(
                   'flex flex-1 flex-col items-center justify-center gap-1 rounded-xl py-1.5 px-1 min-h-[48px] transition-all duration-200',
                   active

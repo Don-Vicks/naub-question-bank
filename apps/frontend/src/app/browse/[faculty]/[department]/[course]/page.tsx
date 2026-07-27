@@ -124,7 +124,7 @@ export default function CoursePapersPage() {
               description={hasFilters ? 'No question papers match your selected filters. Try resetting the filters.' : 'No question papers have been uploaded for this course yet.'}
               actionLabel={hasFilters ? 'Reset Filters' : 'Upload a Paper'}
               onAction={hasFilters ? () => { setExamFilter('all'); setSessionFilter('all'); } : undefined}
-              actionHref={hasFilters ? undefined : '/upload'}
+              actionHref={hasFilters ? undefined : '/login?redirect=/upload'}
             />
           )}
         </div>

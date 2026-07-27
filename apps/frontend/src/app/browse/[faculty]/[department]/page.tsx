@@ -86,7 +86,7 @@ export default function DepartmentPage() {
               title="No courses found"
               description="No courses with uploaded papers were found in this department yet."
               actionLabel="Upload a Question Paper"
-              actionHref="/upload"
+              actionHref="/login?redirect=/upload"
             />
           )}
         </div>

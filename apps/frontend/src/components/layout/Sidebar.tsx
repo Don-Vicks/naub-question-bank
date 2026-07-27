@@ -34,10 +34,13 @@ export function Sidebar() {
           {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
             const active =
               href === '/' ? pathname === '/' : pathname.startsWith(href);
+            const linkHref = href === '/upload' && !user
+              ? '/login?redirect=/upload'
+              : href;
             return (
               <Link
                 key={href}
-                href={href}
+                href={linkHref}
                 className={clsx(
                   'group relative flex items-center gap-3.5 rounded-2xl px-4 py-3 text-sm transition-all duration-200',
                   active

@@ -449,7 +449,7 @@ export default function LandingPage() {
                 {[
                   { label: 'Browse papers', href: '/browse' },
                   { label: 'Flashcards', href: '/flashcards' },
-                  { label: 'Upload', href: '/upload' },
+                  { label: 'Upload', href: '/login?redirect=/upload' },
                   { label: 'Search', href: '/search' },
                 ].map((link) => (
                   <li key={link.href}>
