@@ -22,7 +22,7 @@ export default function BookmarksPage() {
         <button
           onClick={() => router.back()}
           aria-label="Back"
-          className="btn-icon text-paper flex-shrink-0 transition-transform duration-200 hover:scale-110 active:scale-95"
+          className="hidden lg:flex btn-icon text-paper flex-shrink-0 transition-transform duration-200 hover:scale-110 active:scale-95"
         >
           <ArrowLeft size={20} strokeWidth={1.75} />
         </button>

@@ -10,7 +10,7 @@ export default function QuestionPage() {
   return (
     <div className="page-desktop">
       <div className="page-header lg:rounded-card-xl lg:mx-0 lg:my-6">
-        <button onClick={() => router.back()} aria-label="Back" className="md:hidden btn-icon text-paper">
+        <button onClick={() => router.back()} aria-label="Back" className="hidden lg:flex btn-icon text-paper">
           <ArrowLeft size={20} strokeWidth={1.75} />
         </button>
         <div>

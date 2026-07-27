@@ -2,12 +2,130 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, X, Download, Bookmark, Loader2, Check, ExternalLink, FileText } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw, X, Download, Bookmark, Loader2, Check, ExternalLink, FileText } from 'lucide-react';
 import { usePaper } from '@/lib/hooks/useQuestionBank';
 import { WatermarkOverlay } from '@/components/ui/WatermarkOverlay';
 import { useBookmarkStore } from '@/lib/bookmark-store';
 import { downloadFile } from '@/lib/download';
 import { api } from '@/lib/api';
+import { usePinchZoom } from '@/lib/hooks/usePinchZoom';
+
+function ExpandedViewer({
+  pages,
+  currentPage,
+  setCurrentPage,
+  onClose,
+  title,
+}: {
+  pages: string[];
+  currentPage: number;
+  setCurrentPage: (fn: (p: number) => number) => void;
+  onClose: () => void;
+  title: string;
+}) {
+  const { containerRef, scale, translate, handlers, resetZoom } = usePinchZoom({ maxScale: 5 });
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/95 backdrop-blur-sm animate-fade-in"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      {/* Top bar */}
+      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 py-3">
+        <p className="text-xs font-semibold text-paper/70 truncate max-w-[60%]">{title}</p>
+        <div className="flex items-center gap-2">
+          {scale > 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); resetZoom(); }}
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-paper backdrop-blur-sm transition-all duration-200 hover:bg-white/20 active:scale-95"
+              aria-label="Reset zoom"
+            >
+              <RotateCcw size={16} strokeWidth={2} />
+            </button>
+          )}
+          <button
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-paper backdrop-blur-sm transition-all duration-200 hover:bg-white/20 active:scale-95"
+            aria-label="Close"
+            onClick={onClose}
+          >
+            <X size={18} strokeWidth={2} />
+          </button>
+        </div>
+      </div>
+
+      {/* Zoomable image container */}
+      <div
+        ref={containerRef}
+        className="flex h-full w-full items-center justify-center overflow-hidden touch-none"
+        {...handlers}
+      >
+        <img
+          src={pages[currentPage]}
+          alt={`Page ${currentPage + 1} (expanded)`}
+          className="max-h-[85vh] max-w-full object-contain rounded-lg animate-scale-in select-none pointer-events-none"
+          style={{
+            transform: `scale(${scale}) translate(${translate.x / scale}px, ${translate.y / scale}px)`,
+            transition: 'transform 0.1s ease-out',
+          }}
+          draggable={false}
+        />
+      </div>
+
+      {/* Zoom indicator */}
+      {scale > 1 && (
+        <div className="absolute top-14 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 backdrop-blur-sm">
+          <button
+            onClick={(e) => { e.stopPropagation(); handlers.onWheel({ deltaY: 100 } as React.WheelEvent); }}
+            className="text-paper/70 hover:text-paper transition-colors"
+          >
+            <ZoomOut size={14} />
+          </button>
+          <span className="text-xs font-semibold text-paper tabular-nums min-w-[3rem] text-center">
+            {Math.round(scale * 100)}%
+          </span>
+          <button
+            onClick={(e) => { e.stopPropagation(); handlers.onWheel({ deltaY: -100 } as React.WheelEvent); }}
+            className="text-paper/70 hover:text-paper transition-colors"
+          >
+            <ZoomIn size={14} />
+          </button>
+        </div>
+      )}
+
+      {/* Bottom navigation */}
+      {pages.length > 1 && (
+        <div className="absolute bottom-6 left-0 right-0 z-30 flex items-center justify-center gap-6">
+          <button
+            onClick={(e) => { e.stopPropagation(); resetZoom(); setCurrentPage((p) => Math.max(0, p - 1)); }}
+            disabled={currentPage === 0}
+            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-paper backdrop-blur-sm transition-all duration-200 hover:bg-white/20 hover:scale-110 active:scale-95 disabled:opacity-30"
+          >
+            <ChevronLeft size={20} strokeWidth={2} />
+          </button>
+          <p className="text-sm font-semibold text-paper tabular-nums">
+            {currentPage + 1} / {pages.length}
+          </p>
+          <button
+            onClick={(e) => { e.stopPropagation(); resetZoom(); setCurrentPage((p) => Math.min(pages.length - 1, p + 1)); }}
+            disabled={currentPage === pages.length - 1}
+            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-paper backdrop-blur-sm transition-all duration-200 hover:bg-white/20 hover:scale-110 active:scale-95 disabled:opacity-30"
+          >
+            <ChevronRight size={20} strokeWidth={2} />
+          </button>
+        </div>
+      )}
+
+      {/* Instructions */}
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30">
+        <p className="text-[10px] text-paper/40 font-medium whitespace-nowrap">
+          Pinch to zoom · Double-tap to zoom · Scroll to zoom
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export default function PaperPage() {
   const { paperId } = useParams<{ paperId: string }>();
@@ -64,7 +182,7 @@ export default function PaperPage() {
     return (
       <div className="page-desktop">
         <div className="page-header lg:rounded-card-xl lg:mx-0 lg:my-6">
-          <button onClick={() => router.back()} aria-label="Back" className="btn-icon text-paper flex-shrink-0 transition-transform duration-200 hover:scale-110 active:scale-95">
+          <button onClick={() => router.back()} aria-label="Back" className="hidden lg:flex btn-icon text-paper flex-shrink-0 transition-transform duration-200 hover:scale-110 active:scale-95">
             <ArrowLeft size={20} strokeWidth={1.75} />
           </button>
           <div><p className="page-header-title">Loading...</p></div>
@@ -89,7 +207,7 @@ export default function PaperPage() {
       )}
 
       <div className="page-header lg:rounded-card-xl lg:mx-0 lg:my-6">
-        <button onClick={() => router.back()} aria-label="Back" className="btn-icon text-paper flex-shrink-0 transition-transform duration-200 hover:scale-110 active:scale-95">
+        <button onClick={() => router.back()} aria-label="Back" className="hidden lg:flex btn-icon text-paper flex-shrink-0 transition-transform duration-200 hover:scale-110 active:scale-95">
           <ArrowLeft size={20} strokeWidth={1.75} />
         </button>
         <div className="min-w-0 flex-1">
@@ -258,48 +376,15 @@ export default function PaperPage() {
         </div>
       </div>
 
-      {/* ── Expanded fullscreen image ── */}
+      {/* ── Expanded fullscreen image with pinch-zoom ── */}
       {expanded && hasImagePages && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/95 p-4 backdrop-blur-sm animate-fade-in"
-          onClick={() => setExpanded(false)}
-        >
-          <button
-            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-paper transition-all duration-200 hover:bg-white/20 hover:scale-110 active:scale-95"
-            aria-label="Close"
-            onClick={() => setExpanded(false)}
-          >
-            <X size={20} strokeWidth={2} />
-          </button>
-
-          <img
-            src={pages[currentPage]}
-            alt={`Page ${currentPage + 1} (expanded)`}
-            className="max-h-[85vh] max-w-full object-contain rounded-lg animate-scale-in"
-          />
-
-          {pages.length > 1 && (
-            <div className="absolute bottom-6 left-0 right-0 flex items-center justify-center gap-6">
-              <button
-                onClick={(e) => { e.stopPropagation(); setCurrentPage((p) => Math.max(0, p - 1)); }}
-                disabled={currentPage === 0}
-                className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-paper backdrop-blur-sm transition-all duration-200 hover:bg-white/20 hover:scale-110 active:scale-95 disabled:opacity-30"
-              >
-                <ChevronLeft size={20} strokeWidth={2} />
-              </button>
-              <p className="text-sm font-semibold text-paper tabular-nums">
-                {currentPage + 1} / {pages.length}
-              </p>
-              <button
-                onClick={(e) => { e.stopPropagation(); setCurrentPage((p) => Math.min(pages.length - 1, p + 1)); }}
-                disabled={currentPage === pages.length - 1}
-                className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-paper backdrop-blur-sm transition-all duration-200 hover:bg-white/20 hover:scale-110 active:scale-95 disabled:opacity-30"
-              >
-                <ChevronRight size={20} strokeWidth={2} />
-              </button>
-            </div>
-          )}
-        </div>
+        <ExpandedViewer
+          pages={pages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          onClose={() => setExpanded(false)}
+          title={paper.title}
+        />
       )}
     </div>
   );
