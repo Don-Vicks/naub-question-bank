@@ -7,52 +7,16 @@ import {
   Search,
   Upload,
   BookOpen,
-  Shield,
-  Zap,
-  Users,
   ArrowRight,
   Check,
   GraduationCap,
-  FileText,
   Sparkles,
-  Brain,
-  Target,
-  Clock,
-  ChevronRight,
-  Star,
   Layers,
+  ChevronRight,
 } from 'lucide-react';
 import { FACULTIES, getDepartmentsByFaculty } from '@/lib/naub-data';
 import { useAuthStore } from '@/lib/auth-store';
 import { Logo } from '@/components/ui/Logo';
-
-function AnimatedCounter({ end, suffix = '' }: { end: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const duration = 2000;
-    const steps = 60;
-    const increment = end / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= end) {
-        setCount(end);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(current));
-      }
-    }, duration / steps);
-    return () => clearInterval(timer);
-  }, [end]);
-
-  return (
-    <span>
-      {count.toLocaleString()}
-      {suffix}
-    </span>
-  );
-}
 
 const FEATURES = [
   {
@@ -64,32 +28,20 @@ const FEATURES = [
   {
     icon: Upload,
     title: 'Easy Upload',
-    description: 'Snap a photo or upload a PDF — our AI handles splitting and extraction.',
+    description: 'Snap a photo or upload a PDF — our pipeline splits pages and extracts questions automatically.',
     color: 'bg-army-50 text-army',
-  },
-  {
-    icon: Brain,
-    title: 'AI-Powered',
-    description: 'Questions are split, classified, and answered using advanced AI models.',
-    color: 'bg-naub-gold-light text-naub-gold',
   },
   {
     icon: Layers,
     title: 'Flashcards & OBJ',
-    description: 'Study with interactive flip cards and multiple choice quizzes for any course.',
+    description: 'Study with interactive flip cards and multiple choice quizzes generated from past questions.',
     color: 'bg-naub-green-light text-naub-green',
   },
   {
-    icon: Shield,
-    title: 'Verified Answers',
-    description: 'Community-reviewed answers with confidence ratings you can trust.',
-    color: 'bg-naub-teal/10 text-naub-teal',
-  },
-  {
-    icon: Target,
-    title: 'Practice Mode',
-    description: 'Timed quizzes with score tracking to test your knowledge before exams.',
-    color: 'bg-army-50 text-army',
+    icon: BookOpen,
+    title: 'Browse by Faculty',
+    description: 'Navigate papers organized by faculty, department, and course — exactly like NAUB\'s structure.',
+    color: 'bg-naub-gold-light text-naub-gold',
   },
 ];
 
@@ -103,38 +55,17 @@ const STEPS = [
   },
   {
     step: '02',
-    icon: Brain,
+    icon: Search,
     title: 'AI processes them',
-    description: 'Our pipeline splits pages, extracts questions, and generates verified answers.',
+    description: 'Our pipeline splits pages, extracts questions, and organizes them by course.',
     color: 'from-naub-teal to-naub-teal/80',
   },
   {
     step: '03',
     icon: BookOpen,
-    title: 'Study & practice',
-    description: 'Browse by faculty, use flashcards, or take timed practice quizzes.',
+    title: 'Study & review',
+    description: 'Browse by faculty, search by keyword, or use flashcards to revise.',
     color: 'from-naub-green to-naub-green/80',
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    name: 'Abdulrahman K.',
-    faculty: 'FCOM — Computer Science',
-    text: 'Padi saved me during exam prep. I found past questions for COS201 in seconds and the flashcards helped me revise between lectures.',
-    rating: 5,
-  },
-  {
-    name: 'Fatima B.',
-    faculty: 'FAMSS — Accounting',
-    text: 'The AI answers are surprisingly accurate. I cross-check with my textbooks and it\'s spot on most times. Best study tool at NAUB.',
-    rating: 5,
-  },
-  {
-    name: 'Ibrahim M.',
-    faculty: 'FENG — Mechanical Engineering',
-    text: 'Uploading my department\'s past papers was so easy. Now everyone in my class can access them. This is what NAUB needed.',
-    rating: 5,
   },
 ];
 
@@ -161,15 +92,9 @@ export default function LandingPage() {
     <div className="min-h-screen">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-army">
-        {/* Decorative blurs — layered for depth */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-white/[0.04] blur-[100px]" />
           <div className="absolute -bottom-40 -left-40 h-[400px] w-[400px] rounded-full bg-naub-teal/10 blur-[80px]" />
-          <div className="absolute right-1/4 top-1/3 h-64 w-64 rounded-full bg-white/[0.02] blur-[60px]" />
-          {/* Floating accent orbs */}
-          <div className="absolute right-20 top-20 h-3 w-3 rounded-full bg-naub-gold/30 animate-float" />
-          <div className="absolute left-1/3 bottom-32 h-2 w-2 rounded-full bg-white/20 animate-float" style={{ animationDelay: '1s' }} />
-          <div className="absolute right-1/3 top-1/2 h-2.5 w-2.5 rounded-full bg-naub-green/20 animate-float" style={{ animationDelay: '2s' }} />
         </div>
 
         <div className="relative mx-auto max-w-6xl px-6 py-16 lg:py-0">
@@ -208,8 +133,8 @@ export default function LandingPage() {
                 <span className="text-white/75">organized and ready.</span>
               </h1>
               <p className="mt-6 max-w-lg text-lg text-white/55 leading-relaxed">
-                Padi collects, organizes, and AI-enhances past exam papers from every faculty
-                at NAUB. Study smarter, not harder.
+                Padi collects and organizes past exam papers from every faculty
+                at NAUB. Browse, search, and study smarter.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -241,22 +166,15 @@ export default function LandingPage() {
                   <Check size={12} strokeWidth={2.5} className="text-naub-green" />
                   No ads
                 </span>
-                <span className="flex items-center gap-1.5">
-                  <Check size={12} strokeWidth={2.5} className="text-naub-green" />
-                  Open source
-                </span>
               </div>
             </div>
 
             {/* Device mockup */}
             <div className="hidden lg:block">
               <div className="relative">
-                {/* Glow behind */}
                 <div className="absolute -inset-8 rounded-3xl bg-white/[0.03] blur-2xl" />
-                {/* Device frame */}
                 <div className="relative rounded-2xl border border-white/10 bg-white/[0.06] p-3 backdrop-blur-xl shadow-2xl">
                   <div className="rounded-xl bg-paper overflow-hidden">
-                    {/* Browser chrome */}
                     <div className="flex items-center gap-2 border-b border-line bg-white px-4 py-2.5">
                       <div className="flex gap-1.5">
                         <div className="h-2.5 w-2.5 rounded-full bg-red-400/60" />
@@ -267,7 +185,6 @@ export default function LandingPage() {
                         padi.naub.edu.ng/browse/fcom
                       </div>
                     </div>
-                    {/* Content mockup */}
                     <div className="p-4 space-y-3">
                       <div className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-naub-teal to-naub-teal/80 px-4 py-3">
                         <Search size={16} className="text-white/70" />
@@ -310,7 +227,6 @@ export default function LandingPage() {
 
       {/* Stats */}
       <section className="relative border-b border-line bg-white overflow-hidden">
-        {/* Subtle dot texture */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.02]"
           style={{
@@ -319,20 +235,19 @@ export default function LandingPage() {
           }}
         />
         <div className="relative mx-auto max-w-6xl px-6 py-12">
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-3">
             {[
-              { value: 5, label: 'Faculties', suffix: '', accent: 'from-army to-army-700' },
-              { value: 31, label: 'Departments', suffix: '', accent: 'from-naub-teal to-naub-teal/80' },
-              { value: 2146, label: 'Papers', suffix: '+', accent: 'from-naub-green to-naub-green/80' },
-              { value: 10, label: 'Sessions', suffix: '+', accent: 'from-naub-gold to-marigold-600' },
-            ].map(({ value, label, suffix, accent }) => (
+              { value: '5', label: 'Faculties', accent: 'from-army to-army-700' },
+              { value: '31', label: 'Departments', accent: 'from-naub-teal to-naub-teal/80' },
+              { value: '10+', label: 'Sessions covered', accent: 'from-naub-gold to-marigold-600' },
+            ].map(({ value, label, accent }) => (
               <div key={label} className="group text-center">
                 <div className={`mx-auto mb-3 h-1 w-8 rounded-full bg-gradient-to-r ${accent} opacity-40 transition-all duration-300 group-hover:w-12 group-hover:opacity-80`} />
                 <p
                   className="text-3xl font-bold text-ink md:text-4xl tabular-nums"
                   style={{ fontFamily: "'Lora', Georgia, serif" }}
                 >
-                  <AnimatedCounter end={value} suffix={suffix} />
+                  {value}
                 </p>
                 <p className="mt-1.5 text-sm text-muted font-medium">{label}</p>
               </div>
@@ -345,30 +260,23 @@ export default function LandingPage() {
       <section className="bg-paper py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-6">
           <div className="text-center mb-14">
-            <span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-army/5 px-3 py-1 text-xs font-semibold text-army">
-              <Zap size={12} strokeWidth={2.5} />
-              Features
-            </span>
             <h2
               className="text-3xl font-bold text-ink md:text-4xl"
               style={{ fontFamily: "'Lora', Georgia, serif" }}
             >
-              Everything you need to ace your exams
+              Everything you need to study
             </h2>
             <p className="mt-4 text-lg text-muted max-w-2xl mx-auto">
               From searching past questions to uploading new papers — Padi handles it all.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             {FEATURES.map(({ icon: Icon, title, description, color }) => (
               <div
                 key={title}
                 className="group relative overflow-hidden rounded-2xl border border-line bg-white p-6 transition-all duration-300 hover:border-army/15 hover:shadow-card-hover hover:translate-y-[-2px]"
               >
-                {/* Shine sweep */}
-                <div className="absolute -left-full top-0 h-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-[300%]" />
-
                 <div
                   className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl ${color} transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}
                 >
@@ -388,20 +296,15 @@ export default function LandingPage() {
       <section className="bg-white py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-6">
           <div className="text-center mb-14">
-            <span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-naub-teal/10 px-3 py-1 text-xs font-semibold text-naub-teal">
-              <Clock size={12} strokeWidth={2.5} />
-              How it works
-            </span>
             <h2
               className="text-3xl font-bold text-ink md:text-4xl"
               style={{ fontFamily: "'Lora', Georgia, serif" }}
             >
-              Three steps to better grades
+              How it works
             </h2>
           </div>
 
           <div className="relative grid grid-cols-1 gap-8 md:grid-cols-3">
-            {/* Connecting line (desktop) */}
             <div className="absolute left-1/6 right-1/6 top-12 hidden h-px bg-gradient-to-r from-army/20 via-naub-teal/20 to-naub-green/20 md:block" />
 
             {STEPS.map(({ step, icon: Icon, title, description, color }) => (
@@ -435,10 +338,6 @@ export default function LandingPage() {
       <section className="bg-paper py-20 lg:py-28">
         <div className="mx-auto max-w-6xl px-6">
           <div className="text-center mb-14">
-            <span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-naub-green-light px-3 py-1 text-xs font-semibold text-naub-green">
-              <GraduationCap size={12} strokeWidth={2.5} />
-              Coverage
-            </span>
             <h2
               className="text-3xl font-bold text-ink md:text-4xl"
               style={{ fontFamily: "'Lora', Georgia, serif" }}
@@ -487,57 +386,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="bg-white py-20 lg:py-28">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="text-center mb-14">
-            <span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-naub-gold-light px-3 py-1 text-xs font-semibold text-naub-gold">
-              <Star size={12} strokeWidth={2.5} />
-              Testimonials
-            </span>
-            <h2
-              className="text-3xl font-bold text-ink md:text-4xl"
-              style={{ fontFamily: "'Lora', Georgia, serif" }}
-            >
-              Loved by NAUB students
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {TESTIMONIALS.map((t) => (
-              <div
-                key={t.name}
-                className="relative overflow-hidden rounded-2xl border border-line bg-paper p-6 transition-all duration-300 hover:shadow-card-hover hover:border-army/10"
-              >
-                {/* Subtle gold accent on hover */}
-                <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-naub-gold/5 transition-transform duration-500 hover:scale-150" />
-
-                <div className="relative">
-                  <div className="mb-3 flex gap-0.5">
-                    {Array.from({ length: t.rating }).map((_, i) => (
-                      <Star key={i} size={14} fill="currentColor" className="text-naub-gold" />
-                    ))}
-                  </div>
-                  <p className="text-sm text-ink leading-relaxed mb-4">&ldquo;{t.text}&rdquo;</p>
-                  <div className="border-t border-line pt-4">
-                    <p className="text-sm font-semibold text-ink">{t.name}</p>
-                    <p className="text-xs text-muted mt-0.5">{t.faculty}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="relative overflow-hidden bg-gradient-army py-20 lg:py-28">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -right-32 -top-32 h-80 w-80 rounded-full bg-white/[0.04] blur-[80px]" />
           <div className="absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-naub-teal/10 blur-[80px]" />
-          {/* Floating accent orbs */}
-          <div className="absolute left-1/4 top-1/4 h-2 w-2 rounded-full bg-naub-gold/25 animate-float" style={{ animationDelay: '0.5s' }} />
-          <div className="absolute right-1/4 bottom-1/3 h-3 w-3 rounded-full bg-white/10 animate-float" style={{ animationDelay: '1.5s' }} />
         </div>
         <div className="relative mx-auto max-w-3xl px-6 text-center">
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm transition-transform duration-300 hover:scale-110">
@@ -550,7 +403,7 @@ export default function LandingPage() {
             Ready to ace your exams?
           </h2>
           <p className="mt-4 text-lg text-white/55">
-            Join thousands of NAUB students using Padi to study smarter.
+            Join NAUB students using Padi to study smarter.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
@@ -578,18 +431,16 @@ export default function LandingPage() {
       <footer className="bg-ink py-14">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
-            {/* Brand */}
             <div className="md:col-span-2">
               <div className="mb-4">
                 <Logo size="md" href="/" />
               </div>
               <p className="text-sm text-white/40 max-w-sm leading-relaxed">
-                The past question bank for Nigerian Army University Biu. Built by 3 Software
-                Engineering students to help fellow students study smarter and excel.
+                The past question bank for Nigerian Army University Biu. Built by students,
+                for students.
               </p>
             </div>
 
-            {/* Quick links */}
             <div>
               <h4 className="text-xs font-semibold uppercase tracking-wider text-white/30 mb-4">
                 Quick links
@@ -613,7 +464,6 @@ export default function LandingPage() {
               </ul>
             </div>
 
-            {/* Account */}
             <div>
               <h4 className="text-xs font-semibold uppercase tracking-wider text-white/30 mb-4">
                 Account
@@ -622,7 +472,6 @@ export default function LandingPage() {
                 {[
                   { label: 'Sign in', href: '/login' },
                   { label: 'Register', href: '/register' },
-                  { label: 'Profile', href: '/profile' },
                 ].map((link) => (
                   <li key={link.href}>
                     <Link
@@ -643,8 +492,6 @@ export default function LandingPage() {
             </p>
             <div className="flex items-center gap-4 text-xs text-white/25">
               <span>Nigerian Army University Biu</span>
-              <span className="text-white/10">|</span>
-              <span>Africa&apos;s First Green University</span>
             </div>
           </div>
         </div>
